@@ -101,22 +101,31 @@ const labels = createLabels(document.getElementById('labels'), camera, { onPick:
 
 // --------------------------------------------------------------------------------------------------------- the data
 status.textContent = 'Loading the city…';
-const [data, terrain] = await Promise.all([
+const [data, terrain, ages] = await Promise.all([
   fetch(`${import.meta.env.BASE_URL}data/city.json`).then((r) => r.json()),
   loadTerrain(import.meta.env.BASE_URL),
+  // which buildings stood at each stop of the timeline (read off the old plans; without the file, all of them always)
+  fetch(`${import.meta.env.BASE_URL}data/ages.json`).then((r) => (r.ok ? r.json() : null)).catch(() => null),
 ]);
 
 const ground = buildGround(data, terrain);
 scene.add(ground.mesh, ground.lines);
 // the timeline: an old plan on the ground for each year (it has its own streams, and for long no tram: the ribbons go)
-const timeline = createTimeline(document.getElementById('timeline'), ground, import.meta.env.BASE_URL, (plan) => { ground.lines.visible = !plan; });
+// and the buildings that stood then, as far as the plans tell
+const timeline = createTimeline(document.getElementById('timeline'), ground, import.meta.env.BASE_URL, {
+  onChange: (plan) => { ground.lines.visible = !plan; city.showStop(plan && ages ? ages.stops.indexOf(plan.key) : -1); },
+  about: (plan) => {
+    const i = ages ? ages.stops.indexOf(plan.key) : -1;
+    return i < 0 ? '' : `Buildings: ${ages.counts[i].toLocaleString('en')} of today’s ${ages.buildings.toLocaleString('en')} are shown, as read off the plans — an estimate, not recorded dates.`;
+  },
+});
 // the paper beyond the map, well below the lowest ground so the two never fight over the same pixels
 const low = terrain.min;
 const under = new THREE.Mesh(new THREE.PlaneGeometry(20000, 20000).rotateX(-Math.PI / 2).translate(0, low - 6, 0), lookMaterial({ vertexColors: false }));
 under.material.color.set('#e3dccb'); scene.add(under);
 
-const city = buildCity(data, lookMaterial(), terrain);
-outline(city.mesh); scene.add(city.mesh);
+const city = buildCity(data, lookMaterial(), terrain, ages);
+city.meshes.forEach(outline); scene.add(city.group);
 const trees = buildTrees(data, terrain); scene.add(trees.group);
 console.info('city', city.stats, 'trees', trees.count, 'of them in woods', trees.inWoods);
 

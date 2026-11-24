@@ -1,12 +1,16 @@
 // The timeline: a row of years, each an old plan of the city (public/plan/plans.json, made by tools/plan.mjs), and
 // "Today". Picking a year lays that plan on the ground, in colour as it was scanned and in the ink look redrawn
 // with the viewer's own ink and paper; "Today" brings back the ground drawn from OpenStreetMap. Only the ground
-// changes: the buildings stay today's, whatever the year. One plan is held in memory at a time.
+// The buildings follow (src/city.js): those that stood then, as far as the plans tell. One plan is held in memory
+// at a time.
 import * as THREE from 'three';
 import { setPlan } from './look.js';
 
-/** `el`: the bar's element; `ground`: from buildGround; `onChange(plan | null)` is called after each change. */
-export async function createTimeline(el, ground, base, onChange = () => {}) {
+/**
+ * `el`: the bar's element; `ground`: from buildGround; `onChange(plan | null)` is called after each change;
+ * `about(plan)` may give one more sentence for the line under the bar.
+ */
+export async function createTimeline(el, ground, base, { onChange = () => {}, about = () => '' } = {}) {
   let list;
   try {
     const res = await fetch(`${base}plan/plans.json`);
@@ -29,7 +33,7 @@ export async function createTimeline(el, ground, base, onChange = () => {}) {
     const plan = list.plans.find((p) => p.key === key) ?? null, mine = ++asked;
     for (const b of el.querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.key === (plan?.key ?? '')));
     note.hidden = !plan;
-    if (plan) note.innerHTML = `${esc(plan.note)}${plan.page ? ` <a href="${esc(plan.page)}" target="_blank" rel="noopener">The city's record</a>` : ''}`;
+    if (plan) note.innerHTML = `${esc(plan.note)}${plan.page ? ` <a href="${esc(plan.page)}" target="_blank" rel="noopener">The city's record</a>` : ''}${about(plan) ? `<br>${esc(about(plan))}` : ''}`;
     let next = null;
     if (plan) {
       el.classList.add('busy');

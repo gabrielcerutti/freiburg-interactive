@@ -13,6 +13,7 @@
     "terrain": "node tools/terrain.mjs",
     "photos": "node tools/photos.mjs",
     "plan": "node tools/plan.mjs",
+    "ages": "node tools/ages.mjs",
     "pace": "node tools/pace.mjs",
     "shot": "node tools/shot.mjs"
   },

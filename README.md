@@ -11,7 +11,8 @@ Schwabentor, the Historisches Kaufhaus and the two town halls. Two looks — col
 Drag to move, scroll to zoom, right-drag to turn. Click a landmark or its label to highlight it and open its card;
 the card's name stays on top while the rest scrolls: all the photos of the place, each with its caption and credit;
 click any of them to open it large in the viewer (← → to move, Esc to close).
-The years at the top put an old plan of the city on the ground (the buildings stay today's); **Today** takes it away.
+The years at the top put an old plan of the city on the ground and leave only the buildings that stood then — an
+estimate read off the plans, in the shape the buildings have today; **Today** brings everything back.
 **C** (or the button) switches between colour and ink; **Esc** closes the card.
 
 Inspired by [«Buenos Aires, de 1867 a 1950»](https://github.com/mormonnegro/baires-interactivo) by @mormonnegro
@@ -28,7 +29,8 @@ a city drawn on its own map, hand-made landmarks built from simple solids, and e
 | 2 | `tools/city.mjs` | Converts that to local metres and writes `public/data/city.json` (1.9 MB). Buildings claimed by a hand-made place (`src/places/osm-ids.js`) are tagged with its key. |
 | 3 | `src/buildings.js` | Turns each footprint into walls and a roof (gabled, hipped, pyramidal, skillion, flat) from its OSM tags. What OSM does not say is filled in and **counted as assumed**. |
 | 4 | `src/ground.js` | The ground: two small maps of what each point is (street, green, water, and which kind), which the shader turns into crisp, painted surfaces at any zoom; the terrain's shape; and the Bächle and the rails as ribbons on it. |
-| 4b | `src/timeline.js` | The timeline: picking a year lays that year's plan on the ground (in colour as scanned; in ink redrawn with the viewer's ink and paper); “Today” brings the OpenStreetMap ground back. Only the ground changes: the buildings are always today's. |
+| 1d | `tools/ages.mjs` | Works out which buildings stood at each stop of the timeline by reading the old plans under every footprint (built-up tint, the black of the 1944 damage map, the hatched “destroyed blocks” of 1955), plus the few construction years OpenStreetMap has: `public/data/ages.json`. An estimate, not recorded dates; the rules are at the top of the file. |
+| 4b | `src/timeline.js` | The timeline: picking a year lays that year's plan on the ground (in colour as scanned; in ink redrawn with the viewer's ink and paper) and shows only the buildings that stood then, as far as the plans tell; “Today” brings the OpenStreetMap ground and every building back. |
 | 4b | `src/trees.js` | OSM's trees and tree rows, and trees filling OSM's woods, as instanced lumpy crowns and trunks. |
 | 4c | `src/look.js` | The shader: façades (windows, frames, shutters, doors), roof tiles and ridges, stone, cobbles, grass, water, foliage; the ink look (sepia paper, ink, hatching laid on the surfaces) and the highlight of a selected landmark. |
 | 4d | `tools/photos.mjs`, `src/places/photos.js`, `src/photos.js` | The photos: the list with captions, the tool that fetches them from Wikimedia Commons with author, date and licence (public domain or Creative Commons only), and the viewer. |
@@ -43,6 +45,7 @@ Coordinates (`src/geo.js`): metres from the Münster; x east, y up, z south.
 |---|---|
 | `npm run osm`, `npm run terrain`, `npm run city` | Download OSM and the terrain, and build `public/data/`. |
 | `npm run plan` | Download the old plans and build `public/plan/`. |
+| `npm run ages` | Read the plans under every building and write `public/data/ages.json` (`-- --debug` also writes pictures of what was read into `shots/`). |
 | `node tools/photo-search.mjs "words"` | Lists candidate photos on Wikimedia Commons with licence, author and date. |
 | `npm run photos` | Fetches the photos listed in `src/places/photos.js` into `public/photos/`. |
 | `npm run check -- <key>` | Checks a place against its own sources. |
