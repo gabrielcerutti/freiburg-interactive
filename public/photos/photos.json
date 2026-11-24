@@ -1,0 +1,194 @@
+{
+ "muenster": [
+  {
+   "src": "photos/muenster-1.webp",
+   "width": 1280,
+   "height": 1725,
+   "caption": "The Münster above the roofs of the old town, with the plain behind. Photochrom print, about 1895–1900.",
+   "author": "Detroit Publishing Co., under license from Photoglob Zürich",
+   "date": "1901",
+   "licence": "Public domain",
+   "licenceUrl": null,
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:The_cathedral,_Freiburg,_Baden,_Germany,_ca._1895.jpg"
+  },
+  {
+   "src": "photos/muenster-2.webp",
+   "width": 1280,
+   "height": 1920,
+   "caption": "The openwork spire of the west tower, 2019.",
+   "author": "W. Bulach",
+   "date": "2019-09-20 12:18:16",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:0722_Westturm_des_Freiburger_M%C3%BCnsters.jpg"
+  }
+ ],
+ "martinstor": [
+  {
+   "src": "photos/martinstor-1.webp",
+   "width": 500,
+   "height": 594,
+   "caption": "The gate before 1901: a low tower with a tented roof and a small bell turret. Postcard, sent in 1900.",
+   "author": "Unknown author",
+   "date": "gelaufen 1900",
+   "licence": "Public domain",
+   "licenceUrl": null,
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:Martinstor_ak160z.jpg"
+  },
+  {
+   "src": "photos/martinstor-2.webp",
+   "width": 1280,
+   "height": 1968,
+   "caption": "After the rebuilding: the raised tower with its corner turrets, the second gateway beside it and a tram in the street. Painted postcard, 1903 or later.",
+   "author": "Unknown author",
+   "date": "1903/19uu",
+   "licence": "Public domain",
+   "licenceUrl": null,
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:Freiburg_I_B,_Martinstor_(NBY_443670).jpg"
+  },
+  {
+   "src": "photos/martinstor-3.webp",
+   "width": 1280,
+   "height": 1920,
+   "caption": "The top of the tower in 2025: the clock, the corner turrets and the green roofs, over white plaster and sandstone.",
+   "author": "Dietmar Rabich",
+   "date": "20 June 2025, 12:39",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:Freiburg_im_Breisgau,_Martinstor_--_2025_--_8005.jpg"
+  }
+ ],
+ "schwabentor": [
+  {
+   "src": "photos/schwabentor-1.webp",
+   "width": 512,
+   "height": 831,
+   "caption": "The gate before it was raised, seen from Salzstraße. Photograph, about 1880–1900 (shown without its mount).",
+   "author": "Rijksmuseum",
+   "date": "ca. 1880 - ca. 1900",
+   "licence": "CC0",
+   "licenceUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+   "cropped": true,
+   "page": "https://commons.wikimedia.org/wiki/File:Het_%27Schwabentor%27,_gezien_vanuit_de_Salzstrasse,_Freiburg,_RP-F-00-6462.jpg"
+  },
+  {
+   "src": "photos/schwabentor-2.webp",
+   "width": 1280,
+   "height": 803,
+   "caption": "On the right, the tower with the stepped gable it had from 1901 to 1954, above the town; the Schönberg behind. Postcard, 1916.",
+   "author": "Paul Hinsche, Freiburg i. Br.",
+   "date": "1916",
+   "licence": "Public domain",
+   "licenceUrl": null,
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:Freiburg_i._Br.,_Baden-W%C3%BCrttemberg_-_Schwabentor_und_Sch%C3%B6nberg_(Zeno_Ansichtskarten).jpg"
+  },
+  {
+   "src": "photos/schwabentor-3.webp",
+   "width": 1280,
+   "height": 1920,
+   "caption": "The tower from below in 2025: white plaster, sandstone corners and the clock under the tented roof.",
+   "author": "Dietmar Rabich",
+   "date": "20 June 2025, 12:58",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:Freiburg_im_Breisgau,_Schwabentor_--_2025_--_8031.jpg"
+  }
+ ],
+ "kaufhaus": [
+  {
+   "src": "photos/kaufhaus-1.webp",
+   "width": 1280,
+   "height": 1737,
+   "caption": "Market day in front of the Kaufhaus: the four arcades, the balcony, the two oriels and a stepped gable. Photochrom print, 1890s.",
+   "author": "Detroit Publishing Co., under license from Photoglob Zürich",
+   "date": "1897",
+   "licence": "Public domain",
+   "licenceUrl": null,
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:The_market_hall,_Freiburg,_Baden,_Germany,_ca._1895.jpg"
+  },
+  {
+   "src": "photos/kaufhaus-2.webp",
+   "width": 1280,
+   "height": 960,
+   "caption": "The front in 2025: the red façade, the statues under their canopies and the coloured tiles of the oriels.",
+   "author": "JoachimKohler-HB",
+   "date": "2025-06-02 10:18:41",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:Historisches_Kaufhaus_Freiburg_im_Breisgau_(2025).jpg"
+  }
+ ],
+ "altes-rathaus": [
+  {
+   "src": "photos/altes-rathaus-1.webp",
+   "width": 1280,
+   "height": 835,
+   "caption": "The main portal, 2015.",
+   "author": "Photo: Andreas Praefcke",
+   "date": "2015-06",
+   "licence": "CC BY 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by/4.0",
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:Freiburg_Altes_Rathaus_01.jpg"
+  },
+  {
+   "src": "photos/altes-rathaus-2.webp",
+   "width": 1280,
+   "height": 1920,
+   "caption": "Turmstraße in 2025, with the bridge from the Altes Rathaus (right) to the Neues Rathaus (left).",
+   "author": "Dietmar Rabich",
+   "date": "20 June 2025, 11:41",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:Freiburg_im_Breisgau,_Turmstra%C3%9Fe_--_2025_--_7957.jpg"
+  }
+ ],
+ "neues-rathaus": [
+  {
+   "src": "photos/neues-rathaus-1.webp",
+   "width": 512,
+   "height": 494,
+   "caption": "The front on Rathausplatz, five years after the conversion: a gabled house on the left and the middle wing with its three arches, balcony, clock and bell turret. One half of a stereo photograph, 1906.",
+   "author": "Rijksmuseum",
+   "date": "1906",
+   "licence": "CC0",
+   "licenceUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+   "cropped": true,
+   "page": "https://commons.wikimedia.org/wiki/File:Voorgevel_van_het_Neues_Rathaus_te_Freiburg_im_Breisgau_Freiburg_I._B._Neues_Rathaus_(titel_op_object),_RP-F-00-9055.jpg"
+  },
+  {
+   "src": "photos/neues-rathaus-2.webp",
+   "width": 1280,
+   "height": 1920,
+   "caption": "The clock and the green bell turret over the middle wing, from below, 2025.",
+   "author": "Dietmar Rabich",
+   "date": "20 June 2025, 11:42",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:Freiburg_im_Breisgau,_Neues_Rathaus_--_2025_--_7964.jpg"
+  },
+  {
+   "src": "photos/neues-rathaus-3.webp",
+   "width": 1280,
+   "height": 1016,
+   "caption": "The courtyard, 2017.",
+   "author": "Maksym Kozlenko",
+   "date": "2017-05-02 06:01:19",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:2017-05-02_Neues_Rathaus_(Freiburg_im_Breisgau).jpg"
+  }
+ ]
+}

@@ -1,0 +1,7 @@
+node_modules/
+dist/
+shots/
+sources/osm/*.json
+.DS_Store
+sources/terrain/*.png
+sources/photos/

@@ -1,0 +1,26 @@
+{
+  "name": "freiburg-interactive",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "osm": "node tools/osm.mjs",
+    "city": "node tools/city.mjs",
+    "check": "node tools/check-place.mjs",
+    "terrain": "node tools/terrain.mjs",
+    "photos": "node tools/photos.mjs",
+    "pace": "node tools/pace.mjs",
+    "shot": "node tools/shot.mjs"
+  },
+  "dependencies": {
+    "three": "0.186.1"
+  },
+  "devDependencies": {
+    "playwright-core": "1.64.1",
+    "sharp": "0.34.5",
+    "vite": "8.3.5"
+  }
+}

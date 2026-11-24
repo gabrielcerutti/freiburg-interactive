@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Freiburg im Breisgau — interactive</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <div id="labels"></div>
+
+    <header class="title">
+      <h1>Freiburg im Breisgau</h1>
+      <p>The old town in 3D</p>
+    </header>
+
+    <p id="status">Loading…</p>
+    <aside id="card" hidden></aside>
+    <div id="viewer" hidden></div>
+
+    <nav class="tools">
+      <button id="look" title="Switch between colour and ink (C)" aria-pressed="false">Ink</button>
+    </nav>
+
+    <footer class="credits">
+      Map data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a> (ODbL) · Terrain: <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">Terrain Tiles</a> (Copernicus EU-DEM, SRTM)
+      · Drag to move, scroll to zoom, right-drag to turn, C for colour or ink
+    </footer>
+
+    <script>
+      // If the viewer cannot start, say why instead of "Loading…" for ever. (Only while it is still loading: the
+      // first message stays.)
+      function failed(message) {
+        var box = document.getElementById('status');
+        if (!box || box.hidden || box.classList.contains('failed')) return;
+        box.classList.add('failed'); box.textContent = message;
+      }
+      addEventListener('error', function (ev) {
+        failed('The viewer could not start: ' + (ev.message || 'one of its files did not load') + '. Reload the page; if it stays like this, the browser’s console has the details.');
+      }, true);
+      addEventListener('unhandledrejection', function (ev) {
+        failed('The viewer could not start: ' + ((ev.reason && ev.reason.message) || ev.reason) + '. Reload the page; if it stays like this, the browser’s console has the details.');
+      });
+    </script>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
