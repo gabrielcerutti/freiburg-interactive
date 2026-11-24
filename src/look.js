@@ -49,7 +49,8 @@ const FRAGMENT_PARS = /* glsl */ `
   #ifdef GROUND
     uniform sampler2D tMask, tSub, tPlan;
     uniform vec4 uPlan;   // x0, z0, width, depth of the old plan, in world metres
-    uniform float uPlanOn; // 1 once the old plan is loaded
+    uniform float uPlanOn; // 1 while an old plan lies on the ground
+    uniform vec2 uPlanLevels; // the scan's tones of ink and of paper (grey, 0 to 1)
     uniform vec4 uGround; // x0, z0, width, depth of the masks, in world metres
   #endif
 
@@ -87,6 +88,7 @@ const FACADE = /* glsl */ `
   float inkMark = 0.0;  // 1 where the ink drawing is solid ink (windows, doors, rails)
   float inkTone = 0.0;  // 0..1: a mid tone of ink (shutters)
   float gGreen = 0.0, gWood = 0.0, gWater = 0.0, gPaved = 0.0, gLine = 0.0;
+  vec4 gPlan = vec4(0.0); // the old plan at this point (its colour, and how much of it there is)
   {
     float kind = vFacade.w;
     if (kind > 1.5 && kind < 2.5 && abs(vWNor.y) < 0.35) {            // ---- a wall with windows
@@ -180,6 +182,12 @@ const FACADE = /* glsl */ `
       c = mix(c, water, gWater);
       c = mix(c, street, gPaved);
       diffuseColor.rgb = mix(c, c * 0.6, gLine * 0.75);                 // kerbs and banks
+      // an old plan instead, where its sheet reaches: in colour, as it was scanned
+      vec2 puv = (P - uPlan.xy) / uPlan.zw;
+      if (uPlanOn > 0.5 && puv.x > 0.0 && puv.x < 1.0 && puv.y > 0.0 && puv.y < 1.0) {
+        gPlan = texture2D(tPlan, puv);
+        diffuseColor.rgb = mix(diffuseColor.rgb, gPlan.rgb, gPlan.a);
+      }
     }
     #endif
   }
@@ -202,17 +210,15 @@ const OUTPUT = /* glsl */ `
     vec3 ink = uPaper * mix(0.74, 1.03, k);
     #ifdef GROUND
     {
-      // The old plan, where there is one: its ink on our paper (the picture is grey: 1 bare paper, 0 solid ink).
-      vec2 puv = (vWPos.xz - uPlan.xy) / uPlan.zw;
-      float onPlan = uPlanOn * step(0.0, puv.x) * step(puv.x, 1.0) * step(0.0, puv.y) * step(puv.y, 1.0);
-      float drawn = 1.0 - smoothstep(0.12, 0.9, texture2D(tPlan, puv).r);
+      // The old plan, where there is one: redrawn with our ink on our paper, from its scan's tones of ink and paper.
+      float drawn = 1.0 - smoothstep(uPlanLevels.x + 0.08, uPlanLevels.y - 0.04, pow(luma(gPlan.rgb), 1.0 / 2.2));
       // Without it: parks stippled (woods more densely), water lined, streets and banks outlined
       vec2 sc = vWPos.xz / mix(0.95, 0.6, gWood), si = floor(sc), sf = fract(sc) - 0.5 - (vec2(hash(si), hash(si + 7.3)) - 0.5) * 0.55;
       float dw = length(fwidth(sc)), dots = mix(0.07, 1.0 - smoothstep(0.1 - dw, 0.1 + dw, length(sf)), keep(dw));
       vec3 own = mix(ink, uInkColour, gGreen * dots * 0.8);
       own = mix(own, uInkColour, gWater * lines(vWPos.z + 0.3 * sin(vWPos.x * 1.1), 0.75, 0.2) * 0.6);
       own = mix(own, uInkColour, gLine * 0.85);
-      ink = mix(own, mix(ink, uInkColour, drawn * 0.88), onPlan);
+      ink = mix(own, mix(ink, uInkColour, drawn * 0.88), gPlan.a);
     }
     #endif
     ink = mix(ink, mix(uInkColour, uPaper, 0.66) * mix(0.72, 1.06, k), roof);            // roofs a shade darker
@@ -249,10 +255,13 @@ const OUTPUT = /* glsl */ `
 
 const BLANK = new THREE.DataTexture(new Uint8Array([255, 255, 255, 255]), 1, 1); BLANK.needsUpdate = true;
 
-/** Lays an old plan on a ground material: `texture` (grey: paper 1, ink 0) over `area` [x0, z0, width, depth]. */
-export function setPlan(material, texture, area) {
+/**
+ * Lays an old plan on a ground material: `texture` (the scan; see-through where its sheet ends) over `area`
+ * [x0, z0, width, depth], with the scan's `levels` [ink, paper]. Without a texture, the plan is taken away.
+ */
+export function setPlan(material, texture, area = [0, 0, 1, 1], levels = [0, 1]) {
   const p = material.userData.plan;
-  p.tPlan.value = texture; p.uPlan.value.set(...area); p.uPlanOn.value = 1;
+  p.tPlan.value = texture ?? BLANK; p.uPlan.value.set(...area); p.uPlanLevels.value.set(...levels); p.uPlanOn.value = texture ? 1 : 0;
 }
 
 /**
@@ -264,8 +273,8 @@ export function lookMaterial({ ground = null, vertexColors = !ground } = {}) {
   const m = new THREE.MeshLambertMaterial({ vertexColors, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 });
   const own = { uHighlight: { value: 0 } };
   m.userData.highlight = own.uHighlight;
-  // (the ground's old plan arrives later, if at all: see setPlan below)
-  const plan = { tPlan: { value: BLANK }, uPlan: { value: new THREE.Vector4(0, 0, 1, 1) }, uPlanOn: { value: 0 } };
+  // (the ground's old plan comes and goes with the timeline: see setPlan above)
+  const plan = { tPlan: { value: BLANK }, uPlan: { value: new THREE.Vector4(0, 0, 1, 1) }, uPlanOn: { value: 0 }, uPlanLevels: { value: new THREE.Vector2(0, 1) } };
   if (ground) m.userData.plan = plan;
   m.onBeforeCompile = (shader) => {
     Object.assign(shader.uniforms, LOOK, own, {

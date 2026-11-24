@@ -29,9 +29,9 @@ Open Data), which include Copernicus EU-DEM data (produced using Copernicus data
 information funded by the European Union) and SRTM data (NASA):
 https://github.com/tilezen/joerd/blob/master/docs/attribution.md
 
-The town plan of 1875 in public/plan/ is cut from the city's historical town plans
-(changed: cut to the area, turned to grey, contrast stretched). Datengrundlage: Stadt
-Freiburg, www.freiburg.de — Datenlizenz Deutschland – Namensnennung – Version 2.0:
+The old town plans in public/plan/ are cut from the city's historical town plans
+(changed: cut to the area, compressed). Datengrundlage: Stadt Freiburg,
+www.freiburg.de — Datenlizenz Deutschland – Namensnennung – Version 2.0:
 https://www.govdata.de/dl-de/by-2-0
 
 Photographs in public/photos/ come from Wikimedia Commons. Each keeps its own licence

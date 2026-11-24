@@ -1,0 +1,152 @@
+{
+ "credit": "Datengrundlage: Stadt Freiburg, www.freiburg.de",
+ "licence": "Datenlizenz Deutschland – Namensnennung – Version 2.0",
+ "licenceUrl": "https://www.govdata.de/dl-de/by-2-0",
+ "metresPerPixel": 0.55,
+ "plans": [
+  {
+   "key": "1838",
+   "label": "1838",
+   "src": "plan/1838.webp",
+   "area": [
+    -1272.8920265621377,
+    -904.5580800000124,
+    2240,
+    2048
+   ],
+   "levels": [
+    0.318,
+    0.8
+   ],
+   "covers": 0.67,
+   "note": "Black-and-white plan, 1:10,000. The sheet does not reach every corner of the area.",
+   "page": "https://geodaten.freiburg.de/geonetwork/srv/ger/catalog.search#/metadata/0bd1576d-da47-4cbf-8031-e580a921379c"
+  },
+  {
+   "key": "1875",
+   "label": "1875",
+   "src": "plan/1875.webp",
+   "area": [
+    -1272.8920265621377,
+    -904.5580800000124,
+    2240,
+    2048
+   ],
+   "levels": [
+    0.267,
+    0.796
+   ],
+   "covers": 1,
+   "note": "Black-and-white plan, 1:6,000, lithographed by C. Bolia. The city had about 32,000 inhabitants.",
+   "page": "https://geodaten.freiburg.de/geonetwork/srv/ger/catalog.search#/metadata/d5acf557-9f28-436e-8da3-6e25a5d9910f"
+  },
+  {
+   "key": "1903",
+   "label": "1903",
+   "src": "plan/1903.webp",
+   "area": [
+    -1272.8920265621377,
+    -904.5580800000124,
+    2240,
+    2048
+   ],
+   "levels": [
+    0.008,
+    0.973
+   ],
+   "covers": 1,
+   "note": "Colour plan, 1:6,500.",
+   "page": "https://geodaten.freiburg.de/geonetwork/srv/ger/catalog.search#/metadata/23248e1d-2790-4e96-8444-a46113b0c9a5"
+  },
+  {
+   "key": "1920",
+   "label": "1920",
+   "src": "plan/1920.webp",
+   "area": [
+    -1272.8920265621377,
+    -904.5580800000124,
+    2240,
+    2048
+   ],
+   "levels": [
+    0.275,
+    0.812
+   ],
+   "covers": 1,
+   "note": "Colour plan, 1:6,000.",
+   "page": "https://geodaten.freiburg.de/geonetwork/srv/ger/catalog.search#/metadata/d1b49ad0-5d3d-478b-b946-a9e228ef2d53"
+  },
+  {
+   "key": "1944",
+   "label": "1944",
+   "src": "plan/1944.webp",
+   "area": [
+    -1272.8920265621377,
+    -904.5580800000124,
+    2240,
+    2048
+   ],
+   "levels": [
+    0.294,
+    0.804
+   ],
+   "covers": 1,
+   "note": "Colour plan, 1:10,000, with the street names of those years.",
+   "page": "https://geodaten.freiburg.de/geonetwork/srv/ger/catalog.search#/metadata/16f7271f-beae-4120-9d8c-5fdcecd4d092"
+  },
+  {
+   "key": "bomben",
+   "label": "Nov 1944",
+   "src": "plan/bomben.webp",
+   "area": [
+    -1272.8920265621377,
+    -904.5580800000124,
+    2240,
+    2048
+   ],
+   "levels": [
+    0.11,
+    0.835
+   ],
+   "covers": 1,
+   "note": "Damage map after the air raid of 27 November 1944, 1:10,000: black, heavy damage to total loss, not habitable; blue, light to medium damage, habitable.",
+   "page": "https://geodaten.freiburg.de/geonetwork/srv/ger/catalog.search#/metadata/cc209de5-1151-4632-a72d-e5dee8f7596d"
+  },
+  {
+   "key": "1955",
+   "label": "1955",
+   "src": "plan/1955.webp",
+   "area": [
+    -1272.8920265621377,
+    -904.5580800000124,
+    2240,
+    2048
+   ],
+   "levels": [
+    0.365,
+    0.859
+   ],
+   "covers": 1,
+   "note": "Official colour plan, 1:10,000.",
+   "page": "https://geodaten.freiburg.de/geonetwork/srv/ger/catalog.search#/metadata/da91cc61-79b1-4f39-8ce1-8dfd35a616b2"
+  },
+  {
+   "key": "1981",
+   "label": "1981",
+   "src": "plan/1981.webp",
+   "area": [
+    -1272.8920265621377,
+    -904.5580800000124,
+    2240,
+    2048
+   ],
+   "levels": [
+    0.424,
+    0.925
+   ],
+   "covers": 1,
+   "note": "Official city map, 1:16,000.",
+   "page": "https://geodaten.freiburg.de/geonetwork/srv/ger/catalog.search#/metadata/84731cbd-226a-4e66-b2ab-3f72812e085a"
+  }
+ ]
+}

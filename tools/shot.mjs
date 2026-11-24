@@ -1,5 +1,5 @@
 // Takes a screenshot of the viewer with a headless Chrome for Testing (never your everyday browser).
-//   node tools/shot.mjs [out.png] [--view x,y,z,tx,ty,tz] [--card] [--ink] [--select <key>] [--viewer] [--scroll px]
+//   node tools/shot.mjs [out.png] [--view x,y,z,tx,ty,tz] [--card] [--ink] [--select <key>] [--viewer] [--scroll px] [--plan <key>] [--size WxH]
 //   (--viewer: with --select, opens the place's photos and goes to the second one; --scroll: scrolls the card down;
 //    --no-webgl: a browser that cannot do 3D, to see the message the page shows)
 // Starts its own Vite server on port 5431, waits for the city to load, and saves the picture (default: shots/view.png).
@@ -13,7 +13,7 @@ import { execSync } from 'node:child_process';
 
 const args = process.argv.slice(2);
 const opt = (name) => (args.includes(name) ? args[args.indexOf(name) + 1] : null);
-const out = args.find((a, i) => !a.startsWith('--') && !['--view', '--select', '--scroll'].includes(args[i - 1])) ?? 'shots/view.png';
+const out = args.find((a, i) => !a.startsWith('--') && !['--view', '--select', '--scroll', '--plan', '--size'].includes(args[i - 1])) ?? 'shots/view.png';
 const view = args.includes('--view') ? args[args.indexOf('--view') + 1].split(',').map(Number) : null;
 
 function findChrome() {
@@ -39,7 +39,7 @@ await server.listen();
 const noWebgl = args.includes('--no-webgl'); // (to see what the page says in a browser that cannot do 3D)
 const browser = await chromium.launch({ executablePath: findChrome(), headless: true, args: noWebgl ? ['--disable-3d-apis'] : ['--ignore-gpu-blocklist', '--use-angle=metal', '--enable-gpu'] });
 try {
-  const page = await browser.newPage({ viewport: { width: 1600, height: 1000 } });
+  const page = await browser.newPage({ viewport: opt('--size') ? { width: Number(opt('--size').split('x')[0]), height: Number(opt('--size').split('x')[1]) } : { width: 1600, height: 1000 } });
   let said = 0; // (only the first few complaints: a broken shader repeats itself hundreds of times)
   page.on('console', (m) => { if ((m.type() === 'warning' || m.type() === 'error') && said++ < 4) console.log(`[page ${m.type()}]`, m.text().slice(0, 600)); });
   page.on('pageerror', (e) => console.log('[page error]', e.message));
@@ -47,6 +47,7 @@ try {
   await page.waitForFunction((no) => (no ? document.querySelector('#status.failed') : window.lab), noWebgl, { timeout: 45_000, polling: 500 });
   if (noWebgl) { mkdirSync(dirname(out), { recursive: true }); await page.screenshot({ path: out, timeout: 20_000 }); console.log(out); throw new Error('(as asked: no WebGL)'); }
   if (view) await page.evaluate(([x, y, z, tx, ty, tz]) => { lab.camera.position.set(x, y, z); lab.controls.target.set(tx, ty, tz); lab.controls.update(); }, view);
+  if (opt('--plan')) { await page.evaluate((k) => lab.plan(k), opt('--plan')); await page.waitForTimeout(1500); }
   if (args.includes('--ink')) await page.evaluate(() => lab.setLook(true));
   if (opt('--select')) await page.evaluate((k) => lab.select(k), opt('--select'));
   if (args.includes('--card')) await page.click('.label');
