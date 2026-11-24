@@ -47,7 +47,9 @@ const FRAGMENT_PARS = /* glsl */ `
   varying vec3 vWPos;
   varying vec3 vWNor;
   #ifdef GROUND
-    uniform sampler2D tMask, tSub;
+    uniform sampler2D tMask, tSub, tPlan;
+    uniform vec4 uPlan;   // x0, z0, width, depth of the old plan, in world metres
+    uniform float uPlanOn; // 1 once the old plan is loaded
     uniform vec4 uGround; // x0, z0, width, depth of the masks, in world metres
   #endif
 
@@ -200,12 +202,17 @@ const OUTPUT = /* glsl */ `
     vec3 ink = uPaper * mix(0.74, 1.03, k);
     #ifdef GROUND
     {
-      // parks stippled (woods more densely), water lined, streets and banks outlined
+      // The old plan, where there is one: its ink on our paper (the picture is grey: 1 bare paper, 0 solid ink).
+      vec2 puv = (vWPos.xz - uPlan.xy) / uPlan.zw;
+      float onPlan = uPlanOn * step(0.0, puv.x) * step(puv.x, 1.0) * step(0.0, puv.y) * step(puv.y, 1.0);
+      float drawn = 1.0 - smoothstep(0.12, 0.9, texture2D(tPlan, puv).r);
+      // Without it: parks stippled (woods more densely), water lined, streets and banks outlined
       vec2 sc = vWPos.xz / mix(0.95, 0.6, gWood), si = floor(sc), sf = fract(sc) - 0.5 - (vec2(hash(si), hash(si + 7.3)) - 0.5) * 0.55;
       float dw = length(fwidth(sc)), dots = mix(0.07, 1.0 - smoothstep(0.1 - dw, 0.1 + dw, length(sf)), keep(dw));
-      ink = mix(ink, uInkColour, gGreen * dots * 0.8);
-      ink = mix(ink, uInkColour, gWater * lines(vWPos.z + 0.3 * sin(vWPos.x * 1.1), 0.75, 0.2) * 0.6);
-      ink = mix(ink, uInkColour, gLine * 0.85);
+      vec3 own = mix(ink, uInkColour, gGreen * dots * 0.8);
+      own = mix(own, uInkColour, gWater * lines(vWPos.z + 0.3 * sin(vWPos.x * 1.1), 0.75, 0.2) * 0.6);
+      own = mix(own, uInkColour, gLine * 0.85);
+      ink = mix(own, mix(ink, uInkColour, drawn * 0.88), onPlan);
     }
     #endif
     ink = mix(ink, mix(uInkColour, uPaper, 0.66) * mix(0.72, 1.06, k), roof);            // roofs a shade darker
@@ -240,6 +247,14 @@ const OUTPUT = /* glsl */ `
   }
 `;
 
+const BLANK = new THREE.DataTexture(new Uint8Array([255, 255, 255, 255]), 1, 1); BLANK.needsUpdate = true;
+
+/** Lays an old plan on a ground material: `texture` (grey: paper 1, ink 0) over `area` [x0, z0, width, depth]. */
+export function setPlan(material, texture, area) {
+  const p = material.userData.plan;
+  p.tPlan.value = texture; p.uPlan.value.set(...area); p.uPlanOn.value = 1;
+}
+
 /**
  * A Lambert material with the look. `ground`: { mask, sub, area: [x0, z0, width, depth] } for the ground (its two
  * maps and the rectangle they cover). Every material is pushed back a little in depth, so the ink outlines drawn on
@@ -249,13 +264,16 @@ export function lookMaterial({ ground = null, vertexColors = !ground } = {}) {
   const m = new THREE.MeshLambertMaterial({ vertexColors, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 });
   const own = { uHighlight: { value: 0 } };
   m.userData.highlight = own.uHighlight;
+  // (the ground's old plan arrives later, if at all: see setPlan below)
+  const plan = { tPlan: { value: BLANK }, uPlan: { value: new THREE.Vector4(0, 0, 1, 1) }, uPlanOn: { value: 0 } };
+  if (ground) m.userData.plan = plan;
   m.onBeforeCompile = (shader) => {
     Object.assign(shader.uniforms, LOOK, own, {
       uPaper: { value: PAPER }, uInkColour: { value: INK }, uShade: { value: SHADE }, uGlow: { value: new THREE.Color('#ffd27a') },
       uLightFull: { value: LIGHT_FULL },
     });
     if (ground) {
-      Object.assign(shader.uniforms, { tMask: { value: ground.mask }, tSub: { value: ground.sub }, uGround: { value: new THREE.Vector4(...ground.area) } });
+      Object.assign(shader.uniforms, plan, { tMask: { value: ground.mask }, tSub: { value: ground.sub }, uGround: { value: new THREE.Vector4(...ground.area) } });
       shader.defines = { ...shader.defines, GROUND: '' };
     }
     shader.vertexShader = shader.vertexShader

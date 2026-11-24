@@ -5,3 +5,4 @@ sources/osm/*.json
 .DS_Store
 sources/terrain/*.png
 sources/photos/
+sources/plan/

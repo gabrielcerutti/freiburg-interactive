@@ -5,7 +5,7 @@ import { MapControls } from 'three/addons/controls/MapControls.js';
 import { LineSegments2 } from 'three/addons/lines/LineSegments2.js';
 import { LineSegmentsGeometry } from 'three/addons/lines/LineSegmentsGeometry.js';
 import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
-import { buildGround } from './ground.js';
+import { buildGround, loadPlan } from './ground.js';
 import { buildCity } from './city.js';
 import { buildTrees } from './trees.js';
 import { startPlace } from './kit.js';
@@ -107,6 +107,9 @@ const [data, terrain] = await Promise.all([
 
 const ground = buildGround(data, terrain);
 scene.add(ground.mesh, ground.lines);
+// the old plan under the city in the ink look (it arrives when it arrives; until then the ink ground is drawn)
+let plan = null;
+loadPlan(ground, import.meta.env.BASE_URL).then((p) => { plan = p; ground.lines.visible = !(plan && inkTarget); });
 // the paper beyond the map, well below the lowest ground so the two never fight over the same pixels
 const low = terrain.min;
 const under = new THREE.Mesh(new THREE.PlaneGeometry(20000, 20000).rotateX(-Math.PI / 2).translate(0, low - 6, 0), lookMaterial({ vertexColors: false }));
@@ -166,6 +169,7 @@ function setLook(ink) {
   lookButton.textContent = ink ? 'Colour' : 'Ink';
   lookButton.setAttribute('aria-pressed', String(ink));
   document.body.classList.toggle('ink', ink);
+  ground.lines.visible = !(plan && ink); // (the old plan has its own streams; and no tram yet)
 }
 lookButton.addEventListener('click', () => setLook(!inkTarget));
 addEventListener('keydown', (ev) => {

@@ -12,6 +12,7 @@
     "check": "node tools/check-place.mjs",
     "terrain": "node tools/terrain.mjs",
     "photos": "node tools/photos.mjs",
+    "plan": "node tools/plan.mjs",
     "pace": "node tools/pace.mjs",
     "shot": "node tools/shot.mjs"
   },

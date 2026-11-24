@@ -23,9 +23,10 @@ a city drawn on its own map, hand-made landmarks built from simple solids, and e
 |---|---|---|
 | 1 | `tools/osm.mjs` | Downloads buildings, building parts, streets, rail/tram, water and green areas for the old town from OpenStreetMap (Overpass) into `sources/osm/`. |
 | 1b | `tools/terrain.mjs` | Downloads the open Terrain Tiles (zoom 15) over the area and writes an elevation grid every 4 m, relative to the ground at the Münster: `public/data/terrain.bin` and `.json`. The Schlossberg rises 175 m above the old town. |
+| 1c | `tools/plan.mjs` | Fetches the town plan of 1875 over the same area from the city's georeferenced historical plans (one request) and writes it in grey, paper white and ink black: `public/plan/1875.webp` and `.json`. |
 | 2 | `tools/city.mjs` | Converts that to local metres and writes `public/data/city.json` (1.9 MB). Buildings claimed by a hand-made place (`src/places/osm-ids.js`) are tagged with its key. |
 | 3 | `src/buildings.js` | Turns each footprint into walls and a roof (gabled, hipped, pyramidal, skillion, flat) from its OSM tags. What OSM does not say is filled in and **counted as assumed**. |
-| 4 | `src/ground.js` | The ground: two small maps of what each point is (street, green, water, and which kind), which the shader turns into crisp, painted surfaces at any zoom; the terrain's shape; and the Bächle and the rails as ribbons on it. A historical map will come in here later. |
+| 4 | `src/ground.js` | The ground: two small maps of what each point is (street, green, water, and which kind), which the shader turns into crisp, painted surfaces at any zoom; the terrain's shape; and the Bächle and the rails as ribbons on it. In the ink look the ground is the town plan of 1875 instead (the city on it is today's, so a house does not always stand on a block of 1875). |
 | 4b | `src/trees.js` | OSM's trees and tree rows, and trees filling OSM's woods, as instanced lumpy crowns and trunks. |
 | 4c | `src/look.js` | The shader: façades (windows, frames, shutters, doors), roof tiles and ridges, stone, cobbles, grass, water, foliage; the ink look (sepia paper, ink, hatching laid on the surfaces) and the highlight of a selected landmark. |
 | 4d | `tools/photos.mjs`, `src/places/photos.js`, `src/photos.js` | The photos: the list with captions, the tool that fetches them from Wikimedia Commons with author, date and licence (public domain or Creative Commons only), and the viewer. |
@@ -39,6 +40,7 @@ Coordinates (`src/geo.js`): metres from the Münster; x east, y up, z south.
 | Command | What it does |
 |---|---|
 | `npm run osm`, `npm run terrain`, `npm run city` | Download OSM and the terrain, and build `public/data/`. |
+| `npm run plan` | Download the plan of 1875 and build `public/plan/`. |
 | `node tools/photo-search.mjs "words"` | Lists candidate photos on Wikimedia Commons with licence, author and date. |
 | `npm run photos` | Fetches the photos listed in `src/places/photos.js` into `public/photos/`. |
 | `npm run check -- <key>` | Checks a place against its own sources. |
@@ -71,6 +73,10 @@ source you can reopen (a page, a photo, OSM), and the file says which. What had 
 - Code: MIT (`LICENSE`).
 - Map data: © [OpenStreetMap contributors](https://www.openstreetmap.org/copyright), ODbL. `public/data/city.json`
   is derived from it and keeps that licence; the viewer shows the credit.
+- The plan of 1875 (the ink ground): «Historischer Stadtplan von Freiburg i. Br. – Jahr 1875», lithographed by
+  C. Bolia, scale 1:6,000, scanned and georeferenced by the city's survey office.
+  [Datengrundlage: Stadt Freiburg, www.freiburg.de](https://geodaten.freiburg.de/geonetwork/srv/ger/catalog.search#/metadata/d5acf557-9f28-436e-8da3-6e25a5d9910f),
+  [Datenlizenz Deutschland – Namensnennung – Version 2.0](https://www.govdata.de/dl-de/by-2-0). Changed here: cut to the area, turned to grey and stretched in contrast.
 - Terrain: [Terrain Tiles](https://registry.opendata.aws/terrain-tiles/) (Mapzen, on AWS Open Data), built in Europe
   mostly from Copernicus EU-DEM and SRTM ([attribution](https://github.com/tilezen/joerd/blob/master/docs/attribution.md)).
   Everything stands on the lowest ground under it; the woods are OSM's, the trees inside them are placed by the viewer.

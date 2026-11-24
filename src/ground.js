@@ -7,10 +7,12 @@
 // city) and is shaped by the terrain's heights.
 // On top of it, as thin ribbons laid on the terrain: the Bächle (OSM's open drains and ditches; half a metre wide
 // unless OSM gives a width) and the rails (two per track, at OSM's gauge: 1,000 mm for the tram).
-// When a historical map is found and georeferenced, this is where its scan comes in, as the ink ground.
+// In the ink look the ground is an old plan instead, wherever it reaches: the town plan of 1875 (public/plan/, made
+// by tools/plan.mjs from the city's scanned and georeferenced historical plans). The city on it is today's, so a
+// house does not always stand on a block of 1875. Without the plan's files the ink ground is drawn from the masks.
 import * as THREE from 'three';
 import { BOUNDS, toWorld } from './geo.js';
-import { lookMaterial } from './look.js';
+import { lookMaterial, setPlan } from './look.js';
 import { KIND } from './buildings.js';
 import { FLAT } from './terrain.js';
 
@@ -83,6 +85,19 @@ export function buildGround(data, terrain = FLAT, { maxSize = 4096 } = {}) {
   mesh.receiveShadow = true; mesh.name = 'ground';
 
   return { mesh, lines: buildLines(data, terrain) };
+}
+
+/** Fetches the old plan and lays it on the ground (ink look). Resolves to its description, or null if there is none. */
+export async function loadPlan(ground, base, year = 1875) {
+  try {
+    const res = await fetch(`${base}plan/${year}.json`);
+    if (!res.ok) return null;
+    const plan = await res.json();
+    const t = await new THREE.TextureLoader().loadAsync(`${base}${plan.src}`);
+    t.colorSpace = THREE.NoColorSpace; t.flipY = false; t.anisotropy = 8; // (numbers, not colours; row 0 is the north)
+    setPlan(ground.mesh.material, t, plan.area);
+    return plan;
+  } catch { return null; }
 }
 
 /** The Bächle and the rails: ribbons laid on the terrain, a point every 2 m or less, a hand above the ground. */
