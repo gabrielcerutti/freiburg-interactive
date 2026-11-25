@@ -117,7 +117,7 @@ const FRAGMENT_PARS = /* glsl */ `
 const FACADE = /* glsl */ `
   float inkMark = 0.0;  // 1 where the ink drawing is solid ink (windows, doors, rails)
   float inkTone = 0.0;  // 0..1: a mid tone of ink (shutters)
-  float gGreen = 0.0, gWood = 0.0, gWater = 0.0, gPaved = 0.0, gLine = 0.0;
+  float gGreen = 0.0, gWood = 0.0, gWater = 0.0, gPaved = 0.0, gLine = 0.0, gVine = 0.0, gRow = 0.0;
   vec4 gPlan = vec4(0.0); // the old plan at this point (its colour, and how much of it there is)
   {
     float kind = vFacade.w;
@@ -208,7 +208,14 @@ const FACADE = /* glsl */ `
       vec3 grass = mix(srgb(vec3(0.56, 0.69, 0.38)), srgb(vec3(0.68, 0.78, 0.47)), n1) * (0.9 + 0.2 * n2) * (1.0 + 0.16 * grain);
       vec3 wood = srgb(vec3(0.42, 0.53, 0.3)) * (0.88 + 0.24 * n2) * (1.0 + 0.12 * grain);
       vec3 water = srgb(vec3(0.47, 0.65, 0.72)) * (0.94 + 0.1 * n2) * (1.0 + 0.07 * lines(P.y + 0.7 * vnoise(P * 0.35), 1.3, 0.2));
-      vec3 c = mix(base, mix(grass, wood, gWood), gGreen);
+      // a vineyard: rows of vines 2 m apart, each its own shade, with pale grass between (the rows' direction comes
+      // with the map; that there are rows, how wide and how far apart, is the illustration's)
+      gVine = smoothstep(0.12, 0.26, gs.b);
+      float va = (clamp(gs.b, 0.302, 1.0) - 0.302) / 0.698 * 3.14159265, vr = dot(P, vec2(-sin(va), cos(va))) / 2.0, vw = fwidth(vr), vk = keep(vw);
+      gRow = mix(0.5, band(fract(vr), 0.22, 0.78, vw), vk);
+      float along = dot(P, vec2(cos(va), sin(va))), tuft = vnoise(vec2(along * 0.9, floor(vr) * 7.3));
+      vec3 vines = mix(srgb(vec3(0.74, 0.77, 0.5)), srgb(vec3(0.36, 0.52, 0.24)) * (0.85 + 0.3 * tuft * vk) * (1.0 + (hash(vec2(floor(vr), 3.0)) - 0.5) * 0.18 * vk), gRow) * (0.95 + 0.1 * n1);
+      vec3 c = mix(base, mix(mix(grass, wood, gWood), vines, gVine), gGreen);
       c = mix(c, water, gWater);
       c = mix(c, street, gPaved);
       diffuseColor.rgb = mix(c, c * 0.6, gLine * 0.75);                 // kerbs and banks
@@ -245,7 +252,7 @@ const OUTPUT = /* glsl */ `
       // Without it: parks stippled (woods more densely), water lined, streets and banks outlined
       vec2 sc = vWPos.xz / mix(0.95, 0.6, gWood), si = floor(sc), sf = fract(sc) - 0.5 - (vec2(hash(si), hash(si + 7.3)) - 0.5) * 0.55;
       float dw = length(fwidth(sc)), dots = mix(0.07, 1.0 - smoothstep(0.1 - dw, 0.1 + dw, length(sf)), keep(dw));
-      vec3 own = mix(ink, uInkColour, gGreen * dots * 0.8);
+      vec3 own = mix(ink, uInkColour, gGreen * mix(dots, gRow * 0.45, gVine) * 0.8); // (a vineyard: its rows, not dots)
       own = mix(own, uInkColour, gWater * lines(vWPos.z + 0.3 * sin(vWPos.x * 1.1), 0.75, 0.2) * 0.6);
       own = mix(own, uInkColour, gLine * 0.85);
       ink = mix(own, mix(ink, uInkColour, drawn * 0.88), gPlan.a);

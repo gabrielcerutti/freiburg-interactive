@@ -60,6 +60,19 @@ export function buildGround(data, terrain = FLAT, { maxSize = 4096 } = {}) {
   const sub = canvas();
   for (const a of data.green) if (!WOODS.has(a.kind)) fill(sub, a.rings, 'rgb(0,102,0)');
   for (const a of data.green) if (WOODS.has(a.kind)) fill(sub, a.rings, 'rgb(0,255,0)');
+  // A vineyard, in blue: which way its rows run — 0 to 180°, as 77 to 255; under 77 there is none. ASSUMED: the
+  // rows run across the slope (along the contour), as on a terraced hillside; on flat ground, along its longest side.
+  const rowsOf = (ring) => {
+    let gx = 0, gz = 0, long = 0, side = 0;
+    for (let i = 0; i < ring.length; i++) {
+      const p = ring[i], q = ring[(i + 1) % ring.length], l = Math.hypot(q[0] - p[0], q[1] - p[1]);
+      if (l > long) { long = l; side = Math.atan2(q[1] - p[1], q[0] - p[0]); }
+      gx += terrain.heightAt(p[0] + 10, p[1]) - terrain.heightAt(p[0] - 10, p[1]); gz += terrain.heightAt(p[0], p[1] + 10) - terrain.heightAt(p[0], p[1] - 10);
+    }
+    const angle = Math.hypot(gx, gz) / ring.length > 0.6 ? Math.atan2(gz, gx) + Math.PI / 2 : side; // (more than 3 % of slope)
+    return ((angle % Math.PI) + Math.PI) % Math.PI;
+  };
+  for (const a of data.green) if (a.kind === 'vineyard') fill(sub, a.rings, `rgb(0,102,${Math.round(77 + 178 * (rowsOf(a.rings[0]) / Math.PI))})`);
   const paving = canvas();
   const kindOf = (s) => (ASPHALT.has(s.kind) ? 255 : s.width < 3 ? 38 : 128);
   for (const s of data.squares) fill(paving, [s.ring], 'rgb(128,0,0)');

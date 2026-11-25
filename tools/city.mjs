@@ -199,7 +199,10 @@ for (const e of read('trees')) {
     for (let k = i === 0 ? 0 : 1; k <= n; k++) trees.push([cm(a[0] + ((b[0] - a[0]) * k) / n), cm(a[1] + ((b[1] - a[1]) * k) / n), h, d]);
   }
 }
-const green = read('green').flatMap((e) => polygons(e).map((rings) => ({ kind: e.tags.leisure ?? e.tags.landuse ?? e.tags.natural, rings })));
+// (the vineyards have a layer of their own, which also brings the ones mapped as relations; a vineyard that is in
+// both is taken once)
+const seen = new Set(), greens = [...read('vineyards'), ...read('green')].filter((e) => { const k = e.type + e.id; if (seen.has(k)) return false; seen.add(k); return true; });
+const green = greens.flatMap((e) => polygons(e).map((rings) => ({ kind: e.tags.leisure ?? e.tags.landuse ?? e.tags.natural, rings })));
 
 mkdirSync('public/data', { recursive: true });
 const out = { source: '© OpenStreetMap contributors, ODbL', buildings, streets, squares, rail, waterLines, waterAreas, green, trees };

@@ -1,5 +1,5 @@
 // Downloads today's city from OpenStreetMap (Overpass API) inside BOUNDS (src/geo.js):
-// buildings, building parts, streets, railways/tram, water, green areas and trees.
+// buildings, building parts, streets, railways/tram, water, green areas, vineyards and trees.
 //   node tools/osm.mjs            -> sources/osm/<layer>.json   (raw Overpass answers)
 // A layer that is already on disk is not downloaded again (delete the file to refresh it).
 // Data © OpenStreetMap contributors, ODbL (https://www.openstreetmap.org/copyright).
@@ -20,6 +20,8 @@ const LAYERS = {
   rail: 'way["railway"~"^(rail|tram|light_rail)$"];',
   water: '(way["waterway"];way["natural"="water"];relation["natural"="water"];);',
   trees: '(node["natural"="tree"];way["natural"="tree_row"];);',
+  // (the vineyards apart: the big one on the Schlossberg is a relation, and the green layer only asks for ways)
+  vineyards: '(way["landuse"="vineyard"];relation["landuse"="vineyard"];);',
   green: '(way["leisure"~"^(park|garden|playground)$"];way["landuse"~"^(grass|forest|meadow|cemetery|vineyard)$"];way["natural"~"^(wood|scrub)$"];relation["leisure"="park"];relation["landuse"~"^(grass|forest)$"];);',
 };
 
