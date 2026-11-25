@@ -7,6 +7,9 @@
 //              if a building is split into parts, the parts are drawn and the outline is not). Heights and roofs
 //              are copied as OSM gives them; whatever is missing is filled in later by src/buildings.js, which
 //              marks it as an assumption.
+//              Where OSM maps two solids with walls in the same plane, facing the same way and overlapping (a part
+//              drawn inside a bigger part, mostly), the lower one gets an `inset` of a few centimetres: drawn a hair
+//              smaller, it no longer fights the other for the same pixels (they flickered).
 //   places     buildings that belong to a hand-made place (src/places/) are tagged with that place's key, so the
 //              generic city leaves them out and the place decides what to do with them.
 //   ground     streets, squares, railways/tram, water (including the Bächle) and green areas, for the ground map.
@@ -14,6 +17,7 @@
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { toWorld } from '../src/geo.js';
 import { PLACE_OSM } from '../src/places/osm-ids.js';
+import { resolve } from '../src/buildings.js';
 
 const read = (name) => JSON.parse(readFileSync(`sources/osm/${name}.json`, 'utf8')).elements;
 const cm = (v) => Math.round(v * 100) / 100;
@@ -98,8 +102,8 @@ let skippedOutlines = 0;
 const outlineRings = [];
 for (const e of outlines) {
   for (const rings of polygons(e)) {
-    outlineRings.push({ id: `${e.type[0]}${e.id}`, outer: rings[0] });
     const place = placeOf.get(`${e.type[0]}${e.id}`);
+    outlineRings.push({ id: `${e.type[0]}${e.id}`, outer: rings[0], size: Math.abs(area(rings[0])), place, tags: e.tags ?? {} });
     if (place) placeOutlines.push({ place, outer: rings[0] });
     // does any part sit inside this outline? then the parts stand in for it
     const outer = rings[0];
@@ -109,11 +113,52 @@ for (const e of outlines) {
   }
 }
 for (const p of partPolys) {
-  const owner = placeOutlines.find((o) => inside(o.outer, ...p.c));
-  add(p.e, p.rings, owner?.place);
-  // the outline the part belongs to: all the parts of one building stand on the same ground (src/city.js)
-  const outline = outlineRings.find((o) => inside(o.outer, ...p.c));
-  if (outline) buildings[buildings.length - 1].group = outline.id;
+  // the outline the part belongs to: the one most of it lies in (outlines overlap here and there — the upper floors
+  // of the cinema reach over the theatre's — so its middle alone can fall in the neighbour's), the smaller one if
+  // two hold as much of it. All the parts of one building stand on the same ground (src/city.js), and a hand-made
+  // place gets the parts of its outlines.
+  const probes = [p.c, ...p.rings[0].map(([x, z]) => [x + (p.c[0] - x) * 0.15, z + (p.c[1] - z) * 0.15])];
+  const outline = outlineRings.map((o) => ({ o, n: probes.filter((q) => inside(o.outer, ...q)).length })).filter((c) => c.n > probes.length / 3)
+    // (a relation and its outer way are the same outline twice: the one a place names wins)
+    .sort((a, b) => b.n - a.n || Math.round(a.o.size) - Math.round(b.o.size) || (b.o.place ? 1 : 0) - (a.o.place ? 1 : 0))[0]?.o;
+  add(p.e, p.rings, outline?.place);
+  const b = buildings[buildings.length - 1];
+  if (!outline) continue;
+  b.group = outline.id;
+  // A part that says nothing about its own height or roof takes its building's (OSM's rule is that a part stands on
+  // its own tags; but a part mapped bare inside a building tagged "5 levels, flat" is that, and not the three-storey
+  // gabled house src/buildings.js would otherwise assume).
+  const t = outline.tags;
+  if (b.height == null && b.levels == null) { b.height = num(t.height); b.levels = num(t['building:levels']); }
+  if (!b.roofShape) { b.roofShape = t['roof:shape'] ?? null; if (b.roofShape && b.roofHeight == null && b.roofLevels == null) { b.roofHeight = num(t['roof:height']); b.roofLevels = num(t['roof:levels']); } }
+  b.colour ??= t['building:colour'] ?? null; b.roofColour ??= t['roof:colour'] ?? null;
+}
+
+// Walls in the same plane: the lower solid of each pair (the smaller, if they are as tall) steps in by 5 cm, and
+// further if the one it lost to has stepped in itself.
+{
+  const signed = (r) => { let a = 0; for (let i = 0, j = r.length - 1; i < r.length; j = i++) a += r[j][0] * r[i][1] - r[i][0] * r[j][1]; return a / 2; };
+  const info = buildings.map((b) => {
+    const r = resolve(b), xs = b.rings[0].map((p) => p[0]), zs = b.rings[0].map((p) => p[1]);
+    const edges = b.rings.flatMap((ring, k) => { const sign = Math.sign(signed(ring)) * (k === 0 ? 1 : -1); return ring.map((p, i) => { const q = ring[(i + 1) % ring.length], dx = q[0] - p[0], dz = q[1] - p[1], l = Math.hypot(dx, dz) || 1; return { p, q, n: [(dz / l) * sign, (-dx / l) * sign] }; }); });
+    return { b, lo: r.minH, top: r.wallTop, size: Math.abs(signed(b.rings[0])), box: [Math.min(...xs), Math.min(...zs), Math.max(...xs), Math.max(...zs)], edges };
+  });
+  const lost = []; // [loser, winner]
+  for (let i = 0; i < info.length; i++) for (let j = i + 1; j < info.length; j++) {
+    const A = info[i], B = info[j];
+    if (A.box[0] > B.box[2] || B.box[0] > A.box[2] || A.box[1] > B.box[3] || B.box[1] > A.box[3]) continue;
+    if (Math.min(A.top, B.top) - Math.max(A.lo, B.lo) < 0.5) continue; // (their walls do not meet in height)
+    let shared = 0;
+    for (const e of A.edges) for (const f of B.edges) {
+      if (e.n[0] * f.n[0] + e.n[1] * f.n[1] < 0.999) continue;                                       // facing the same way
+      if (Math.abs((f.p[0] - e.p[0]) * e.n[0] + (f.p[1] - e.p[1]) * e.n[1]) > 0.03) continue;        // in the same plane
+      const along = (pt) => (pt[0] - e.p[0]) * -e.n[1] + (pt[1] - e.p[1]) * e.n[0];
+      shared += Math.max(0, Math.min(Math.max(along(e.p), along(e.q)), Math.max(along(f.p), along(f.q))) - Math.max(Math.min(along(e.p), along(e.q)), Math.min(along(f.p), along(f.q))));
+    }
+    if (shared > 0.3) lost.push(A.top < B.top - 0.01 || (Math.abs(A.top - B.top) <= 0.01 && A.size < B.size) ? [A.b, B.b] : [B.b, A.b]);
+  }
+  for (let round = 0; round < 6; round++) for (const [loser, winner] of lost) loser.inset = Math.max(loser.inset ?? 0, cm((winner.inset ?? 0) + 0.05));
+  console.log(`walls in the same plane: ${lost.length} pairs, ${buildings.filter((b) => b.inset).length} buildings stepped in`);
 }
 
 // ---------------------------------------------------------------------------------------------------------- ground

@@ -132,7 +132,7 @@
    "src": "photos/altes-rathaus-1.webp",
    "width": 1280,
    "height": 835,
-   "caption": "The main portal, 2015.",
+   "caption": "The arch of the former passage to the courtyard, today the main entrance, 2015.",
    "author": "Photo: Andreas Praefcke",
    "date": "2015-06",
    "licence": "CC BY 4.0",
@@ -151,6 +151,18 @@
    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
    "cropped": false,
    "page": "https://commons.wikimedia.org/wiki/File:Freiburg_im_Breisgau,_Turmstra%C3%9Fe_--_2025_--_7957.jpg"
+  },
+  {
+   "src": "photos/altes-rathaus-3.webp",
+   "width": 1280,
+   "height": 925,
+   "caption": "The front on Rathausplatz in 2011: on the left the gable with the clock, the eagle and two bells, over the green arch of the main entrance; along the wing a small doorway and, behind a palm, a second portal; a stepped gable at each end of the long roof.",
+   "author": "user:joergens.mi",
+   "date": "2011-08-29 21:52:30",
+   "licence": "CC BY-SA 3.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:Altes_Rathaus_(Freiburg_im_Breisgau)_4610.jpg"
   }
  ],
  "neues-rathaus": [
@@ -189,6 +201,208 @@
    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
    "cropped": false,
    "page": "https://commons.wikimedia.org/wiki/File:2017-05-02_Neues_Rathaus_(Freiburg_im_Breisgau).jpg"
+  },
+  {
+   "src": "photos/neues-rathaus-4.webp",
+   "width": 1280,
+   "height": 944,
+   "caption": "The front on Rathausplatz in 2011: two gabled houses, each with an oriel on its outer corner, and between them the three arches, the balcony, the clock and the copper bell turret. On the right, the red Altes Rathaus.",
+   "author": "user:joergens.mi",
+   "date": "2011-08-21 08:34:46",
+   "licence": "CC BY-SA 3.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:Neues_Rathaus_(Freiburg)_4029.jpg"
+  }
+ ],
+ "schlossbergturm": [
+  {
+   "src": "photos/schlossbergturm-1.webp",
+   "width": 1280,
+   "height": 2110,
+   "caption": "The tower with its tree trunks, seen from the steps below it, October 2011.",
+   "author": "Andreas Schwarzkopf",
+   "date": "2011-10-03 14:47:43",
+   "licence": "CC BY-SA 3.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:Schlossbergturm_in_Freiburg_7.jpg"
+  },
+  {
+   "src": "photos/schlossbergturm-2.webp",
+   "width": 1280,
+   "height": 2489,
+   "caption": "July 2015, without its trunks: the stair cage and the decks stand alone, held by cables, behind a site fence.",
+   "author": "Andreas Schwarzkopf",
+   "date": "2015-07-15 10:55:35",
+   "licence": "CC BY-SA 3.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:Schlossbergturm_in_Freiburg_ohne_St%C3%BCtzen_3.jpg"
+  },
+  {
+   "src": "photos/schlossbergturm-3.webp",
+   "width": 1280,
+   "height": 2492,
+   "caption": "The tower on its steel posts, January 2020: the stair in its round cage, a ring low down, two decks close under the top and the small pulpit above them.",
+   "author": "Jörg Braukmann",
+   "date": "2020-01-03",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:Schlossbergturm_(Freiburg).jpg"
+  }
+ ],
+ "colombischloessle": [
+  {
+   "src": "photos/colombischloessle-1.webp",
+   "width": 1229,
+   "height": 952,
+   "caption": "The villa seen from Eisenbahnstraße, above a railing and a planted slope, with children standing in the street: a turret on the left, the porch and its balcony on the right, the lantern and its weathervane on the low roof. Photograph by Gottlieb Theodor Hase, after 1861 (shown without its edges).",
+   "author": "Unknown author",
+   "date": "after 1861",
+   "licence": "CC0",
+   "licenceUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+   "cropped": true,
+   "page": "https://commons.wikimedia.org/wiki/File:Colombischl%C3%B6%C3%9Fle,_Blick_von_der_Eisenbahnstra%C3%9Fe_-_Gottlieb_Theodor_Hase_-_Augustiner_M_Freiburg.png"
+  },
+  {
+   "src": "photos/colombischloessle-2.webp",
+   "width": 1280,
+   "height": 870,
+   "caption": "The front in 2011, across the fountain of the park: the porch of three arches with a balcony on it, and the taller middle part between sandstone pilasters.",
+   "author": "joergens.mi",
+   "date": "2011-07-30 11:04:52",
+   "licence": "CC BY-SA 3.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:Colombischl%C3%B6%C3%9Fchen_(Freiburg)_3348.jpg"
+  },
+  {
+   "src": "photos/colombischloessle-3.webp",
+   "width": 1280,
+   "height": 880,
+   "caption": "The south-west side in 2019: brick walls, pilasters and a plinth of red sandstone, a pierced parapet, and a turret at the back.",
+   "author": "Joergens.mi",
+   "date": "2 February 2019, 14:14:38",
+   "licence": "CC BY-SA 3.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:Colombischl%C3%B6%C3%9Fle_(Freiburg_im_Breisgau)_jm90430.jpg"
+  }
+ ],
+ "kollegiengebaeude-1": [
+  {
+   "src": "photos/kollegiengebaeude-1-1.webp",
+   "width": 500,
+   "height": 328,
+   "caption": "The tower of the «Neue Universität» (left) and the dome of the «Neues Theater» (right) over the roofs of the town, as the card labels them. Postcard, dated 1912.",
+   "author": "Unknown author",
+   "date": "1912-01-01",
+   "licence": "Public domain",
+   "licenceUrl": null,
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:Freiburg_-_Synagoge_-_Universit%C3%A4t_-_Theater_-_AK_1912.jpg"
+  },
+  {
+   "src": "photos/kollegiengebaeude-1-2.webp",
+   "width": 1280,
+   "height": 950,
+   "caption": "The south front in July 2009: the portal at the top of its steps between the two seated figures, and five dormers on the slate roof.",
+   "author": "user:Joergens.mi",
+   "date": "2009-07-16",
+   "licence": "CC BY-SA 3.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:Kolleggeb%C3%A4ude_I_Uni.Fr.jpg"
+  },
+  {
+   "src": "photos/kollegiengebaeude-1-3.webp",
+   "width": 1280,
+   "height": 1707,
+   "caption": "The round wing under its copper dome and the tower with its clocks behind it, January 2007.",
+   "author": "Michael Schmalenstroer",
+   "date": "2007-01",
+   "licence": "CC BY-SA 3.0",
+   "licenceUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:Uni_Freiburg_-_KGI.jpg"
+  }
+ ],
+ "universitaetsbibliothek": [
+  {
+   "src": "photos/universitaetsbibliothek-1.webp",
+   "width": 1280,
+   "height": 853,
+   "caption": "June 2025, across the tram tracks: the lower storeys lean out and mirror the square and the buildings opposite, the upper ones lean back and mirror the sky.",
+   "author": "Dietmar Rabich",
+   "date": "20 June 2025, 13:26",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:Freiburg_im_Breisgau,_Universit%C3%A4tsbibliothek_--_2025_--_8092.jpg"
+  },
+  {
+   "src": "photos/universitaetsbibliothek-2.webp",
+   "width": 1280,
+   "height": 652,
+   "caption": "Under a twilight sky in February 2017, with the lights on inside: the long front folded into slanted faces, and the entrance marked «UB».",
+   "author": "Ronald Buck",
+   "date": "2017-02-17",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:Universit%C3%A4tsbibliothek_Freiburg.jpg"
+  },
+  {
+   "src": "photos/universitaetsbibliothek-3.webp",
+   "width": 1280,
+   "height": 960,
+   "caption": "The library of 1978, which stood here before: storeys clad in red-brown panels behind the trees, seen from Platz der Alten Synagoge across a parking place for bicycles and scooters. August 2008.",
+   "author": "Andreas Schwarzkopf",
+   "date": "2008-08-26 11:27",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:2008-08_ehemaliger_Bau_der_Freiburger_Universit%C3%A4tsbibliothek_von_1978,_vorne_der_fr%C3%BChere_Zweiradparkplatz.jpg"
+  }
+ ],
+ "theater": [
+  {
+   "src": "photos/theater-1.webp",
+   "width": 500,
+   "height": 321,
+   "caption": "The theatre with strollers in front of it: the show gable over the curved front on the right, the long flank, and a dome with a lantern over the stage. Colour postcard, about 1910.",
+   "author": "Heinrich Hoffmann",
+   "date": "circa 1910",
+   "licence": "Public domain",
+   "licenceUrl": null,
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:Hoffmann_theater_01.jpg"
+  },
+  {
+   "src": "photos/theater-2.webp",
+   "width": 500,
+   "height": 503,
+   "caption": "The front in September 1960, still with its show gable: the doors, the tall windows with their balconies, the statues in front of the piers, and the pillars with figures by the steps.",
+   "author": "Willy Pragher",
+   "date": "6 September 1960",
+   "licence": "CC BY 3.0 de",
+   "licenceUrl": "https://creativecommons.org/licenses/by/3.0/de/deed.en",
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:Stadttheater_freiburg_1960.jpg"
+  },
+  {
+   "src": "photos/theater-3.webp",
+   "width": 1280,
+   "height": 853,
+   "caption": "June 2025, from the tram crossing: the curved front with the lettering «THEATER FREIBURG» under the cone roof, the north flank, and the stage tower behind.",
+   "author": "JoachimKohler-HB",
+   "date": "2025-06-02 14:20:17",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:Theater_Freiburg_i._Br._(2025).jpg"
   }
  ]
 }

@@ -2,7 +2,8 @@
 
 The old town of Freiburg in 3D, in the browser: every building from OpenStreetMap with its roof, the streets, the
 Bächle, the tram and OSM's trees on the ground, and landmarks modelled by hand: the Münster, the Martinstor and the
-Schwabentor, the Historisches Kaufhaus and the two town halls. Two looks — colour, and an ink engraving.
+Schwabentor, the Historisches Kaufhaus, the two town halls, the Colombischlössle, the Theater, the university's
+Kollegiengebäude I and its library, and the tower on the Schlossberg. Two looks — colour, and an ink engraving.
 
     npm install
     npm run dev          # http://localhost:5173
@@ -69,7 +70,10 @@ screenshots (`node tools/shot.mjs`).
 1. Find its OSM outline. If OSM already has `building:part`s for it, start from those (as the Münster does).
 2. Add `src/places/<key>.js` with `PLACE` and `build(kit, parts)`. The kit (`src/kit.js`) has `box`, `cylinder`,
    `pyramid`, `prism`, `beam` and `put` (any three.js geometry), all in the place's own metres.
-3. List its outline in `src/places/osm-ids.js` and its module in `src/places/index.js`, then `npm run city`.
+3. List its outline in `src/places/osm-ids.js` and its module in `src/places/index.js`, then `npm run city`
+   (and `npm run ages`, so the timeline knows the ground is taken). A landmark OSM maps as a point and not as a
+   building (the Schlossbergturm) lists nothing and places itself at its coordinates.
+   If it was not always there, give `PLACE.since` (the year, with its source): the timeline puts it away before.
 4. `npm run check -- <key>`: it must build, stay under budget (25,000 vertices for a building, 90,000 for a group),
    fall where its coordinates say, and match its sourced height and length.
 

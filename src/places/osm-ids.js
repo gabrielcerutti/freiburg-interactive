@@ -15,4 +15,14 @@ export const PLACE_OSM = {
   // "Neues Rathaus", https://www.openstreetmap.org/relation/6824, and the bridge over Turmstraße to the Altes Rathaus
   // (https://www.openstreetmap.org/way/551176977)
   'neues-rathaus': ['r6824', 'w551176977'],
+  // "Archäologisches Museum Colombischlössle", https://www.openstreetmap.org/way/146291591
+  colombischloessle: ['w146291591'],
+  // "Universitätsbibliothek", https://www.openstreetmap.org/way/219971985
+  universitaetsbibliothek: ['w219971985'],
+  // "Kollegiengebäude I", https://www.openstreetmap.org/relation/5626
+  'kollegiengebaeude-1': ['r5626'],
+  // "Theater Freiburg", https://www.openstreetmap.org/way/113767229, with what OSM maps as outlines of their own
+  // against its front block: the low south wing with the entrance of the Kleines Haus (way 254048365) and the raised
+  // terraces on its south (way 254048364) and north side (ways 113767224 and 113767228)
+  theater: ['w113767229', 'w254048365', 'w254048364', 'w113767224', 'w113767228'],
 };

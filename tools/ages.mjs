@@ -34,7 +34,8 @@
 //   * 1981 and today: everything stands (the plan of 1981 is too small in scale to read house by house).
 //   * a year in OpenStreetMap (start_date) overrides the reading: not standing before it, standing from it on until
 //     the war. For the 70 or so buildings that have one.
-//   * the six hand-made landmarks are not in the list: they stand at every stop (their cards tell their history).
+//   * the hand-made landmarks are not in the list: each stands from the year it says (PLACE.since, src/places/) or,
+//     if it says none, at every stop (their cards tell their history).
 // The lost buildings (assumptions, every one but where they stood): wherever the plan of 1920 draws a building and
 // none of today's buildings stood there in 1920, something else did.
 //   * a public building, drawn on its own (brown: a barracks, a hospital, the old station), is taken whole;
@@ -52,6 +53,7 @@
 // are made up in the viewer (src/city.js). Buildings put up after 1920 and gone since are missing altogether.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import sharp from 'sharp';
+import { PLACES } from '../src/places/index.js';
 
 const STOPS = ['1838', '1875', '1903', '1920', '1944', 'bomben', '1955', '1981'], YEAR = [1838, 1875, 1903, 1920, 1944, 1944.9, 1955, 1981];
 const DEPTH = 13;      // metres: how deep the row of lost houses along a street is taken to be
@@ -205,7 +207,10 @@ function paint(rings, value) {
   }
 }
 keys.forEach((k, gi) => { for (const rings of groups.get(k).rings) paint(rings, gi); });
-for (const b of city.buildings) if (b.place || claimed.has(b.group ?? b.id)) paint(b.rings, -2);
+// (a place that says since when it stands — PLACE.since — and was not there in 1920 leaves its ground free: what the
+// plan of 1920 draws there is a lost building like any other)
+const since = new Map(PLACES.map((p) => [p.PLACE.key, p.PLACE.since ?? -Infinity]));
+for (const b of city.buildings) if ((b.place && since.get(b.place) <= 1920) || (!b.place && claimed.has(b.group ?? b.id))) paint(b.rings, -2);
 
 // what each plan shows under each building: how much of its footprint is built on, destroyed, beyond the sheet
 const seen = new Float64Array(keys.length * 7 * 5), area = new Float64Array(keys.length);

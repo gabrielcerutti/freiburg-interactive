@@ -78,6 +78,22 @@ function clip(poly, [a, b, c]) {
   return out;
 }
 
+/** A footprint (its rings) stepped in by d metres on every side: the outline inwards, the courtyards outwards. */
+export function shrunk(rings, d) {
+  return rings.map((ring, k) => {
+    const sign = Math.sign(signedArea(ring)) * (k === 0 ? 1 : -1), n = ring.length;
+    const out = ring.map((p, i) => { const q = ring[(i + 1) % n], dx = q[0] - p[0], dz = q[1] - p[1], l = Math.hypot(dx, dz); return l < 1e-6 ? null : [(dz / l) * sign, (-dx / l) * sign]; });
+    return ring.map((p, i) => {
+      let a = null, b = out[i];
+      for (let j = 1; j <= n && !a; j++) a = out[(i - j + n) % n];
+      for (let j = 1; j <= n && !b; j++) b = out[(i + j) % n];
+      if (!a || !b) return p;
+      const k2 = d / Math.max(0.3, 1 + a[0] * b[0] + a[1] * b[1]); // (along the corner's bisector, so both walls move by d)
+      return [p[0] - (a[0] + b[0]) * k2, p[1] - (a[1] + b[1]) * k2];
+    });
+  });
+}
+
 // --------------------------------------------------------------------------------------------- what to build, exactly
 /** OSM tags (as tools/city.mjs stores them) -> the numbers the solid needs, and the list of what had to be assumed. */
 export function resolve(b) {
@@ -190,9 +206,13 @@ export class Mesher {
  * `lift`: the height of the ground under it (src/terrain.js). `chimneys`: add assumed chimneys (the generic city).
  * `walls`: what the shader paints on the walls — KIND.WINDOWS (the default: floors of windows, ASSUMED, as OSM does
  * not map them) or KIND.STONE (for churches and towers, whose openings a place draws itself).
+ * A building with an `inset` (tools/city.mjs: its walls share a plane with a taller neighbour's) is drawn that much
+ * smaller all around and lower, so the two do not flicker.
  */
 export function addBuilding(m, b, { walls = KIND.WINDOWS, roof = KIND.TILES, lift = 0, chimneys = false } = {}) {
+  if (b.inset) b = { ...b, rings: shrunk(b.rings, b.inset) };
   const r = resolve(b), P = r.shape === 'flat' ? [] : planes(r), floats = r.minH > 0;
+  if (b.inset) r.wallTop = Math.max(r.minH + 0.3, r.wallTop - b.inset);
   r.minH += lift; r.wallTop += lift; // (`lift`: the height of the ground the building stands on)
   const seed = (hash(b.id) % 1000) / 1000;
   const fWall = [r.minH, r.wallTop, seed, walls], fRoof = [r.wallTop + r.roofH, r.wallTop, seed, roof];
@@ -284,9 +304,12 @@ export function addBuilding(m, b, { walls = KIND.WINDOWS, roof = KIND.TILES, lif
  * The walls are a single skin, to keep the ruins light: their mesh has to be drawn from both sides (src/city.js).
  */
 export function addRuin(m, b, { lift = 0 } = {}) {
-  const r = resolve(b);
+  const r = resolve(b), seed = (hash(b.id) % 1000) / 1000;
   if (r.minH > 0.5) return r;
-  const foot = lift, ground = lift + 0.3, full = Math.max(3.5, r.wallTop), seed = (hash(b.id) % 1000) / 1000;
+  // (each ruin a little inside its footprint, by its own amount: two neighbours' party walls would otherwise lie in
+  // the same plane and, with no roof to hide them, flicker)
+  b = { ...b, rings: shrunk(b.rings, 0.1 + 0.15 * seed) };
+  const foot = lift, ground = lift + 0.3, full = Math.max(3.5, r.wallTop);
   const soot = r.wall.clone().multiplyScalar(0.8).lerp(new THREE.Color('#5a4e43'), 0.3), rubble = new THREE.Color('#9a8f80');
   const fWall = [ground, ground + full, seed, KIND.WINDOWS];
   // how much of the wall is left at a point: the same for every wall that meets there
@@ -307,7 +330,7 @@ export function addRuin(m, b, { lift = 0 } = {}) {
     }
   });
   // the rubble: a bed of it over the whole floor, and a few heaps
-  const v2 = (pts) => pts.map((p) => new THREE.Vector2(p[0], p[1])), all = b.rings.flat(), bed = ground + 0.7;
+  const v2 = (pts) => pts.map((p) => new THREE.Vector2(p[0], p[1])), all = b.rings.flat(), bed = ground + 0.6 + 0.2 * seed;
   for (const [i, j, k] of THREE.ShapeUtils.triangulateShape(v2(b.rings[0]), b.rings.slice(1).map(v2))) {
     m.tri([all[i][0], bed, all[i][1]], [all[j][0], bed, all[j][1]], [all[k][0], bed, all[k][1]], rubble, [0, 1, 0]);
   }

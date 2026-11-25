@@ -11,12 +11,12 @@ export function createLabels(root, camera, { onPick }) {
       el.className = 'label'; el.textContent = text;
       el.addEventListener('click', () => onPick(data, position));
       root.appendChild(el);
-      items.push({ el, position: new THREE.Vector3(...position) });
+      items.push({ el, position: new THREE.Vector3(...position), data });
     },
     update(width, height) {
       for (const it of items) {
         v.copy(it.position).project(camera);
-        const visible = v.z < 1 && Math.abs(v.x) < 1.1 && Math.abs(v.y) < 1.1;
+        const visible = !it.data?.hidden && v.z < 1 && Math.abs(v.x) < 1.1 && Math.abs(v.y) < 1.1; // (hidden: not there at this year)
         it.el.style.display = visible ? '' : 'none';
         if (visible) it.el.style.transform = `translate(${((v.x + 1) / 2) * width}px, ${((1 - v.y) / 2) * height}px) translate(-50%, -100%)`;
       }

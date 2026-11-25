@@ -126,6 +126,10 @@ const timeline = createTimeline(document.getElementById('timeline'), ground, imp
     const i = plan && ages ? ages.stops.indexOf(plan.key) : -1, to = i < 0 ? TODAY : i, s = STOP.uStop.value;
     if (to !== s.y) s.set(s.z >= 0.5 ? s.y : s.x, to, 0); // (from where it is — or was, if it had barely started — to the new stop)
     city.showStops(s.x, s.y);
+    // the hand-made places that say since when they stand (PLACE.since) are not there before
+    const year = plan ? Number(plan.key) || 1944.9 : Infinity; // (the damage map, "bomben", is of November 1944)
+    for (const p of placeMeshes) p.hidden = year < p.since;
+    if (selected?.hidden) select(null);
   },
   about: (plan) => {
     const i = ages ? ages.stops.indexOf(plan.key) : -1; if (i < 0) return '';
@@ -143,6 +147,7 @@ under.material.color.set('#e3dccb'); scene.add(under);
 
 const cityLook = { solid: lookMaterial({ rise: true }), open: lookMaterial({ rise: true }), depth: riseDepthMaterial() };
 cityLook.open.side = THREE.DoubleSide; // (the ruins: walls with no roof, seen from inside too)
+cityLook.open.shadowSide = THREE.FrontSide; // (and a single skin must not shade its own sunlit inside: it came out speckled)
 const city = buildCity(data, cityLook, terrain, ages);
 city.meshes.forEach(outlineCity); scene.add(city.group);
 city.showStops(TODAY, TODAY);
@@ -160,7 +165,7 @@ for (const place of PLACES) {
     const lift = (parts.length ? terrain.lowest(parts.flatMap((b) => b.rings[0])) : terrain.heightAt(anchor[0], anchor[1])) - 0.3;
     mesh.position.y = lift;
     outline(mesh); scene.add(mesh);
-    const entry = { place: place.PLACE, mesh, labelAt: [anchor[0], lift + top + 6, anchor[1]], target: 0 };
+    const entry = { place: place.PLACE, mesh, labelAt: [anchor[0], lift + top + 6, anchor[1]], target: 0, since: place.PLACE.since ?? -Infinity, hidden: false, rise: 1 };
     mesh.userData.entry = entry; placeMeshes.push(entry);
     labels.add(place.PLACE.name, entry.labelAt, entry);
     console.info(place.PLACE.key, kit.mesher.vertices, 'vertices');
@@ -174,7 +179,7 @@ const pickAt = (ev) => {
   const r = renderer.domElement.getBoundingClientRect();
   mouse.set(((ev.clientX - r.left) / r.width) * 2 - 1, -((ev.clientY - r.top) / r.height) * 2 + 1);
   ray.setFromCamera(mouse, camera);
-  const hit = ray.intersectObjects(placeMeshes.map((p) => p.mesh), false)[0];
+  const hit = ray.intersectObjects(placeMeshes.filter((p) => !p.hidden).map((p) => p.mesh), false)[0];
   return hit?.object.userData.entry ?? null;
 };
 let down = null;
@@ -226,7 +231,12 @@ renderer.setAnimationLoop((time) => {
   for (const m of [edgeMaterial, cityEdgeMaterial]) { m.opacity = 0.3 + 0.65 * ink; m.linewidth = (0.9 + 0.7 * ink) * renderer.getPixelRatio(); }
   STOP.uStop.value.z = Math.min(1, STOP.uStop.value.z + dt / 1.8); // (the timeline: the buildings that come and go)
   if (STOP.uStop.value.z === 1) city.showStops(STOP.uStop.value.y, STOP.uStop.value.y); // (arrived: what is left of the stop before is put away)
-  for (const p of placeMeshes) { const h = p.mesh.material.userData.highlight, to = Math.max(p.target, p.hover ? 0.45 : 0); h.value += (to - h.value) * Math.min(1, dt * 6); }
+  for (const p of placeMeshes) {
+    const h = p.mesh.material.userData.highlight, to = Math.max(p.target, p.hover ? 0.45 : 0); h.value += (to - h.value) * Math.min(1, dt * 6);
+    // (a place that is not there yet at this year sinks into the ground, like the city's buildings, and rises back)
+    const want = p.hidden ? 0 : 1; p.rise += Math.sign(want - p.rise) * Math.min(Math.abs(want - p.rise), dt / 1.2);
+    p.mesh.visible = p.rise > 0.002; p.mesh.scale.y = Math.max(p.rise * p.rise * (3 - 2 * p.rise), 0.002);
+  }
   if (flight) {
     flight.t = Math.min(1, flight.t + dt / 1.4);
     const e = flight.t < 0.5 ? 2 * flight.t * flight.t : 1 - (-2 * flight.t + 2) ** 2 / 2;
