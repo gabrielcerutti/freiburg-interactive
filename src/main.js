@@ -8,12 +8,15 @@ import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
 import { buildGround } from './ground.js';
 import { createTimeline } from './timeline.js';
 import { buildCity, TODAY } from './city.js';
+import { Mesher, addRuin } from './buildings.js';
 import { buildTrees } from './trees.js';
 import { startPlace } from './kit.js';
 import { PLACES } from './places/index.js';
 import { createLabels, showCard } from './labels.js';
-import { LOOK, STOP, INK, PAPER, lookMaterial, riseDepthMaterial, riseLines, setLightFull } from './look.js';
+import { LOOK, STOP, INK, lookMaterial, riseDepthMaterial, riseLines, setLightFull } from './look.js';
 import { loadTerrain } from './terrain.js';
+import { buildSky, SKY } from './sky.js';
+import { createSearch } from './search.js';
 
 const app = document.getElementById('app'), status = document.getElementById('status');
 
@@ -34,8 +37,9 @@ renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFShadowMap;
 app.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
-const SKY = { colour: new THREE.Color('#dcd6c8'), ink: PAPER.clone().multiplyScalar(0.97) };
-scene.background = SKY.colour.clone(); scene.fog = new THREE.Fog(SKY.colour.clone(), 1200, 3200);
+// the sky (src/sky.js): blue overhead, haze at the horizon; the fog is that haze, so the far city fades into it
+scene.background = SKY.haze.clone(); scene.fog = new THREE.Fog(SKY.haze.clone(), 1200, 3200);
+const sky = buildSky(); scene.add(sky);
 
 const camera = new THREE.PerspectiveCamera(40, 1, 2, 8000);
 camera.position.set(-330, 260, 380);
@@ -100,12 +104,15 @@ function select(entry) {
   if (!entry) { card.hidden = true; return; }
   showCard(card, entry.place);
   card.querySelector('.close').onclick = () => select(null);
-  const [x, y, z] = entry.labelAt;
-  const g = terrain.heightAt(x, z), target = new THREE.Vector3(x, g + Math.min((y - g) * 0.4, 45), z);
-  const offset = camera.position.clone().sub(controls.target).setLength(Math.max(160, (y - g) * 2.4));
+  const [x, y, z] = entry.labelAt, g = terrain.heightAt(x, z);
+  flyTo(x, g + Math.min((y - g) * 0.4, 45), z, Math.max(160, (y - g) * 2.4));
+}
+/** the camera goes to look at a point from `distance` metres, keeping the side it is looking from */
+function flyTo(x, y, z, distance) {
+  const target = new THREE.Vector3(x, y, z), offset = camera.position.clone().sub(controls.target).setLength(distance);
   flight = { t: 0, fromP: camera.position.clone(), fromT: controls.target.clone(), toP: target.clone().add(offset), toT: target };
 }
-const labels = createLabels(document.getElementById('labels'), camera, { onPick: (entry) => select(entry) });
+const labels = createLabels(document.getElementById('labels'), camera, { onPick: (entry, at) => (entry ? select(entry) : flyTo(at[0], at[1] - 8, at[2], 230)) });
 
 // --------------------------------------------------------------------------------------------------------- the data
 status.textContent = 'Loading the city…';
@@ -118,6 +125,29 @@ const [data, terrain, ages] = await Promise.all([
 
 const ground = buildGround(data, terrain);
 scene.add(ground.mesh, ground.lines);
+// What the note under the years says: what changed by that year, in a visitor's words. The numbers are counts of
+// public/data/ages.json (which buildings each plan shows: an estimate, and the note says so), rounded to the ten; the
+// landmarks are the hand-made places with a year of their own (PLACE.since, sourced in each file).
+function yearNote(plan) {
+  const n = (v) => v.toLocaleString('en'), about = (v) => `about ${n(Math.round(v / 10) * 10)}`;
+  if (!plan || !ages) return `<b>Today.</b> The city as OpenStreetMap maps it${ages ? `: ${n(ages.buildings)} buildings` : ''}. Pick a year to see how much of it stood then.`;
+  const i = ages.stops.indexOf(plan.key); if (i < 0) return '';
+  const year = (k) => Number(ages.stops[k]) || 1944.9, label = (k) => (ages.stops[k] === 'bomben' ? 'November 1944' : ages.stops[k]);
+  const lost = ages.lostCounts?.[i] ?? 0, ruins = ages.ruins?.[i] ?? 0, more = i ? ages.counts[i] - ages.counts[i - 1] : 0;
+  const gone = lost ? ` Another ${about(lost)} stood that are gone today: they are drawn as plain houses, their shapes assumed.` : '';
+  let text;
+  if (ruins) text = `<b>After the air raid of 27 November 1944.</b> ${about(ruins).replace(/^a/, 'A')} buildings lay in ruins or were too damaged to live in; ${about(ages.counts[i] + lost)} still stood. How much of each ruin was left is assumed.`;
+  else if (!i) text = `<b>${label(i)}.</b> The oldest plan here. ${about(ages.counts[i]).replace(/^a/, 'A')} of today’s ${n(ages.buildings)} buildings already stood.${gone}`;
+  else text = `<b>${label(i)}.</b> ${more > 0 ? `${about(more).replace(/^a/, 'A')} of today’s buildings went up since ${label(i - 1)}: ` : ''}${about(ages.counts[i])} of ${n(ages.buildings)} ${more > 0 ? 'now stood' : 'stood'}.${gone}`;
+  const fresh = PLACES.map((p) => p.PLACE).filter((p) => p.since > (i ? year(i - 1) : -Infinity) && p.since <= year(i) && i).sort((a, b) => a.since - b.since);
+  if (fresh.length) text += ` New among the landmarks: ${fresh.map((p) => `${p.name} (${p.since})`).join(', ')}.`;
+  // (what the raid did to the landmarks: each place's file says, with its source)
+  const fate = (state, at) => PLACES.map((p) => p.PLACE).filter((p) => p.war?.state === state && !(p.since > at) && (state !== 'ruin' || at < (p.war.rebuilt ?? 1945))).map((p) => p.name).join(', ');
+  if (ruins) { const r = fate('ruin', year(i)), d = fate('damaged', year(i)), ok = fate('spared', year(i)); text += ` Among the landmarks${r ? `, in ruins: ${r}` : ''}${d ? `${r ? ';' : ','} damaged: ${d}` : ''}${ok ? `${r || d ? ';' : ','} spared: ${ok}` : ''}.`; }
+  else if (year(i) > 1945 && fate('ruin', year(i))) text += ` Still in ruins among the landmarks: ${fate('ruin', year(i))}.`;
+  return `${text} <i>Read off the city’s old plans: an estimate, not recorded dates.</i>`;
+}
+
 // the timeline: an old plan on the ground for each year (it has its own streams, and for long no tram: the ribbons go)
 // and the buildings that stood then, as far as the plans tell — they rise and sink as the year changes (see the loop)
 const timeline = createTimeline(document.getElementById('timeline'), ground, import.meta.env.BASE_URL, {
@@ -128,17 +158,10 @@ const timeline = createTimeline(document.getElementById('timeline'), ground, imp
     city.showStops(s.x, s.y);
     // the hand-made places that say since when they stand (PLACE.since) are not there before
     const year = plan ? Number(plan.key) || 1944.9 : Infinity; // (the damage map, "bomben", is of November 1944)
-    for (const p of placeMeshes) p.hidden = year < p.since;
+    for (const p of placeMeshes) { p.hidden = year < p.since; if (p.ruin) p.ruined = year >= 1944.9 && year < p.ruinUntil; }
     if (selected?.hidden) select(null);
   },
-  about: (plan) => {
-    const i = ages ? ages.stops.indexOf(plan.key) : -1; if (i < 0) return '';
-    const n = (v) => v.toLocaleString('en'), lost = ages.lostCounts?.[i] ?? 0, ruins = ages.ruins?.[i] ?? 0;
-    return `Buildings: ${n(ages.counts[i])} of today’s ${n(ages.buildings)}`
-      + (lost ? `, and ${n(lost)} that are gone, drawn as plain houses where the plan of 1920 shows a building (their shapes are assumed)` : '')
-      + (ruins ? `; ${n(ruins)} in ruins (how much of each was left is assumed)` : '')
-      + '. All of it read off the plans: an estimate, not recorded dates.';
-  },
+  about: yearNote,
 });
 // the paper beyond the map, well below the lowest ground so the two never fight over the same pixels
 const low = terrain.min;
@@ -154,6 +177,8 @@ city.showStops(TODAY, TODAY);
 const trees = buildTrees(data, terrain); scene.add(trees.group);
 console.info('city', city.stats, 'trees', trees.count, 'of them in woods', trees.inWoods);
 
+// (a ruin's walls are a single skin: drawn from both sides, and not shading their own sunlit inside)
+const ruinLook = () => { const m = lookMaterial(); m.side = THREE.DoubleSide; m.shadowSide = THREE.FrontSide; return m; };
 for (const place of PLACES) {
   const kit = startPlace();
   try {
@@ -167,6 +192,17 @@ for (const place of PLACES) {
     outline(mesh); scene.add(mesh);
     const entry = { place: place.PLACE, mesh, labelAt: [anchor[0], lift + top + 6, anchor[1]], target: 0, since: place.PLACE.since ?? -Infinity, hidden: false, rise: 1 };
     mesh.userData.entry = entry; placeMeshes.push(entry);
+    // A place the raid of 27 November 1944 left in ruins (PLACE.war, sourced in its file) has a second shape: the
+    // shell of its outline, made like the city's ruins. It takes the place's place from that stop until the year it
+    // stood again (`rebuilt`; where no source gives one, only at the stop of November 1944).
+    const war = place.PLACE.war;
+    if (war?.state === 'ruin' && parts.length) {
+      const m = new Mesher(); for (const b of parts) addRuin(m, b, { lift: 0 });
+      const ruin = new THREE.Mesh(m.toGeometry(), ruinLook()); ruin.position.y = lift; ruin.castShadow = ruin.receiveShadow = true; ruin.visible = false;
+      const lines = new LineSegments2(new LineSegmentsGeometry().setPositions(m.seg), edgeMaterial); lines.raycast = () => {}; ruin.add(lines);
+      ruin.userData.entry = entry; scene.add(ruin);
+      Object.assign(entry, { ruin, ruinRise: 0, ruined: false, ruinUntil: war.rebuilt ?? 1945 });
+    }
     labels.add(place.PLACE.name, entry.labelAt, entry);
     console.info(place.PLACE.key, kit.mesher.vertices, 'vertices');
   } catch (e) { console.warn(`could not build ${place.PLACE.key}:`, e); }
@@ -179,7 +215,7 @@ const pickAt = (ev) => {
   const r = renderer.domElement.getBoundingClientRect();
   mouse.set(((ev.clientX - r.left) / r.width) * 2 - 1, -((ev.clientY - r.top) / r.height) * 2 + 1);
   ray.setFromCamera(mouse, camera);
-  const hit = ray.intersectObjects(placeMeshes.filter((p) => !p.hidden).map((p) => p.mesh), false)[0];
+  const hit = ray.intersectObjects(placeMeshes.filter((p) => !p.hidden).map((p) => (p.ruined ? p.ruin : p.mesh)), false)[0];
   return hit?.object.userData.entry ?? null;
 };
 let down = null;
@@ -195,6 +231,52 @@ renderer.domElement.addEventListener('pointermove', (ev) => {
   for (const p of placeMeshes) p.hover = p === hit;
 });
 
+// ------------------------------------------------------------------------------------------- the address search
+// A found address gets a red tag and the camera goes there. What is said about it comes from the same estimate as the
+// timeline: since which plan a building shows on that spot (the spot, not necessarily the same house).
+const insideRing = (ring, x, z) => { let inside = false; for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) { const [xi, zi] = ring[i], [xj, zj] = ring[j]; if (zi > z !== zj > z && x < ((xj - xi) * (z - zi)) / (zj - zi) + xi) inside = !inside; } return inside; };
+const toRing = (ring, x, z) => { let best = Infinity; for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) { const [ax, az] = ring[j], [bx, bz] = ring[i], l = (bx - ax) ** 2 + (bz - az) ** 2 || 1, t = Math.max(0, Math.min(1, ((x - ax) * (bx - ax) + (z - az) * (bz - az)) / l)); best = Math.min(best, Math.hypot(x - ax - t * (bx - ax), z - az - t * (bz - az))); } return best; };
+function buildingAt(x, z) {
+  let near = null, d = 8; // (an address is often a point at the door: the nearest wall within 8 m counts)
+  for (const b of data.buildings) {
+    if (b.type === 'part' && !b.place) continue;
+    if (insideRing(b.rings[0], x, z)) return b;
+    const k = toRing(b.rings[0], x, z); if (k < d) { d = k; near = b; }
+  }
+  return near;
+}
+function spotNote(x, z) {
+  const b = buildingAt(x, z);
+  if (!b) return '<br>No building at this point today.';
+  const place = b.place && placeMeshes.find((p) => p.place.key === b.place);
+  if (place) return `<br>This is the ${place.place.name}: its label opens its story.`;
+  if (!ages) return '';
+  const when = ages.standing[b.group ?? b.id] ?? '1'.repeat(ages.stops.length); // (the file leaves out those standing at every stop)
+  const label = (k) => (ages.stops[k] === 'bomben' ? 'November 1944' : ages.stops[k]), first = when.search(/[12]/);
+  const text = first < 0 ? `The building here is newer than the plan of ${label(when.length - 1)}.`
+    : first === 0 ? `A building already stands on this spot on the oldest plan, of ${label(0)}.`
+    : `A building stands on this spot from the plan of ${label(first)} on; the plan of ${label(first - 1)} shows none.`;
+  return `<br>${text}${when.includes('2') ? ' The damage map of November 1944 marks it as heavily damaged or lost.' : ''}<small>Read off the city’s old plans: an estimate, and of the spot, not of the house.</small>`;
+}
+let foundLabel = null;
+const dropFound = () => { if (foundLabel) labels.remove(foundLabel); foundLabel = null; };
+const search = createSearch(document.getElementById('search'), document.getElementById('search-note'), {
+  onFound: ({ name, x, z, exact }) => {
+    dropFound(); select(null);
+    const g = terrain.heightAt(x, z);
+    foundLabel = labels.add(name, [x, g + 16, z], null, 'found');
+    flyTo(x, g + 8, z, 230);
+    return exact ? spotNote(x, z) : '<small>This is the street. With a house number, the search also says since when a building stands there.</small>';
+  },
+  onClear: dropFound,
+});
+
+// ------------------------------------------------------------------------------------------- the «?»
+const aboutButton = document.getElementById('about-button'), aboutBox = document.getElementById('about');
+const showAbout = (on) => { aboutBox.hidden = !on; aboutButton.setAttribute('aria-expanded', String(on)); };
+aboutButton.addEventListener('click', () => showAbout(aboutBox.hidden));
+addEventListener('pointerdown', (ev) => { if (!aboutBox.hidden && !aboutBox.contains(ev.target) && ev.target !== aboutButton) showAbout(false); });
+
 // ------------------------------------------------------------------------------------------- colour ⇄ ink
 const lookButton = document.getElementById('look');
 let inkTarget = 0;
@@ -208,11 +290,11 @@ lookButton.addEventListener('click', () => setLook(!inkTarget));
 addEventListener('keydown', (ev) => {
   if (ev.target instanceof HTMLInputElement) return;
   if (ev.key === 'c' || ev.key === 'C') setLook(!inkTarget);
-  if (ev.key === 'Escape') select(null);
+  if (ev.key === 'Escape') { select(null); showAbout(false); }
 });
 setLook(false);
 
-window.lab = { scene, camera, controls, renderer, city: city.stats, setLook, plan: (key) => timeline.then((t) => t?.show(key)), select: (key) => select(placeMeshes.find((p) => p.place.key === key) ?? null) };
+window.lab = { search: (text) => search.search(text), scene, camera, controls, renderer, city: city.stats, setLook, plan: (key) => timeline.then((t) => t?.show(key)), select: (key) => select(placeMeshes.find((p) => p.place.key === key) ?? null) };
 
 // ---------------------------------------------------------------------------------------------------- the main loop
 function resize() {
@@ -227,15 +309,20 @@ renderer.setAnimationLoop((time) => {
   LOOK.uTime.value += dt;
   // the look eases from one to the other
   const ink = (LOOK.uInk.value += Math.sign(inkTarget - LOOK.uInk.value) * Math.min(Math.abs(inkTarget - LOOK.uInk.value), dt / 0.6));
-  scene.background.lerpColors(SKY.colour, SKY.ink, ink); scene.fog.color.copy(scene.background);
+  scene.background.lerpColors(SKY.haze, SKY.paper, ink); scene.fog.color.copy(scene.background);
   for (const m of [edgeMaterial, cityEdgeMaterial]) { m.opacity = 0.3 + 0.65 * ink; m.linewidth = (0.9 + 0.7 * ink) * renderer.getPixelRatio(); }
   STOP.uStop.value.z = Math.min(1, STOP.uStop.value.z + dt / 1.8); // (the timeline: the buildings that come and go)
   if (STOP.uStop.value.z === 1) city.showStops(STOP.uStop.value.y, STOP.uStop.value.y); // (arrived: what is left of the stop before is put away)
   for (const p of placeMeshes) {
     const h = p.mesh.material.userData.highlight, to = Math.max(p.target, p.hover ? 0.45 : 0); h.value += (to - h.value) * Math.min(1, dt * 6);
     // (a place that is not there yet at this year sinks into the ground, like the city's buildings, and rises back)
-    const want = p.hidden ? 0 : 1; p.rise += Math.sign(want - p.rise) * Math.min(Math.abs(want - p.rise), dt / 1.2);
-    p.mesh.visible = p.rise > 0.002; p.mesh.scale.y = Math.max(p.rise * p.rise * (3 - 2 * p.rise), 0.002);
+    const ease = (v) => Math.max(v * v * (3 - 2 * v), 0.002), towards = (v, want) => v + Math.sign(want - v) * Math.min(Math.abs(want - v), dt / 1.2);
+    p.rise = towards(p.rise, p.hidden || p.ruined ? 0 : 1);
+    p.mesh.visible = p.rise > 0.002; p.mesh.scale.y = ease(p.rise);
+    if (p.ruin) { // (its ruin comes up as the place goes down, and the other way round)
+      p.ruinRise = towards(p.ruinRise, p.ruined && !p.hidden ? 1 : 0);
+      p.ruin.visible = p.ruinRise > 0.002; p.ruin.scale.y = ease(p.ruinRise); p.ruin.material.userData.highlight.value = h.value;
+    }
   }
   if (flight) {
     flight.t = Math.min(1, flight.t + dt / 1.4);
@@ -244,6 +331,7 @@ renderer.setAnimationLoop((time) => {
     if (flight.t === 1) flight = null;
   }
   controls.update();
+  sky.position.copy(camera.position);
   aimSun();
   renderer.render(scene, camera);
   labels.update(app.clientWidth, app.clientHeight);

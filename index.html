@@ -11,10 +11,18 @@
     <div id="app"></div>
     <div id="labels"></div>
 
-    <header class="title">
-      <h1>Freiburg im Breisgau</h1>
-      <p>The old town in 3D</p>
-    </header>
+    <div class="left">
+      <header class="title">
+        <h1>Freiburg im Breisgau</h1>
+        <p>The old town in 3D</p>
+      </header>
+      <form id="search" role="search">
+        <input type="search" placeholder="Find an address of today" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" aria-label="Find an address of today" />
+        <button type="button" class="clear" aria-label="Clear the search" title="Clear">×</button>
+        <button type="submit" class="go">Search</button>
+      </form>
+      <div id="search-note" aria-live="polite" hidden></div>
+    </div>
 
     <p id="status">Loading…</p>
     <aside id="card" hidden></aside>
@@ -26,11 +34,22 @@
       <button id="look" title="Switch between colour and ink (C)" aria-pressed="false">Ink</button>
     </nav>
 
-    <footer class="credits">
-      Map data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a> (ODbL) · Terrain: <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">Terrain Tiles</a> (Copernicus EU-DEM, SRTM)
-      · Old plans: <a href="https://geoportal.freiburg.de/freigis/" target="_blank" rel="noopener">Datengrundlage: Stadt Freiburg, www.freiburg.de</a> (<a href="https://www.govdata.de/dl-de/by-2-0" target="_blank" rel="noopener">dl-de/by-2-0</a>)
-      · Drag to move, scroll to zoom, right-drag to turn, C for colour or ink
-    </footer>
+    <!-- the «?»: how to move, what is shown and whose data it is. Put away until asked for, so it does not cover the map -->
+    <button id="about-button" title="How to move, what you are looking at, and credits" aria-label="About this map" aria-expanded="false" aria-controls="about">?</button>
+    <aside id="about" hidden>
+      <h2>How to move</h2>
+      <p>Drag to move, scroll to zoom, right-drag (or two fingers) to turn. Click a label, or a building that lights up, for its story and photos. <b>C</b> switches between colour and ink.</p>
+      <h2>What you are looking at</h2>
+      <p>«Today» is the city as OpenStreetMap maps it. Each year lays an old plan of the city on the ground and shows the buildings that stood then. Which ones stood is read off those plans: an estimate, not recorded dates. The buildings that are gone and the ruins of November 1944 are drawn where the plans show them; their shapes are assumed.</p>
+      <h2>Credits</h2>
+      <p>
+        Map data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a> (ODbL).
+        Terrain: <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">Terrain Tiles</a> (Copernicus EU-DEM, SRTM).
+        Old plans: <a href="https://geoportal.freiburg.de/freigis/" target="_blank" rel="noopener">Datengrundlage: Stadt Freiburg, www.freiburg.de</a> (<a href="https://www.govdata.de/dl-de/by-2-0" target="_blank" rel="noopener">dl-de/by-2-0</a>).
+        Address search: <a href="https://nominatim.org" target="_blank" rel="noopener">Nominatim</a>, with OpenStreetMap data; what you type in the search box is sent to it.
+        Photos: credited under each one.
+      </p>
+    </aside>
 
     <script>
       // If the viewer cannot start, say why instead of "Loading…" for ever. (Only while it is still loading: the

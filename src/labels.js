@@ -6,13 +6,16 @@ import { photosOf, cardPhotosHtml, openViewer } from './photos.js';
 export function createLabels(root, camera, { onPick }) {
   const items = [], v = new THREE.Vector3();
   return {
-    add(text, position, data) {
+    /** `kind`: one more class for the tag (the address that was searched for is drawn apart). Gives the label back, for remove(). */
+    add(text, position, data, kind = '') {
       const el = document.createElement('button');
-      el.className = 'label'; el.textContent = text;
+      el.className = `label ${kind}`.trim(); el.textContent = text;
       el.addEventListener('click', () => onPick(data, position));
       root.appendChild(el);
-      items.push({ el, position: new THREE.Vector3(...position), data });
+      const item = { el, position: new THREE.Vector3(...position), data };
+      items.push(item); return item;
     },
+    remove(item) { const i = items.indexOf(item); if (i >= 0) { items.splice(i, 1); item.el.remove(); } },
     update(width, height) {
       for (const it of items) {
         v.copy(it.position).project(camera);
@@ -43,7 +46,7 @@ export function showCard(el, place) {
       ${c.text.map((t) => `<p>${esc(t)}</p>`).join('')}
       <div class="photos rest"></div>
       <details><summary>Sources</summary><ul>${place.sources.map((s) => `<li>${esc(s)}</li>`).join('')}</ul></details>
-      <details><summary>What is assumed</summary><ul>${place.assumptions.map((s) => `<li>${esc(s)}</li>`).join('')}</ul></details>
+      <details><summary>What is assumed</summary><ul>${[...place.assumptions, ...(place.war?.state === 'ruin' ? ['At the years when it lay in ruins it is drawn as a roofless shell of its outline, like the other ruins: how much of each wall still stood is assumed.'] : [])].map((s) => `<li>${esc(s)}</li>`).join('')}</ul></details>
     </div>`;
   el.hidden = false;
   el.querySelector('.close').onclick = () => { el.hidden = true; };

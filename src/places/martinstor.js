@@ -27,6 +27,7 @@ export const PLACE = {
   localName: 'Martin’s Gate',
   kind: 'building',
   built: { from: 1238, rebuilt: 1901 }, // first mentioned 1238; raised in 1901 (both Wikipedias)
+  war: { state: 'spared', rebuilt: null, source: 'German Wikipedia, «Freiburg im Breisgau»: «die beiden noch erhaltenen mittelalterlichen Stadttore blieben nahezu unversehrt» (air raid of 27 November 1944); the city’s damage map of the raid leaves the gate unmarked' },
   coordinates: [47.993712, 7.848921], // en.wikipedia "Martinstor", infobox
   osm: 'w1105286648',
   checks: {
@@ -36,6 +37,7 @@ export const PLACE = {
     'English Wikipedia, «Martinstor»: coordinates (47.993712 N, 7.848921 E); timbers dated to 1202 by dendrochronology; first mentioned in 1238 as «Porta Sancti Martini»; in 1901, under Carl Schäfer, «heightened from 22 to 60 metres» with a roof in the style of the 15th century, and a second gate built next to it',
     'German Wikipedia, «Martinstor»: the footprint, 10 by 11 metres; the work done in summer 1901 by builder Eugen Schmidt, topping-out on 28 August and completion on 14 October 1901 with the opening of the tram; the steep roof first of green glazed tiles, later covered in copper; Schäfer’s proposal of 66 metres; the picture of St Martin on the town side, removed in 1968/69',
     'Wikimedia Commons, «Freiburg im Breisgau, Martinstor -- 2025 -- 8005» (Dietmar Rabich, CC BY-SA 4.0): the colours — white plaster, red sandstone corners and turrets, green roofs — and the clock',
+    'German Wikipedia, «Freiburg im Breisgau»: «Ein großer Teil der historischen Altstadt wurde beim Bombenangriff am 27. November 1944 zerstört. Das Münster, die Südostecke des Münsterplatzes mit Historischem Kaufhaus, Wentzingerhaus und Alter Wache sowie die beiden noch erhaltenen mittelalterlichen Stadttore blieben nahezu unversehrt»; «Kaiser-Joseph-Straße (Freiburg im Breisgau)»: «Im Zweiten Weltkrieg zerstörten Bombardierungen die meisten Gebäude zwischen Siegesdenkmal und Martinstor völlig»; the city’s damage map of the air raid of 27 November 1944 (1:10,000; the viewer’s «Nov 1944» plan, whose legend reads black, heavy damage to total loss, not habitable; blue, light to medium damage, habitable): the gate is not marked',
     'OpenStreetMap, way 1105286648 and its 6 building:parts: footprint, heights and roofs of the tower and its turrets; way 53799627: the passage through the gate',
   ],
   assumptions: [
@@ -49,6 +51,7 @@ export const PLACE = {
     text: [
       'The gate is first mentioned in 1238, as the Porta Sancti Martini. Timbers inside it have been dated to 1202.',
       'In 1901 Carl Schäfer raised it and gave it a roof in the style of the 15th century, and a second, wider gateway was built beside it. The work was finished on 14 October 1901, when the tram opened. The steep roof first had green glazed tiles and was later covered in copper.',
+      'In the Second World War bombing destroyed most of the buildings on Kaiser-Joseph-Straße between the Siegesdenkmal and the gate. The gate itself came through the air raid of 27 November 1944 nearly unharmed.',
       'From the 17th century a picture of St Martin decorated the town side. It was removed in 1968–69.',
       'The sources do not agree on its height: the English Wikipedia gives 60 metres (22 before 1901), OpenStreetMap 53. The model uses OpenStreetMap’s. The size of the archway and the windows are guesses.',
     ],

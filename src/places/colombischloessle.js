@@ -41,6 +41,8 @@ export const PLACE = {
   kind: 'building',
   built: { from: 1859, to: 1861 }, // de: «wurde 1859 bis 1861 … errichtet»; en: «built between 1859 and 1861»
   since: 1861, // (the year it was finished, same sources: it is not there at the stop of 1838 and stands from 1875 on)
+  // No written account of the villa in the raid was found: the state rests on the city’s damage map alone.
+  war: { state: 'damaged', rebuilt: null, source: 'City of Freiburg, damage map after the air raid of 27 November 1944 (the viewer’s «Nov 1944» plan): the villa is marked blue, which its legend gives as light to medium damage, habitable; German Wikipedia, «Colombischlössle»: «Von 1947 bis 1952 … Sitz der Staatskanzlei»' },
   coordinates: [47.99774, 7.84618], // en.wikipedia «Colombischlössle Freiburg», geo data (de.wikipedia «Colombischlössle»: 47.997713, 7.846174)
   osm: 'w146291591',
   sources: [
@@ -51,6 +53,7 @@ export const PLACE = {
     'Wikimedia Commons, «Colombischlößchen (Freiburg) 3348» (joergens.mi, 2011, CC BY-SA 3.0): the front — materials and colours, the porch of three arches with its balcony, the windows, the parapets',
     'Wikimedia Commons, «Colombischlößle (Freiburg im Breisgau) jm90430» (Joergens.mi, 2019, CC BY-SA 3.0): the south-west side — five bays, the two pilasters, the turret',
     'Wikimedia Commons, «Ansicht von Westen (Rückseite) des Colombischlössles in Freiburg» (Andreas Schwarzkopf, 2016, CC BY-SA 3.0): the back — two eight-sided turrets one storey taller than the roof, the windows and balconies between them',
+    'City of Freiburg, damage map of the air raid of 27 November 1944 (1:10,000; the viewer’s «Nov 1944» plan, whose legend reads black, heavy damage to total loss, not habitable; blue, light to medium damage, habitable): the villa is marked blue. None of the pages read (German and English Wikipedia on the villa and on the museum, the raid’s article, the museum’s page) says what the raid did to it',
     'OpenStreetMap, way 146291591 and its 12 building:parts: the footprints, the levels (2; turrets 3), the roof shapes (pyramidal, hipped, flat) and roof:colour grey. No heights',
   ],
   assumptions: [
@@ -67,7 +70,7 @@ export const PLACE = {
     text: [
       'The villa was built between 1859 and 1861 as the widow’s residence of Maria Antonia Gertrudis de Colombi y de Bode (1809–1863). The German Wikipedia calls her a countess («Gräfin»), the English one a duchess. It stands on the former Bastion Saint Louis of the town’s fortifications, which had been filled in and turned into a garden.',
       'The Freiburg architect Georg Jakob Schneider drew the plans, in the Gothic Tudor style of medieval England, following his teacher Friedrich Eisenlohr. The house cost about 300,000 Goldmark. A glass roof lights the stairwell in the middle.',
-      'The town bought the villa in 1899. It was the municipal art museum from 1909 to 1923 and the seat of the state government of Baden under Leo Wohleb from 1947 to 1952; then it housed courts until 1977. Since 1983 it has been the archaeological museum. The park has been open to the public since 1906.',
+      'The town bought the villa in 1899. It was the municipal art museum from 1909 to 1923. The city’s damage map of the air raid of 27 November 1944 marks the villa with light to medium damage; no written account of it was found. From 1947 to 1952 it was the seat of the state government of Baden under Leo Wohleb; then it housed courts until 1977. Since 1983 it has been the archaeological museum. The park has been open to the public since 1906.',
       'The footprints are OpenStreetMap’s, which maps the two turrets round; the photos show eight sides. No source gives a height: all heights, the roof, the windows and the parapets are read off photographs, and the north-east side, which those photos do not show, is drawn like the south-west one.',
     ],
   },

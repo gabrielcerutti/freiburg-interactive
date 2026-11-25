@@ -47,6 +47,8 @@ export const PLACE = {
   localName: 'New Town Hall',
   kind: 'building',
   built: { from: 1539, converted: [1896, 1901] }, // «Zum Rechen» 1539–1545; bought by the city 1896, converted until 1901
+  // Which part was hit is not said anywhere found; «einigermaßen instandgesetzt» by July 1946 is the only date.
+  war: { state: 'damaged', rebuilt: 1946, source: 'Gerhard Dangel, «Welte Glockenspiel Freiburg Rathaus» (Waldkircher Orgelbau Jäger & Brommer): «Im Zweiten Weltkrieg … wurde das Rathaus und damit auch das Glockenspiel erheblich beschädigt. Nachdem das Gebäude wieder einigermaßen instandgesetzt war, wurde die Firma Welte am 9. Juli 1946 erneut beauftragt»; the city’s damage map of the raid of 27 November 1944 marks it blue, light to medium damage (only «beschädigt», and no word of a fire: the weaker state)' },
   coordinates: [47.996046, 7.849225], // de.wikipedia «Rathaus (Freiburg im Breisgau)», infobox for the Neues Rathaus
   osm: 'r6824',
   sources: [
@@ -56,6 +58,8 @@ export const PLACE = {
     'Wikimedia Commons, «Neues Rathaus in Freiburg i. Br. (2025)» (JoachimKohler-HB, CC BY-SA 4.0) and «Neues Rathaus Freiburg 03» (Giftzwerg 88, 2023, CC BY-SA 4.0): the front from either side — the oriels on the corners of Rathausgasse and Turmstraße, with their stone lower storey, corbels and copper roofs; the niche at each end of the upper floor',
     'Wikimedia Commons, «Freiburg im Breisgau, Neues Rathaus -- 2025 -- 7964» (Dietmar Rabich, CC BY-SA 4.0; one of the place’s photos): the clock, and the copper turret with its open bell stage and its gilt ball',
     'Wikimedia Commons, «Alte Universität Freiburg» (Georg Röbcke, before 1896, public domain): the building before the conversion, with a portal under a pediment in the wall between the two houses',
+    'German Wikipedia, «Rathaus (Freiburg im Breisgau)», on the Glockenspiel: «Im Zweiten Weltkrieg … wurde es wie das Rathaus erheblich beschädigt. Zwar erklang es in der Silvesternacht 1946 … wieder, doch erst im September 1947 war es vorläufig repariert»; Gerhard Dangel, «Welte Glockenspiel Freiburg Rathaus», on the website of Waldkircher Orgelbau Jäger & Brommer: «wurde das Rathaus und damit auch das Glockenspiel erheblich beschädigt. Nachdem das Gebäude wieder einigermaßen instandgesetzt war, wurde die Firma Welte am 9. Juli 1946 erneut beauftragt, das Glockenspiel instand zu setzen»',
+    'City of Freiburg, damage map of the air raid of 27 November 1944 (1:10,000; the viewer’s «Nov 1944» plan, whose legend reads black, heavy damage to total loss, not habitable; blue, light to medium damage, habitable): the building is marked blue for the most part. The city’s board on the town halls (Wikimedia Commons, «Beschreibungstafel der Freiburger Rathäuser», Andreas Schwarzkopf, 2016, CC BY-SA 3.0) says nothing of war damage here, and that the baroque Aula on the first floor is «erhalten»',
     'OpenStreetMap, relation 6824 and its building:parts: footprint, levels, roof shapes and colours, the onion turrets, the balcony’s floor and the two oriels; way 551176977: the bridge',
   ],
   assumptions: [
@@ -75,6 +79,7 @@ export const PLACE = {
     text: [
       'It began as two houses. «Zum Rechen» was built in 1539–45 for the physician Joachim Schiller von Herdern; in 1595 the university bought the house next door, «Zum Phönix», and joined the two. The university used them until 1774.',
       'The city bought the building in 1896 and by 1901 had turned it into the New Town Hall, adding larger windows, balconies and oriels. Its Glockenspiel was inaugurated on 14 October 1901. A bridge over Turmstraße joins it to the Altes Rathaus.',
+      'In the Second World War the building and its Glockenspiel were badly damaged; no source found says which part or on which day. The city’s damage map of the air raid of 27 November 1944 marks it with light to medium damage. By July 1946 the building was more or less repaired, and the Glockenspiel played again on New Year’s Eve 1946.',
       'The two Wikipedias disagree on which side «Zum Rechen» stands. The volumes are OpenStreetMap’s. The three arches, the balcony, the windows and niches above it, the clock, the openings of the bell turret, the two corner oriels and the shaped gables are placed by eye from photographs: their size, their exact position and their shades are guesses. The columned portal of the old university and the bells of the Glockenspiel are not drawn.',
     ],
   },

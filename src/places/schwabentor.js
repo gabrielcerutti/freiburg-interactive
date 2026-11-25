@@ -31,6 +31,7 @@ export const PLACE = {
   localName: 'Swabian Gate',
   kind: 'building',
   built: { from: 1250, rebuilt: 1901, simplified: 1954 }, // "um 1250 errichtete Torturm" (de); 1901 and 1954 (en and de)
+  war: { state: 'spared', rebuilt: null, source: 'German Wikipedia, «Freiburg im Breisgau»: «die beiden noch erhaltenen mittelalterlichen Stadttore blieben nahezu unversehrt» (air raid of 27 November 1944); the city’s damage map of the raid leaves the gate unmarked' },
   coordinates: [47.99278, 7.85417], // en.wikipedia "Schwabentor", infobox
   osm: 'w129932309',
   checks: {
@@ -40,6 +41,7 @@ export const PLACE = {
     'English Wikipedia, «Schwabentor»: coordinates (47.99278 N, 7.85417 E); closed with a stone wall in 1547; in 1901 «almost doubled in height» to Carl Schaefer’s design, with a crow-stepped gable; partly undone in 1954, with «a simpler tented roof» and «a bell turret with an onion dome»; St George painted on the outside in 1903 by Fritz Geiges',
     'German Wikipedia, «Schwabentor (Freiburg im Breisgau)»: the tower built around 1250, on a square plan eleven metres a side; a pointed archway with three storeys above it; a stair turret added in 1572; the work of 1901 by Geis & Bauer, completed on 14 October 1901 with the opening of the tram',
     'Wikimedia Commons, «Freiburg im Breisgau, Schwabentor -- 2025 -- 8031» (Dietmar Rabich, CC BY-SA 4.0): white plaster, red sandstone corners, and the clock under the roof',
+    'German Wikipedia, «Freiburg im Breisgau»: «Ein großer Teil der historischen Altstadt wurde beim Bombenangriff am 27. November 1944 zerstört. Das Münster, die Südostecke des Münsterplatzes mit Historischem Kaufhaus, Wentzingerhaus und Alter Wache sowie die beiden noch erhaltenen mittelalterlichen Stadttore blieben nahezu unversehrt»; the city’s damage map of the air raid of 27 November 1944 (1:10,000; the viewer’s «Nov 1944» plan, whose legend reads black, heavy damage to total loss, not habitable; blue, light to medium damage, habitable): the gate is not marked',
     'OpenStreetMap, way 129932309 and its 3 building:parts: footprint, roof shapes and (estimated) heights of the tower and its turret; way 41455470: the passage through the gate',
   ],
   assumptions: [
@@ -56,7 +58,7 @@ export const PLACE = {
     text: [
       'The gate tower was built around 1250, on a square plan eleven metres a side. It was only closed with a stone wall on the town side in 1547; a stair turret was added in 1572.',
       'In 1901 Carl Schäfer almost doubled its height and topped it with a stepped gable modelled on town towers in northern Germany. In 1903 Fritz Geiges painted St George, the dragon slayer, on its outer side.',
-      'In 1954 the rebuilding was partly undone: the tower got a simpler tented roof, closer to the original, and a bell turret with an onion dome. That is the gate shown here.',
+      'The gate came through the air raid of 27 November 1944 nearly unharmed. In 1954 the rebuilding was partly undone: the tower got a simpler tented roof, closer to the original, and a bell turret with an onion dome. That is the gate shown here.',
       'No source gives its height: the heights here are OpenStreetMap’s estimates. The archway and the windows are guesses too.',
     ],
   },

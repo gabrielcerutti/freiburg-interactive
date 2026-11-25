@@ -58,6 +58,10 @@ export const PLACE = {
   // aufgestockt»; the inscription on the building reads «nach dem Brande 1934 aufgestockt 1935-36» (Commons).
   built: { from: 1907, to: 1911, raised: [1935, 1936] },
   since: 1911, // (the year every source gives for its completion: not there at the stop of 1903, standing from 1920 on)
+  // 1944: «schwer beschädigt» is all the written sources say; the damage map has it black, and a photo shows one
+  // stretch of a front torn open — nothing says the whole building lost its roof, so the weaker state. `rebuilt` is
+  // not the year of the repair (not found) but the year of the first dated photo that shows it whole again.
+  war: { state: 'damaged', rebuilt: 1951, source: 'Wikimedia Commons, caption of «Landappbw 763196 1819 Universität Kollegiengebäude I Freiburg»: «1944 schwer beschädigt»; Willy Pragher’s photo «Zerstörte Fassade Kollegiengebäude I der Universität»: one stretch of a front torn open from roof to ground; his photos of 28 November 1951 show the building whole, with roofs and tower' },
   coordinates: [47.993859, 7.846078], // de.wikipedia «Liste von historischen Objekten in der Freiburger Altstadt», entry «Uni-Kollegiengebäude I»
   osm: 'r5626',
   sources: [
@@ -67,6 +71,9 @@ export const PLACE = {
     'English Wikipedia, «University of Freiburg»: «the Jugendstil Kollegiengebäude I (short: "KG I"), built in 1911 by Hermann Billing»',
     'German Wikipedia, «Liste von historischen Objekten in der Freiburger Altstadt», entry «Uni-Kollegiengebäude I», Platz der Universität 3: coordinates (47.993859 N, 7.846078 E); architects Friedrich Ratzel and Hermann Billing; a protected monument («Kulturdenkmal gem. § 12 DSchG»)',
     'Wikimedia Commons, «Landappbw 763196 1819 Universität Kollegiengebäude I Freiburg» (Klemens Maier, CC0), its description: «1906 Grundsteinlegung 1936 erweitert 1944 schwer beschädigt»; and «Kollegiengebäude I der Albert-Ludwigs-Universität Freiburg mit Inschrift nach dem Brande 1934 aufgestockt» (Andreas Schwarzkopf, 2020), whose description gives the inscription as «nach dem Brande 1934 aufgestockt 1935-36»',
+    'Wikimedia Commons, «Freiburg i. Br.: Zerstörte Fassade Kollegiengebäude I der Universität» (Willy Pragher, Staatsarchiv Freiburg W 134 Nr. 017610a and b, CC BY 4.0; a photograph of a print, dated there «after 1952», which cannot be the year of what it shows): one stretch of a stone front torn open from the roof to the ground, the floors hanging, the roof above it broken, rubble at its foot; the walls on either side standing to the eaves. Which front it is cannot be told from the picture',
+    'Wikimedia Commons, «Freiburg i. Br.: Universität, Kollegiengebäude I vom Werthmannhaus aus» (Willy Pragher, 28 November 1951, Staatsarchiv Freiburg W 134 Nr. 019346a, CC BY 4.0): the building whole again — the roof and dormers of the front with the main entrance, the dome of the round wing, the tower with its cap',
+    'City of Freiburg, damage map of the air raid of 27 November 1944 (1:10,000; the viewer’s «Nov 1944» plan, whose legend reads black, heavy damage to total loss, not habitable; blue, light to medium damage, habitable): nearly all of the footprint is black. German Wikipedia, «Albert-Ludwigs-Universität Freiburg»: «Bei Kriegsende war die Universität durch alliierte Bombenangriffe zu 65–80 Prozent zerstört»',
     'Wikimedia Commons, «Freiburg i. Br.: Universität, Kollegiengebäude I Frontalansicht» (Willy Pragher, 28 November 1951, Landesarchiv Baden-Württemberg, CC BY 4.0): the proportions of the south front — the height of the eaves and of the roof against the width of the front, the rows of windows, the nine axes, the five dormers',
     'Wikimedia Commons, photos of 2007 to 2023 (listed at the top of the place’s file): the colours, the roofs, the dome of the round wing, the top of the tower, the west front and the portal',
     'OpenStreetMap, relation 5626 and its 13 building:parts: the footprint, the number of storeys of each part (4; 2 and 2.5 for the low parts; 9 for the tower), which parts have a hipped, a flat or a domed roof and how many roof storeys, building:colour #BD8089',
@@ -83,12 +90,13 @@ export const PLACE = {
   ],
   card: {
     title: 'Kollegiengebäude I',
-    years: 'completed 1911 · raised 1936',
+    years: 'completed 1911 · raised 1936 · badly damaged 1944',
     text: [
       'The university’s main building was completed in 1911, in the Jugendstil, with fronts of red sandstone and a tower. Friedrich Ratzel drew the plans; he died in July 1907, and Hermann Billing carried them out with considerable changes. The German Wikipedia gives the start of the work as 1907 on two pages and as 1906 on a third.',
       'It is the seat of the faculties of theology and philosophy. In the tower are two «Karzer» rooms (a Karzer was a university’s lock-up for its students).',
       'Sculptures of Homer and Aristotle, made in 1915 by Cipri Adolf Bermann, flank the entrance. Above it is cut «AEDEM A PATRE STUDIIS DEDICATAM EREXIT FRIDERICUS II», and on the west front, over the windows of the Aula, the university’s motto: «DIE WAHRHEIT WIRD EUCH FREI MACHEN».',
-      'On 10 July 1934 a fire destroyed many institutes and the Aula on the top floor. When it was rebuilt, in 1936, the building was raised, and the university’s leaders had «Dem ewigen Deutschtum» cut over the entrance; it was gilded, and after the war the French had the gilding scraped out. A photo caption on Wikimedia Commons adds that the building was badly damaged in 1944.',
+      'On 10 July 1934 a fire destroyed many institutes and the Aula on the top floor. When it was rebuilt, in 1936, the building was raised, and the university’s leaders had «Dem ewigen Deutschtum» cut over the entrance; it was gilded, and after the war the French had the gilding scraped out.',
+      'In 1944 the building was badly damaged («schwer beschädigt», says a photo caption on Wikimedia Commons). The city’s damage map of the air raid of 27 November 1944 marks it black, for heavy damage to total loss, and a photograph by Willy Pragher shows one stretch of a front torn open from the roof to the ground. No source found gives the year of the repair: Pragher’s photographs of 28 November 1951 show the building whole again, with its roofs and its tower.',
       'The plan and the number of storeys are OpenStreetMap’s. Every height is a guess — 4.9 metres a storey, read off a photo of 1951 — and so are the pitch of the roofs, the windows, the dormers, the portal, the copper dome of the round wing and the top of the tower, all placed by eye from photos. It is drawn as it stands today at every stop of the timeline, also at those before 1936.',
     ],
   },

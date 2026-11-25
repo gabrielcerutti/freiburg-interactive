@@ -32,12 +32,15 @@ export const PLACE = {
   localName: 'Historical Merchants’ Hall',
   kind: 'building',
   built: { from: 1520, to: 1532 }, // de: «Das zwischen 1520 und 1532 errichtete Gebäude»; en: «completed in 1532»
+  war: { state: 'spared', rebuilt: null, source: 'German Wikipedia, «Münsterplatz (Freiburg im Breisgau)»: «Lediglich die Gebäude auf der Südostseite mit Historischem Kaufhaus, Wentzingerhaus und Alter Wache blieben wie das Münster selbst weitgehend verschont» (27 November 1944); the city’s damage map of the raid marks the building mostly blue, light to medium damage' },
   coordinates: [47.994964, 7.852727], // en.wikipedia «Historical Merchants' Hall (Freiburg)», infobox
   osm: 'w767726339',
   sources: [
     'English Wikipedia, «Historical Merchants’ Hall (Freiburg)»: coordinates (47.994964 N, 7.852727 E); completed in 1532, architect not known, assumed to be Lienhardt Müller; the four arcades with an access balcony facing the Minster; two polygonal bay windows with coloured tiles; five emblems under each bay window; the four statues are replicas; the high roof with two attic storeys lined by crow-stepped gables; the crimson façade',
     'German Wikipedia, «Historisches Kaufhaus (Freiburg im Breisgau)»: built between 1520 and 1532; the attribution to Lienhart Müller not certain; Hans Sixt von Staufen made the figures and coats of arms in 1530/31; the balcony of 1550; the large late-Gothic windows with curtain arches; the steep roof with Treppengiebel; the red façade',
     'Wikimedia Commons, «Historisches Kaufhaus Freiburg im Breisgau (2025)» (JoachimKohler-HB, CC BY-SA 4.0): the oriel roofs, in diamonds of green, yellow, red-brown and white',
+    'German Wikipedia, «Münsterplatz (Freiburg im Breisgau)»: «Bei der Bombardierung Freiburgs am 27. November 1944 wurde fast die gesamte Randbebauung des Münsterplatzes zerstört. Lediglich die Gebäude auf der Südostseite mit Historischem Kaufhaus, Wentzingerhaus und Alter Wache blieben wie das Münster selbst weitgehend verschont»; «Freiburg im Breisgau»: these «blieben nahezu unversehrt»',
+    'City of Freiburg, damage map of the air raid of 27 November 1944 (1:10,000; the viewer’s «Nov 1944» plan, whose legend reads black, heavy damage to total loss, not habitable; blue, light to medium damage, habitable): the building is marked mostly blue. Wikimedia Commons, «Luftbild Freiburg 1944» (Stadtarchiv Freiburg M 72 B 271, dated there «Sommer 1945 oder Folgejahre», public domain): the row on the south side of the square still has its roofs, the houses on its north and west sides are roofless walls',
     'OpenStreetMap, way 767726339 and its 12 building:parts: footprint, heights and roofs, the five piers of the arcade, building:colour #dd2222 and roof:colour #2c0707',
   ],
   assumptions: [
@@ -54,6 +57,7 @@ export const PLACE = {
       'The merchants’ hall on Münsterplatz was built between 1520 and 1532. Who designed it is not certain; it is usually attributed to Lienhart Müller.',
       'Its red front opens onto the square with four arcades, and the balcony above them was added in 1550. Two polygonal oriels with coloured tiles frame the upper floor, where Hans Sixt von Staufen’s statues of four Habsburg rulers — Maximilian I, Philip I, Charles V and Ferdinand I — stand under canopies, with five coats of arms under each oriel. The statues there today are replicas.',
       'The steep roof, with two attic storeys, is closed by stepped gables.',
+      'The air raid of 27 November 1944 destroyed nearly all the buildings around Münsterplatz. Only those on its south-east side — the Kaufhaus, the Wentzingerhaus and the Alte Wache — were largely spared, like the Minster; the city’s damage map of the raid marks light to medium damage here.',
       'The volumes are OpenStreetMap’s. The arches, windows, statues and coats of arms are placed by eye: their exact size and position are guesses.',
     ],
   },

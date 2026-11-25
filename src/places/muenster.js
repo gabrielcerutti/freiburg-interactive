@@ -24,6 +24,9 @@ export const PLACE = {
   localName: 'Münster Unserer Lieben Frau',
   kind: 'building', // (budget: 25,000 vertices)
   built: { from: 1200, to: 1513 }, // de.wikipedia: "Sie wurde von etwa 1200 bis 1513 erbaut." (the start is approximate)
+  // 27 November 1944: no direct hit, the church and its tower stood; the blast took the tiles off the roof (a partial
+  // case: 'damaged', not 'ruin'). `rebuilt` is the later of the two dates the sources give for the roof.
+  war: { state: 'damaged', rebuilt: 1946, source: 'German Wikipedia, «Freiburger Münster»: «blieb im Zweiten Weltkrieg weitgehend unzerstört … Lediglich das Dach wurde beschädigt, konnte aber … bis zum Winter 1945/46 wieder komplett geschlossen werden»; «Geschichte der Stadt Freiburg im Breisgau»: «Ohne Direkteinschlag … wurde jedoch abgedeckt», re-covered «bis zum Januar 1945 wieder weitgehend» (the two pages differ on when: the later date is kept)' },
   coordinates: [47.99556, 7.85306], // en.wikipedia "Freiburg Minster", infobox (independent of the OSM outline)
   osm: 'w110404213',
   checks: {
@@ -33,6 +36,9 @@ export const PLACE = {
   sources: [
     'English Wikipedia, «Freiburg Minster»: coordinates (47.99556 N, 7.85306 E); the 116 m tower; tower completed 1330; how the tower is built up (square base, dodecagonal star gallery, octagon, spire)',
     'German Wikipedia, «Freiburger Münster»: built from about 1200 to 1513; tower finished around 1330; choir foundation stone 24 March 1354, choir consecrated 5 December 1513; total length 125.83 m; the earliest Gothic tracery spire',
+    'German Wikipedia, «Freiburger Münster», on the air raid of 27 November 1944: «Das Münster blieb im Zweiten Weltkrieg weitgehend unzerstört, obwohl die umgebenden Gebäude … in Schutt und Asche gelegt worden waren. Lediglich das Dach wurde beschädigt, konnte aber … bis zum Winter 1945/46 wieder komplett geschlossen werden»; the medieval windows «rechtzeitig vor den Bombenangriffen ausgelagert»; the spire held, which is put down to its iron anchors bedded in lead',
+    'German Wikipedia, «Geschichte der Stadt Freiburg im Breisgau»: «Das Münster blieb inmitten der Trümmer im Wesentlichen unversehrt. Ohne Direkteinschlag widerstand es … dem Luftdruck der in der Umgebung detonierenden Bomben, wurde jedoch abgedeckt. Mit Dachziegeln, großzügig gespendet von der Stadt Basel, konnte das Münster bis zum Januar 1945 wieder weitgehend eingedeckt werden»; and «Operation Tigerfish»: «Nur leicht beschädigt wurde das Wahrzeichen der Stadt, das Freiburger Münster»',
+    'City of Freiburg, damage map of the air raid of 27 November 1944 (1:10,000; the viewer’s «Nov 1944» plan, whose legend reads black, heavy damage to total loss, not habitable; blue, light to medium damage, habitable): the church is marked blue',
     'OpenStreetMap, way 110404213 and the 35 building:parts inside it: footprint, heights, roof shapes and colours of the whole church; one of them, way 100424612, is the octagon and spire (37–116 m, roof height 46 m)',
   ],
   assumptions: [
@@ -46,6 +52,7 @@ export const PLACE = {
     text: [
       'Building started around 1200 and went on for three centuries. The west tower was finished around 1330: 116 metres, nearly square at the base, then a twelve-sided star gallery, an octagon, and the spire.',
       'The spire is open tracery, said to be the earliest of the Gothic period. The new choir was begun in 1354 and consecrated on 5 December 1513. The church is 125.83 metres long.',
+      'The air raid of 27 November 1944 destroyed the houses around the Minster. The church took no direct hit and its tower stood, but the blast stripped the tiles off the roof. It was covered again with tiles given by the city of Basel: for the most part by January 1945, says one page of the German Wikipedia; completely by the winter of 1945–46, says another. The medieval windows had been taken out in time.',
       'The body of the church is OpenStreetMap’s 3D model of it. The top of the tower is drawn by hand: the pattern of its tracery, the windows and the pinnacles are simplified guesses.',
     ],
   },

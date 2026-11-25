@@ -25,4 +25,19 @@ export const PLACE_OSM = {
   // against its front block: the low south wing with the entrance of the Kleines Haus (way 254048365) and the raised
   // terraces on its south (way 254048364) and north side (ways 113767224 and 113767228)
   theater: ['w113767229', 'w254048365', 'w254048364', 'w113767224', 'w113767228'],
+  // "Kollegiengebäude II", https://www.openstreetmap.org/way/273332423
+  'kollegiengebaeude-2': ['w273332423'],
+  // "Kollegiengebäude III", https://www.openstreetmap.org/relation/12450227 (its outline: two bodies) and
+  // https://www.openstreetmap.org/relation/12036358 (the same building as a relation of its ten parts), with the roof
+  // OSM maps between the two bodies (https://www.openstreetmap.org/way/442217813)
+  'kollegiengebaeude-3': ['r12450227', 'r12036358', 'w442217813'],
+  // "Alte Universität", https://www.openstreetmap.org/way/285561959 (the range on Bertoldstraße; the wings around the
+  // courtyard and the Universitätskirche are outlines of their own and stay with the generic city)
+  'alte-universitaet': ['w285561959'],
+  // "Brauerei Ganter", https://www.openstreetmap.org/relation/7509071 (the old block west of the yard), and the block
+  // north of the yard with the tower (https://www.openstreetmap.org/way/766716133, unnamed in OSM: see the place file)
+  'brauerei-ganter': ['r7509071', 'w766716133'],
+  // "Greiffenegg-Schlössle", https://www.openstreetmap.org/way/118656365, and the kiosk at the upper edge of its beer
+  // garden, the Kastaniengarten (https://www.openstreetmap.org/way/285810376; the garden itself is a point in OSM)
+  kastaniengarten: ['w118656365', 'w285810376'],
 };

@@ -3,7 +3,7 @@
 The old town of Freiburg in 3D, in the browser: every building from OpenStreetMap with its roof, the streets, the
 Bächle, the tram and OSM's trees on the ground, and landmarks modelled by hand: the Münster, the Martinstor and the
 Schwabentor, the Historisches Kaufhaus, the two town halls, the Colombischlössle, the Theater, the university's
-Kollegiengebäude I and its library, and the tower on the Schlossberg. Two looks — colour, and an ink engraving.
+Alte Universität, its Kollegiengebäude I, II and III and its library, the Ganter brewery, and on the Schlossberg the tower and the Kastaniengarten. Two looks — colour, and an ink engraving.
 
     npm install
     npm run dev          # http://localhost:5173
@@ -41,6 +41,12 @@ a city drawn on its own map, hand-made landmarks built from simple solids, and e
 | 4d | `tools/photos.mjs`, `src/places/photos.js`, `src/photos.js` | The photos: the list with captions, the tool that fetches them from Wikimedia Commons with author, date and licence (public domain or Creative Commons only), and the viewer. |
 | 5 | `src/places/` | The hand-made landmarks. Each file exports `PLACE` (facts, sources, assumptions, card) and `build()`. |
 | 6 | `src/main.js` | The scene, light, camera (three.js `MapControls`) and labels. |
+| 6b | `src/sky.js` | The sky: a dome around the camera, pale blue overhead and haze at the horizon (the fog's colour); all paper in the ink look. An illustration choice. |
+| 6c | `src/search.js` | The address search: an address of today, turned into coordinates by Nominatim only when the form is sent. The viewer flies there, marks it, and says since which plan a building stands on that spot (the same estimate as the timeline); outside the area drawn, how far from the Münster it lies. |
+
+The page (`index.html`, `src/style.css`): the title and the search on the left, the years with their note (what
+changed by then, in a visitor's words; it can be put away) in the middle, a landmark's card on the right, and a «?»
+in the bottom corner that opens how to move, what is shown and the credits.
 
 Coordinates (`src/geo.js`): metres from the Münster; x east, y up, z south.
 
@@ -74,6 +80,11 @@ screenshots (`node tools/shot.mjs`).
    (and `npm run ages`, so the timeline knows the ground is taken). A landmark OSM maps as a point and not as a
    building (the Schlossbergturm) lists nothing and places itself at its coordinates.
    If it was not always there, give `PLACE.since` (the year, with its source): the timeline puts it away before.
+   If it stood in 1944, say what the air raid of 27 November 1944 did to it, with the source:
+   `PLACE.war = { state: 'ruin' | 'damaged' | 'spared', rebuilt: year | null, source }`. A `'ruin'` is drawn as a
+   roofless shell of its outline (assumed, like the other ruins) from the stop of November 1944 until `rebuilt`
+   (without a year: only at that stop); the note of that stop lists the landmarks by what happened to them. Where
+   no source says, leave it out.
 4. `npm run check -- <key>`: it must build, stay under budget (25,000 vertices for a building, 90,000 for a group),
    fall where its coordinates say, and match its sourced height and length.
 
@@ -85,7 +96,9 @@ source you can reopen (a page, a photo, OSM), and the file says which. What had 
 
 - Code: MIT (`LICENSE`).
 - Map data: © [OpenStreetMap contributors](https://www.openstreetmap.org/copyright), ODbL. `public/data/city.json`
-  is derived from it and keeps that licence; the viewer shows the credit.
+  is derived from it and keeps that licence; the viewer shows the credit (under the «?»).
+- Address search: [Nominatim](https://nominatim.org), with OpenStreetMap data. What is typed in the search box is
+  sent to it, once, when the form is sent; nothing else leaves the page.
 - The old plans of the timeline (1838, 1875, 1903, 1920, 1944, the damage map of November 1944, 1955, 1981): the
   city's «Historische Stadtpläne», scanned and georeferenced by its survey office.
   [Datengrundlage: Stadt Freiburg, www.freiburg.de](https://geoportal.freiburg.de/freigis/),

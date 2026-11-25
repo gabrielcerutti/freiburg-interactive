@@ -44,6 +44,7 @@ export const PLACE = {
   localName: 'Old Town Hall',
   kind: 'building',
   built: { from: 1557, to: 1559, rebuilt: [1949, 1954] }, // de: «Das Gebäude von 1557/1559»; «Wiederaufbau 1949 bis 1954»
+  war: { state: 'ruin', rebuilt: 1954, source: 'German Wikipedia, «Rathaus (Freiburg im Breisgau)»: «Beim Luftangriff von 1944 brannte das alte Rathaus völlig aus und so ging auch die Innenausstattung verloren. Beim Wiederaufbau 1949 bis 1954 wurde auf moderne Materialien gesetzt»; the city’s board on the town halls: «Beim Luftangriff auf Freiburg im Jahre 1944 brannte das Haus völlig aus»' },
   coordinates: [47.996256, 7.8493], // de.wikipedia «Rathaus (Freiburg im Breisgau)», infobox for the Altes Rathaus
   osm: 'w23226923',
   sources: [
@@ -53,6 +54,8 @@ export const PLACE = {
     'Wikimedia Commons, «Altes Rathaus (Freiburg im Breisgau) 3802» (joergens.mi, 2011, CC BY-SA 3.0): the gable from the front — its outline, the clock, the eagle, the six arms and the two bells',
     'Wikimedia Commons, «(Neues, links und) Altes Rathaus in Freiburg i. Br. (2025)» (JoachimKohler-HB, CC BY-SA 4.0): the gable reaches the corner on Turmstraße',
     'Wikimedia Commons, «Freiburg Altes Rathaus 01» (Andreas Praefcke, 2015, CC BY 4.0; one of the place’s photos) and «Altes Rathaus (Freiburg im Breisgau) 3832» (joergens.mi, 2011, CC BY-SA 3.0): the arch of today’s main entrance and the portal of 1558, their parts and colours',
+    'The city’s board on the town halls, in a photo on Wikimedia Commons («Beschreibungstafel der Freiburger Rathäuser», Andreas Schwarzkopf, 2016, CC BY-SA 3.0): «Beim Luftangriff auf Freiburg im Jahre 1944 brannte das Haus völlig aus. Im Zuge des Wiederaufbaus wurde es 1952 bis 1958 um 3 neue Flügel erweitert» (the German Wikipedia dates the wings 1953 to 1958; the board also says the house was «zwischen 1556 und 1561 errichtet»)',
+    'German Wikipedia, «Operation Tigerfish» (the air raid of 27 November 1944): the Altes Rathaus in its list of the historic buildings that «fielen dem Angriff zum Opfer»; the city’s damage map of the air raid of 27 November 1944 (1:10,000; the viewer’s «Nov 1944» plan, whose legend reads black, heavy damage to total loss, not habitable; blue, light to medium damage, habitable): the western half of the footprint is black',
     'OpenStreetMap, way 23226923 and its 5 building:parts: footprint, levels, roof shapes and colours',
   ],
   assumptions: [
@@ -70,7 +73,7 @@ export const PLACE = {
     text: [
       'In 1557 the council commissioned the master builder Dietrich Neeb and the master mason Barthlin Ress; the town hall was built in 1557–59 and extended in 1561 and 1600.',
       'It is plastered in a uniform sandstone red. Over the arch of its passage is a clock crowned by the double-headed eagle of the Holy Roman Empire.',
-      'In the air raid of 1944 it burned out completely, and its interior was lost. It was rebuilt in 1949–54 with modern materials.',
+      'In the air raid of 27 November 1944 it burned out completely, and its interior was lost. It was rebuilt in 1949–54 with modern materials.',
       'The volumes are OpenStreetMap’s; the heights come from its storey counts. The gable with its clock, eagle and six coats of arms, the three entrances, the windows between them and the stepped gables are placed by eye from photographs: their size, their exact position and their shades are guesses. The black and gold window frames are not drawn.',
     ],
   },

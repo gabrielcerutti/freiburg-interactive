@@ -58,4 +58,29 @@ export const PHOTOS = {
     { file: 'File:Stadttheater freiburg 1960.jpg', caption: 'The front in September 1960, still with its show gable: the doors, the tall windows with their balconies, the statues in front of the piers, and the pillars with figures by the steps.' },
     { file: 'File:Theater Freiburg i. Br. (2025).jpg', caption: 'June 2025, from the tram crossing: the curved front with the lettering «THEATER FREIBURG» under the cone roof, the north flank, and the stage tower behind.' },
   ],
+  'kollegiengebaeude-2': [
+    { file: 'File:Freiburg i. Br.- Blick vom Hochhaus des Regierungspräsidiums auf neues Kollegiengebäude der Universität - LABW - Staatsarchiv Freiburg W 134 Nr. 068816b.jpeg', caption: 'The new building from a high-rise across the square, 7 May 1962: stone piers the full height of the long front, a canopy over the ground floor, people on the roof terrace, and a lawn in front. Behind it, the tower of the Kollegiengebäude I (right). Photograph by Willy Pragher.' },
+    { file: 'File:Kollegiengebäude II (Freiburg im Breisgau) jm59866.jpg', caption: 'The side on Bertoldstraße in January 2018: the two end walls of red sandstone without windows, a lower front of white fins between them, and the canopy over the ground floor.' },
+    { file: 'File:Kollegiengebäude II der Freiburger Uni 7.jpg', caption: 'The back, seen from the Kollegiengebäude III in June 2015: sandstone piers, and between them pale walls with rows of windows over a canopy.' },
+  ],
+  'kollegiengebaeude-3': [
+    { file: 'File:Freiburg- Kollegiengebäude III vom Hof aus - LABW - Staatsarchiv Freiburg W 134 Nr. 112206a.jpeg', caption: 'The north end of the building across a cobbled yard, 12 March 1980: four upper floors, each a band of concrete under a ribbon of windows, over a ground floor set back behind columns; plants on the roof. On the left, a spire with corner turrets, the one the third photo’s title names as the Martinstor. Photograph by Willy Pragher.' },
+    { file: 'File:Kollegiengebäude III der Uni Freiburg, im Hintergrund das KG I.jpg', caption: 'The north end in June 2015, from the lawn: bare concrete, balconies with railings at the corner, a railing around the roof, and café chairs under the building. Behind it on the right, the red Kollegiengebäude I, as the photo’s title says.' },
+    { file: 'File:Kollegiengebäude III der Uni Freiburg mit Martinstor.jpg', caption: 'June 2015: the north end on the right; on the left the low wing with glass walls and a green roof, a concrete deck leading to it, and above the roofs the spire of the Martinstor.' },
+  ],
+  'alte-universitaet': [
+    { file: 'File:Jesuitenkolleg Bertoldstraße.jpg', caption: 'The former Jesuit college seen from the east, with tram tracks in the street: the tall hipped roof, the stepped fire wall half way along it, the low gatehouse with its round archway in front, and the church at the far end. Photograph by Georg Röbcke, dated «after 1901» on Wikimedia Commons.' },
+    { file: 'File:Bertoldstraße 17 (Freiburg im Breisgau) jm61169.jpg', caption: 'The same view in February 2018: pink plaster, three rows of windows, dormers on the tiled roof, the stepped fire wall, and the gatehouse on the right.' },
+    { file: 'File:University College Freiburg & Uniseum (2025).jpg', caption: 'The street front in June 2025: the arched portal at the east end, the lettering «Uniseum Freiburg», a statue in a niche between the windows, and the front of the Universitätskirche at the far end.' },
+  ],
+  kastaniengarten: [
+    { file: 'File:Freiburger Schlossberg, Kastaniengarten mit Blick auf Schwaben- und Martinstor.jpg', caption: 'In the garden in October 2005: guests at beer tables between the trunks, a price board on one of them, lamps with a brewery’s name, and over the fence the tower of the Schwabentor and the town in the haze.' },
+    { file: 'File:Greiffeneggschlössle (Freiburg) 3239.jpg', caption: 'The Schlössle from below in January 2011: white walls, dark roofs with white dormers and a flag, people at the railing, and on the left the round rubble wall at the corner, overgrown with ivy.' },
+    { file: 'File:Greiffeneggschlösschen (1897).jpg', caption: 'A New Year’s card, «Gruss vom Rommel’s Schlösschen»: the house on its walled spur under a flag with that name, behind it a long hall and a pavilion with two turrets, on the right the Schwabentor with its low roof, and in the oval the Münster. Lithograph by Michael Wachter, dated 1897 on Wikimedia Commons.' },
+  ],
+  'brauerei-ganter': [
+    { file: 'File:Freiburg- Vom Schlossberg auf Ganter Brauerei - LABW - Staatsarchiv Freiburg W 134 Nr. 106457a.jpeg', caption: 'The brewery from the Schlossberg on 14 July 1976, above a row of trees: on the left the square tower lettered «Ganter Bier», then a flat roof with steel stacks, the round chimney, a stepped gable below it and a tower with a stepped roof and a pointed cap; behind them a long building with bands of windows and the sign «Ganter Bier». Photograph by Willy Pragher.' },
+    { file: 'File:Brauerei Ganter.jpg', caption: 'Much the same view in May 2007, in colour: yellow walls, the tower lettered «Ganter» with glazed storeys on top, steel stacks on a flat roof, the brick chimney, the stepped slate roof with its pointed cap, and a large flat-roofed building behind.' },
+    { file: 'File:Brauerei Ganter in Freiburg 2.jpg', caption: 'In the yard, April 2015: a front lettered «Brauerei Ganter» with a coat of arms between tall windows, a low white pavilion before it, the tower and steel stacks behind, the brick chimney on the left and a house with a mural on its gable on the right.' },
+  ],
 };
