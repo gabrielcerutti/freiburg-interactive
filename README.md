@@ -64,6 +64,8 @@ Coordinates (`src/geo.js`): metres from the Münster; x east, y up, z south.
 | `node tools/pace.mjs [--hide a,b]` | Frame time, triangles and the browser's memory, with a watchdog. |
 
 The screenshot and pace tools always kill their test browser at the end and stop themselves after a time limit.
+They run on macOS, Linux and Windows; `tools/browser.mjs` holds what differs (where Chrome for Testing is, which
+GPU it uses, how it is killed and how its memory is read).
 
 ### Stack
 

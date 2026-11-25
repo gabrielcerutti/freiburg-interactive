@@ -8,33 +8,18 @@
 // Uses the same headless Chrome for Testing as tools/shot.mjs, on its own port.
 import { createServer } from 'vite';
 import { chromium } from 'playwright-core';
-import { existsSync, readdirSync } from 'node:fs';
-import { homedir } from 'node:os';
-import { join } from 'node:path';
-import { exec, execSync } from 'node:child_process';
+import { findChrome, gpuArgs, killChrome, chromeMemory } from './browser.mjs';
 
 const args = process.argv.slice(2), hide = args.includes('--hide') ? args[args.indexOf('--hide') + 1].split(',') : [];
 if (args.includes('--no-shadows')) hide.push('shadows');
-function findChrome() {
-  if (process.env.CHROME) return process.env.CHROME;
-  for (const root of [join(homedir(), 'Library/Caches/ms-playwright'), join(homedir(), '.cache/ms-playwright')]) {
-    if (!existsSync(root)) continue;
-    for (const d of readdirSync(root).filter((d) => /^chromium-\d+$/.test(d)).sort().reverse()) for (const p of ['chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing', 'chrome-mac/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing', 'chrome-linux/chrome']) if (existsSync(join(root, d, p))) return join(root, d, p);
-  }
-  throw new Error('no Chrome for Testing found: set CHROME or run `npx playwright-core install chromium`');
-}
-/** the memory (GB) of every process of the test browser, summed */
-// (the "memory" Activity Monitor shows — it counts what the GPU holds for the process, which plain `ps` does not.
-// Asked without blocking, every 3 s: `top` takes about a second to answer.)
-const kill = () => { try { execSync("pkill -9 -f 'Google Chrome for Testing'"); } catch { /* none left */ } };
+// the memory of every process of the test browser, summed (tools/browser.mjs says what is counted on each system),
+// asked without blocking every 3 s
+const chrome = findChrome(), kill = () => killChrome(chrome);
 const series = [];
-const watch = setInterval(() => exec("pgrep -f 'Google Chrome for Testing' | tr '\\n' ' '", (e1, pids) => {
-  const ids = (pids ?? '').trim().split(/\s+/).filter(Boolean); if (!ids.length) return;
-  exec(`top -l 1 -stats pid,mem ${ids.map((id) => `-pid ${id}`).join(' ')}`, (e2, out) => {
-    const gb = (out ?? '').split('\n').reduce((sum, line) => { const m = line.trim().match(/^\d+\s+([\d.]+)([KMG])/); return sum + (m ? m[1] * { K: 1e-6, M: 1e-3, G: 1 }[m[2]] : 0); }, 0);
-    series.push(+gb.toFixed(2));
-    if (gb > 6) { console.log('MEMORY PASSED 6 GB — stopping.', series.join(' ')); kill(); process.exit(2); }
-  });
+const watch = setInterval(() => chromeMemory(chrome, (gb) => {
+  if (gb === null) return;
+  series.push(gb);
+  if (gb > 6) { console.log('MEMORY PASSED 6 GB — stopping.', series.join(' ')); kill(); process.exit(2); }
 }), 3000);
 // and whatever happens, the whole run ends after a minute
 const t0 = Date.now(), stage = (what) => console.log(`${((Date.now() - t0) / 1000).toFixed(1)} s  ${what}`);
@@ -42,7 +27,7 @@ setTimeout(() => { console.log('TOOK MORE THAN 75 s — stopping. memory, GB:', 
 const url = args.includes('--url') ? args[args.indexOf('--url') + 1] : null;
 const server = url ? { close: async () => {} } : await createServer({ server: { port: 5432, strictPort: true }, logLevel: 'silent', cacheDir: 'node_modules/.vite-tools' });
 if (!url) await server.listen();
-const browser = await chromium.launch({ executablePath: findChrome(), headless: true, args: ['--ignore-gpu-blocklist', '--use-angle=metal', '--enable-gpu'] });
+const browser = await chromium.launch({ executablePath: chrome, headless: true, args: gpuArgs });
 try {
   const page = await browser.newPage({ viewport: { width: 1600, height: 1000 } });
   page.on('pageerror', (e) => console.log('[page error]', e.message));

@@ -5,41 +5,26 @@
 //    --eval: prints what a line of JavaScript gives in the page (say, "lab.city");
 //    --no-webgl: a browser that cannot do 3D, to see the message the page shows)
 // Starts its own Vite server on port 5431, waits for the city to load, and saves the picture (default: shots/view.png).
-// Chrome: $CHROME if set, otherwise the newest "Google Chrome for Testing" in Playwright's cache (npx playwright-core install chromium).
+// Chrome: $CHROME if set, otherwise the newest Chrome for Testing in Playwright's cache (tools/browser.mjs).
 import { createServer } from 'vite';
 import { chromium } from 'playwright-core';
-import { existsSync, mkdirSync, readdirSync } from 'node:fs';
-import { homedir } from 'node:os';
-import { dirname, join } from 'node:path';
-import { execSync } from 'node:child_process';
+import { mkdirSync } from 'node:fs';
+import { dirname } from 'node:path';
+import { findChrome, gpuArgs, killChrome } from './browser.mjs';
 
 const args = process.argv.slice(2);
 const opt = (name) => (args.includes(name) ? args[args.indexOf(name) + 1] : null);
 const out = args.find((a, i) => !a.startsWith('--') && !['--view', '--select', '--scroll', '--plan', '--then', '--size', '--eval'].includes(args[i - 1])) ?? 'shots/view.png';
 const view = args.includes('--view') ? args[args.indexOf('--view') + 1].split(',').map(Number) : null;
 
-function findChrome() {
-  if (process.env.CHROME) return process.env.CHROME;
-  const cache = join(homedir(), 'Library/Caches/ms-playwright'), linux = join(homedir(), '.cache/ms-playwright');
-  for (const root of [cache, linux]) {
-    if (!existsSync(root)) continue;
-    for (const d of readdirSync(root).filter((d) => /^chromium-\d+$/.test(d)).sort().reverse()) {
-      for (const p of ['chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing', 'chrome-mac/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing', 'chrome-linux/chrome']) {
-        if (existsSync(join(root, d, p))) return join(root, d, p);
-      }
-    }
-  }
-  throw new Error('no Chrome for Testing found: set CHROME or run `npx playwright-core install chromium`');
-}
-
 // Whatever happens — a broken shader, a page that never loads — the test browser is killed at the end, and the whole
 // run stops after 90 s: a browser left behind with a broken page can eat all the memory of the machine.
-const kill = () => { try { execSync("pkill -9 -f 'Google Chrome for Testing'"); } catch { /* none left */ } };
+const chrome = findChrome(), kill = () => killChrome(chrome);
 setTimeout(() => { console.error('TOOK MORE THAN 90 s — stopping.'); kill(); process.exit(3); }, 90_000);
 const server = await createServer({ server: { port: 5431, strictPort: true }, logLevel: 'silent', cacheDir: 'node_modules/.vite-tools' }); // (its own cache: a dev server already running keeps its own)
 await server.listen();
 const noWebgl = args.includes('--no-webgl'); // (to see what the page says in a browser that cannot do 3D)
-const browser = await chromium.launch({ executablePath: findChrome(), headless: true, args: noWebgl ? ['--disable-3d-apis'] : ['--ignore-gpu-blocklist', '--use-angle=metal', '--enable-gpu'] });
+const browser = await chromium.launch({ executablePath: chrome, headless: true, args: noWebgl ? ['--disable-3d-apis'] : gpuArgs });
 try {
   const page = await browser.newPage({ viewport: opt('--size') ? { width: Number(opt('--size').split('x')[0]), height: Number(opt('--size').split('x')[1]) } : { width: 1600, height: 1000 } });
   let said = 0; // (only the first few complaints: a broken shader repeats itself hundreds of times)

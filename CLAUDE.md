@@ -55,7 +55,8 @@ A three.js + Vite viewer of Freiburg's old town. `README.md` explains the pipeli
   own git identity — a GitHub noreply address, set with `git config user.name` / `user.email` in this repository
   only, never the machine's global one. Commit titles say what changed for someone looking at the viewer.
 - Before saying something is done: `npm run build`, the checks of the places touched, `node tools/pace.mjs`
-  (frame time about 13 ms, memory about 1.6 GB on the machine it was built on), and a look at screenshots in both
+  (frame time about 13 ms, memory about 1.6 GB on the Mac it was built on; about 17 ms and 2.2–2.9 GB on the Windows
+  laptop, which counts memory differently — see `tools/browser.mjs`), and a look at screenshots in both
   looks. Make sure no test browser is left running.
 - After each piece of work, tell the owner what is assumed, where sources disagreed and what could not be found.
 - Scratch files (downloads, screenshots, notes) stay outside the repository.
