@@ -16,6 +16,10 @@
 // ASSUMED, all of it drawing convention and not data: the windows, frames, shutters and doors (OSM does not map
 // them), the textures of the surfaces, the look of the foliage.
 // A material can be highlighted (uHighlight, 0 → 1): the selected landmark glows in colour, or turns to red ink.
+// The city follows the timeline (`rise`): every vertex of a building carries the ground it stands on and the stops
+// at which it stands (aWhen, src/buildings.js), and as the timeline goes from one stop to another (STOP.uStop) the
+// buildings that come rise out of the ground and those that go sink into it, each a moment apart. The shadows
+// (riseDepthMaterial) and the ink outlines (riseLines) do the same.
 import * as THREE from 'three';
 
 /** Shared by every material: the look (0 colour, 1 ink) and the clock. */
@@ -23,7 +27,33 @@ export const LOOK = { uInk: { value: 0 }, uTime: { value: 0 } };
 
 export const PAPER = new THREE.Color('#f4e9cf'), INK = new THREE.Color('#2e2620'), SHADE = new THREE.Color(0.6, 0.56, 0.57);
 
+/**
+ * The timeline, shared by everything that rises: the stop it comes from, the stop it goes to (0 … 7: the old plans;
+ * 8: today) and how far along it is (0 → 1; src/main.js moves it).
+ */
+export const STOP = { uStop: { value: new THREE.Vector3(8, 8, 1) } };
+const RISE_PARS = /* glsl */ `
+  uniform vec3 uStop;
+  float standsAt(float stops, float stop) { return mod(floor((stops + 0.5) / exp2(stop)), 2.0); }
+  /** a point of a building, raised from its ground (when.x) as much as it stands now; far away when it does not at all */
+  vec3 risen(vec3 p, vec2 when) {
+    float a = standsAt(when.y, uStop.x), b = standsAt(when.y, uStop.y);
+    float seed = fract(sin(when.x * 91.17) * 43758.5453);                  // (each building a moment apart)
+    float k = mix(a, b, smoothstep(seed * 0.55, seed * 0.55 + 0.45, uStop.z));
+    return k <= 0.0 ? vec3(0.0, -1.0e6, 0.0) : vec3(p.x, when.x + (p.y - when.x) * k, p.z);
+  }
+`;
+const RISE_MAIN = /* glsl */ `
+  #ifdef RISE
+    transformed = risen(transformed, aWhen);
+  #endif
+`;
+
 const VERTEX_PARS = /* glsl */ `
+  #ifdef RISE
+    attribute vec2 aWhen;
+    ${RISE_PARS}
+  #endif
   attribute vec4 aFacade;
   varying vec4 vFacade;
   varying vec3 vWPos;
@@ -269,7 +299,7 @@ export function setPlan(material, texture, area = [0, 0, 1, 1], levels = [0, 1])
  * maps and the rectangle they cover). Every material is pushed back a little in depth, so the ink outlines drawn on
  * its edges never flicker.
  */
-export function lookMaterial({ ground = null, vertexColors = !ground } = {}) {
+export function lookMaterial({ ground = null, vertexColors = !ground, rise = false } = {}) {
   const m = new THREE.MeshLambertMaterial({ vertexColors, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 });
   const own = { uHighlight: { value: 0 } };
   m.userData.highlight = own.uHighlight;
@@ -281,20 +311,48 @@ export function lookMaterial({ ground = null, vertexColors = !ground } = {}) {
       uPaper: { value: PAPER }, uInkColour: { value: INK }, uShade: { value: SHADE }, uGlow: { value: new THREE.Color('#ffd27a') },
       uLightFull: { value: LIGHT_FULL },
     });
+    if (rise) { Object.assign(shader.uniforms, STOP); shader.defines = { ...shader.defines, RISE: '' }; }
     if (ground) {
       Object.assign(shader.uniforms, plan, { tMask: { value: ground.mask }, tSub: { value: ground.sub }, uGround: { value: new THREE.Vector4(...ground.area) } });
       shader.defines = { ...shader.defines, GROUND: '' };
     }
     shader.vertexShader = shader.vertexShader
       .replace('#include <common>', `#include <common>\n${VERTEX_PARS}`)
+      .replace('#include <begin_vertex>', `#include <begin_vertex>\n${RISE_MAIN}`)
       .replace('#include <fog_vertex>', `#include <fog_vertex>\n${VERTEX_MAIN}`);
     shader.fragmentShader = shader.fragmentShader
       .replace('#include <common>', `#include <common>\n${FRAGMENT_PARS}`)
       .replace('#include <color_fragment>', `#include <color_fragment>\n${FACADE}`)
       .replace('#include <opaque_fragment>', OUTPUT);
   };
-  m.customProgramCacheKey = () => (ground ? 'look-ground' : 'look');
+  m.customProgramCacheKey = () => (ground ? 'look-ground' : rise ? 'look-rise' : 'look');
   return m;
+}
+
+/** For the shadows of what rises: the depth material three.js would use, with the same rise. (As a mesh's customDepthMaterial.) */
+export function riseDepthMaterial() {
+  const m = new THREE.MeshDepthMaterial({ depthPacking: THREE.RGBADepthPacking });
+  m.onBeforeCompile = (shader) => {
+    Object.assign(shader.uniforms, STOP);
+    shader.vertexShader = shader.vertexShader
+      .replace('#include <common>', `#include <common>\nattribute vec2 aWhen;\n${RISE_PARS}`)
+      .replace('#include <begin_vertex>', '#include <begin_vertex>\n  transformed = risen(transformed, aWhen);');
+  };
+  m.customProgramCacheKey = () => 'rise-depth';
+  return m;
+}
+
+/** For the ink outlines of what rises: a LineMaterial whose segments carry `instanceWhen` and rise with their building. */
+export function riseLines(material) {
+  const before = material.vertexShader;
+  material.uniforms.uStop = STOP.uStop;
+  material.vertexShader = before
+    .replace('attribute vec3 instanceEnd;', `attribute vec3 instanceEnd;\nattribute vec2 instanceWhen;\n${RISE_PARS}`)
+    .replace('vec4( instanceStart, 1.0 )', 'vec4( risen( instanceStart, instanceWhen ), 1.0 )')
+    .replace('vec4( instanceEnd, 1.0 )', 'vec4( risen( instanceEnd, instanceWhen ), 1.0 )');
+  if (material.vertexShader.split('risen(').length !== 4) console.warn('the outlines could not be made to follow the timeline (three.js changed its line shader?)');
+  material.needsUpdate = true;
+  return material;
 }
 
 /** How bright a fully sunlit horizontal surface of albedo 1 comes out with the lights in src/main.js. */

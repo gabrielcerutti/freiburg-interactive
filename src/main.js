@@ -7,12 +7,12 @@ import { LineSegmentsGeometry } from 'three/addons/lines/LineSegmentsGeometry.js
 import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
 import { buildGround } from './ground.js';
 import { createTimeline } from './timeline.js';
-import { buildCity } from './city.js';
+import { buildCity, TODAY } from './city.js';
 import { buildTrees } from './trees.js';
 import { startPlace } from './kit.js';
 import { PLACES } from './places/index.js';
 import { createLabels, showCard } from './labels.js';
-import { LOOK, INK, PAPER, lookMaterial, setLightFull } from './look.js';
+import { LOOK, STOP, INK, PAPER, lookMaterial, riseDepthMaterial, riseLines, setLightFull } from './look.js';
 import { loadTerrain } from './terrain.js';
 
 const app = document.getElementById('app'), status = document.getElementById('status');
@@ -82,6 +82,14 @@ const outline = (mesh) => {
   const lines = new LineSegments2(new LineSegmentsGeometry().fromEdgesGeometry(new THREE.EdgesGeometry(mesh.geometry, 28)), edgeMaterial);
   lines.raycast = () => {}; mesh.add(lines);
 };
+// the city's outlines rise and sink with its buildings as the timeline moves (src/look.js)
+const cityEdgeMaterial = riseLines(new LineMaterial({ color: INK.getHex(), linewidth: 1, transparent: true, opacity: 0.25, fog: true }));
+const outlineCity = (mesh) => {
+  const { positions, whens } = mesh.userData.edges, geo = new LineSegmentsGeometry().setPositions(positions);
+  geo.setAttribute('instanceWhen', new THREE.InstancedBufferAttribute(whens, 2));
+  const lines = new LineSegments2(geo, cityEdgeMaterial);
+  lines.raycast = () => {}; lines.frustumCulled = false; mesh.add(lines); delete mesh.userData.edges;
+};
 
 // ----------------------------------------------------------------------------------------------- the card and labels
 const card = document.getElementById('card');
@@ -111,12 +119,21 @@ const [data, terrain, ages] = await Promise.all([
 const ground = buildGround(data, terrain);
 scene.add(ground.mesh, ground.lines);
 // the timeline: an old plan on the ground for each year (it has its own streams, and for long no tram: the ribbons go)
-// and the buildings that stood then, as far as the plans tell
+// and the buildings that stood then, as far as the plans tell — they rise and sink as the year changes (see the loop)
 const timeline = createTimeline(document.getElementById('timeline'), ground, import.meta.env.BASE_URL, {
-  onChange: (plan) => { ground.lines.visible = !plan; city.showStop(plan && ages ? ages.stops.indexOf(plan.key) : -1); },
+  onChange: (plan) => {
+    ground.lines.visible = !plan;
+    const i = plan && ages ? ages.stops.indexOf(plan.key) : -1, to = i < 0 ? TODAY : i, s = STOP.uStop.value;
+    if (to !== s.y) s.set(s.z >= 0.5 ? s.y : s.x, to, 0); // (from where it is — or was, if it had barely started — to the new stop)
+    city.showStops(s.x, s.y);
+  },
   about: (plan) => {
-    const i = ages ? ages.stops.indexOf(plan.key) : -1;
-    return i < 0 ? '' : `Buildings: ${ages.counts[i].toLocaleString('en')} of today’s ${ages.buildings.toLocaleString('en')} are shown, as read off the plans — an estimate, not recorded dates.`;
+    const i = ages ? ages.stops.indexOf(plan.key) : -1; if (i < 0) return '';
+    const n = (v) => v.toLocaleString('en'), lost = ages.lostCounts?.[i] ?? 0, ruins = ages.ruins?.[i] ?? 0;
+    return `Buildings: ${n(ages.counts[i])} of today’s ${n(ages.buildings)}`
+      + (lost ? `, and ${n(lost)} that are gone, drawn as plain houses where the plan of 1920 shows a building (their shapes are assumed)` : '')
+      + (ruins ? `; ${n(ruins)} in ruins (how much of each was left is assumed)` : '')
+      + '. All of it read off the plans: an estimate, not recorded dates.';
   },
 });
 // the paper beyond the map, well below the lowest ground so the two never fight over the same pixels
@@ -124,8 +141,11 @@ const low = terrain.min;
 const under = new THREE.Mesh(new THREE.PlaneGeometry(20000, 20000).rotateX(-Math.PI / 2).translate(0, low - 6, 0), lookMaterial({ vertexColors: false }));
 under.material.color.set('#e3dccb'); scene.add(under);
 
-const city = buildCity(data, lookMaterial(), terrain, ages);
-city.meshes.forEach(outline); scene.add(city.group);
+const cityLook = { solid: lookMaterial({ rise: true }), open: lookMaterial({ rise: true }), depth: riseDepthMaterial() };
+cityLook.open.side = THREE.DoubleSide; // (the ruins: walls with no roof, seen from inside too)
+const city = buildCity(data, cityLook, terrain, ages);
+city.meshes.forEach(outlineCity); scene.add(city.group);
+city.showStops(TODAY, TODAY);
 const trees = buildTrees(data, terrain); scene.add(trees.group);
 console.info('city', city.stats, 'trees', trees.count, 'of them in woods', trees.inWoods);
 
@@ -203,7 +223,9 @@ renderer.setAnimationLoop((time) => {
   // the look eases from one to the other
   const ink = (LOOK.uInk.value += Math.sign(inkTarget - LOOK.uInk.value) * Math.min(Math.abs(inkTarget - LOOK.uInk.value), dt / 0.6));
   scene.background.lerpColors(SKY.colour, SKY.ink, ink); scene.fog.color.copy(scene.background);
-  edgeMaterial.opacity = 0.3 + 0.65 * ink; edgeMaterial.linewidth = (0.9 + 0.7 * ink) * renderer.getPixelRatio();
+  for (const m of [edgeMaterial, cityEdgeMaterial]) { m.opacity = 0.3 + 0.65 * ink; m.linewidth = (0.9 + 0.7 * ink) * renderer.getPixelRatio(); }
+  STOP.uStop.value.z = Math.min(1, STOP.uStop.value.z + dt / 1.8); // (the timeline: the buildings that come and go)
+  if (STOP.uStop.value.z === 1) city.showStops(STOP.uStop.value.y, STOP.uStop.value.y); // (arrived: what is left of the stop before is put away)
   for (const p of placeMeshes) { const h = p.mesh.material.userData.highlight, to = Math.max(p.target, p.hover ? 0.45 : 0); h.value += (to - h.value) * Math.min(1, dt * 6); }
   if (flight) {
     flight.t = Math.min(1, flight.t + dt / 1.4);

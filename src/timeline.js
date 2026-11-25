@@ -1,8 +1,8 @@
 // The timeline: a row of years, each an old plan of the city (public/plan/plans.json, made by tools/plan.mjs), and
 // "Today". Picking a year lays that plan on the ground, in colour as it was scanned and in the ink look redrawn
-// with the viewer's own ink and paper; "Today" brings back the ground drawn from OpenStreetMap. Only the ground
-// The buildings follow (src/city.js): those that stood then, as far as the plans tell. One plan is held in memory
-// at a time.
+// with the viewer's own ink and paper; "Today" brings back the ground drawn from OpenStreetMap.
+// The buildings follow (src/city.js, moved by src/main.js): those that stood then, as far as the plans tell, rise
+// out of the ground and the others sink into it. One plan is held in memory at a time.
 import * as THREE from 'three';
 import { setPlan } from './look.js';
 

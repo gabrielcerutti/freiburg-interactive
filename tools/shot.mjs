@@ -1,6 +1,8 @@
 // Takes a screenshot of the viewer with a headless Chrome for Testing (never your everyday browser).
-//   node tools/shot.mjs [out.png] [--view x,y,z,tx,ty,tz] [--card] [--ink] [--select <key>] [--viewer] [--scroll px] [--plan <key>] [--size WxH]
+//   node tools/shot.mjs [out.png] [--view x,y,z,tx,ty,tz] [--card] [--ink] [--select <key>] [--viewer] [--scroll px] [--plan <key>] [--then <key>] [--size WxH] [--eval <js>]
 //   (--viewer: with --select, opens the place's photos and goes to the second one; --scroll: scrolls the card down;
+//    --then: after everything else, picks another year and takes the picture half way through the change;
+//    --eval: prints what a line of JavaScript gives in the page (say, "lab.city");
 //    --no-webgl: a browser that cannot do 3D, to see the message the page shows)
 // Starts its own Vite server on port 5431, waits for the city to load, and saves the picture (default: shots/view.png).
 // Chrome: $CHROME if set, otherwise the newest "Google Chrome for Testing" in Playwright's cache (npx playwright-core install chromium).
@@ -13,7 +15,7 @@ import { execSync } from 'node:child_process';
 
 const args = process.argv.slice(2);
 const opt = (name) => (args.includes(name) ? args[args.indexOf(name) + 1] : null);
-const out = args.find((a, i) => !a.startsWith('--') && !['--view', '--select', '--scroll', '--plan', '--size'].includes(args[i - 1])) ?? 'shots/view.png';
+const out = args.find((a, i) => !a.startsWith('--') && !['--view', '--select', '--scroll', '--plan', '--then', '--size', '--eval'].includes(args[i - 1])) ?? 'shots/view.png';
 const view = args.includes('--view') ? args[args.indexOf('--view') + 1].split(',').map(Number) : null;
 
 function findChrome() {
@@ -56,6 +58,8 @@ try {
   if (view && (opt('--select') || args.includes('--card'))) await page.waitForTimeout(1600); // (let the flight finish)
   if (view && opt('--select')) await page.evaluate(([x, y, z, tx, ty, tz]) => { lab.camera.position.set(x, y, z); lab.controls.target.set(tx, ty, tz); lab.controls.update(); }, view);
   await page.waitForTimeout(args.includes('--card') || opt('--select') || args.includes('--ink') ? 1800 : 1200);
+  if (opt('--eval')) console.log(JSON.stringify(await page.evaluate(opt('--eval'))));
+  if (opt('--then')) { await page.evaluate((k) => lab.plan(k), opt('--then')); await page.waitForTimeout(900); }
   mkdirSync(dirname(out), { recursive: true });
   await page.screenshot({ path: out, timeout: 20_000 });
   console.log(out);

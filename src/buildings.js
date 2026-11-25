@@ -144,9 +144,15 @@ function planes({ shape, box, across }) {
 export const KIND = { PLAIN: 1, WINDOWS: 2, TILES: 3, STONE: 4, FOLIAGE: 5, RUNNEL: 6, TRACK: 7, DIAMONDS: 8 };
 const PLAIN = [0, 0, 0, KIND.PLAIN];
 
-/** Collects triangles with flat normals, one colour per triangle and what the shader paints on it. */
+/**
+ * Collects triangles with flat normals, one colour per triangle and what the shader paints on it.
+ * `when` (optional, set before adding a building): [the ground under it, the stops of the timeline at which it
+ * stands, one bit each] — the shader raises it from that ground and lowers it back as the timeline moves (src/look.js).
+ */
 export class Mesher {
-  constructor() { this.pos = []; this.nor = []; this.col = []; this.fac = []; }
+  constructor() { this.pos = []; this.nor = []; this.col = []; this.fac = []; this.whn = []; this.when = null; this.seg = []; }
+  /** an outline to draw in ink, from a to b, for a thing that names its own (the rest get theirs from their edges: src/city.js) */
+  line(a, b) { this.seg.push(a[0], a[1], a[2], b[0], b[1], b[2]); }
   get vertices() { return this.pos.length / 3; }
   /** one triangle; `want` is the direction its face should look (it is flipped to match) */
   tri(a, b, c, colr, want, fac = PLAIN) {
@@ -154,7 +160,10 @@ export class Mesher {
     let nx = uy * vz - uz * vy, ny = uz * vx - ux * vz, nz = ux * vy - uy * vx; const l = Math.hypot(nx, ny, nz); if (l < 1e-9) return;
     nx /= l; ny /= l; nz /= l;
     if (want && nx * want[0] + ny * want[1] + nz * want[2] < 0) { [b, c] = [c, b]; nx = -nx; ny = -ny; nz = -nz; }
-    for (const p of [a, b, c]) { this.pos.push(p[0], p[1], p[2]); this.nor.push(nx, ny, nz); this.col.push(colr.r, colr.g, colr.b); this.fac.push(fac[0], fac[1], fac[2], fac[3]); }
+    for (const p of [a, b, c]) {
+      this.pos.push(p[0], p[1], p[2]); this.nor.push(nx, ny, nz); this.col.push(colr.r, colr.g, colr.b); this.fac.push(fac[0], fac[1], fac[2], fac[3]);
+      if (this.when) this.whn.push(this.when[0], this.when[1]);
+    }
   }
   /** any three.js geometry (indexed or not), with a matrix and a colour */
   geometry(g, colr, matrix, fac = PLAIN) {
@@ -169,6 +178,7 @@ export class Mesher {
     g.setAttribute('normal', new THREE.Float32BufferAttribute(this.nor, 3));
     g.setAttribute('color', new THREE.Float32BufferAttribute(this.col, 3));
     g.setAttribute('aFacade', new THREE.Float32BufferAttribute(this.fac, 4));
+    if (this.whn.length === (this.pos.length / 3) * 2) g.setAttribute('aWhen', new THREE.Float32BufferAttribute(this.whn, 2));
     g.computeBoundingSphere();
     return g;
   }
@@ -182,7 +192,7 @@ export class Mesher {
  * not map them) or KIND.STONE (for churches and towers, whose openings a place draws itself).
  */
 export function addBuilding(m, b, { walls = KIND.WINDOWS, roof = KIND.TILES, lift = 0, chimneys = false } = {}) {
-  const r = resolve(b), P = r.shape === 'flat' ? [] : planes(r);
+  const r = resolve(b), P = r.shape === 'flat' ? [] : planes(r), floats = r.minH > 0;
   r.minH += lift; r.wallTop += lift; // (`lift`: the height of the ground the building stands on)
   const seed = (hash(b.id) % 1000) / 1000;
   const fWall = [r.minH, r.wallTop, seed, walls], fRoof = [r.wallTop + r.roofH, r.wallTop, seed, roof];
@@ -260,6 +270,57 @@ export function addBuilding(m, b, { walls = KIND.WINDOWS, roof = KIND.TILES, lif
     }
   }
   // a part that floats (a gallery, a canopy) gets a floor too, seen from below
-  if (r.minH > 0) fill(b.rings[0], b.rings.slice(1), () => r.minH, [0, -1, 0]);
+  if (floats) fill(b.rings[0], b.rings.slice(1), () => r.minH, [0, -1, 0]);
+  return r;
+}
+
+// ------------------------------------------------------------------------------------------------------------ ruins
+/**
+ * Adds what is left of a building after a fire: its outer walls, burnt, standing to a ragged height with their empty
+ * windows, and rubble inside. ASSUMED, all of it — the damage map says "heavy damage to total loss", not what was
+ * left of each house: how high each stretch of wall still stands (between a fifth of its height and all of it, with
+ * breaches), that the roof and the floors are gone, the rubble.
+ * A part that floats (a gallery, an upper storey mapped on its own) leaves nothing.
+ * The walls are a single skin, to keep the ruins light: their mesh has to be drawn from both sides (src/city.js).
+ */
+export function addRuin(m, b, { lift = 0 } = {}) {
+  const r = resolve(b);
+  if (r.minH > 0.5) return r;
+  const foot = lift, ground = lift + 0.3, full = Math.max(3.5, r.wallTop), seed = (hash(b.id) % 1000) / 1000;
+  const soot = r.wall.clone().multiplyScalar(0.8).lerp(new THREE.Color('#5a4e43'), 0.3), rubble = new THREE.Color('#9a8f80');
+  const fWall = [ground, ground + full, seed, KIND.WINDOWS];
+  // how much of the wall is left at a point: the same for every wall that meets there
+  const rnd = (x, z) => { const v = Math.sin(x * 12.9898 + z * 78.233) * 43758.5453; return v - Math.floor(v); };
+  const soft = (x, z) => { const ix = Math.floor(x), iz = Math.floor(z), fx = x - ix, fz = z - iz, sx = fx * fx * (3 - 2 * fx), sz = fz * fz * (3 - 2 * fz); return (rnd(ix, iz) * (1 - sx) + rnd(ix + 1, iz) * sx) * (1 - sz) + (rnd(ix, iz + 1) * (1 - sx) + rnd(ix + 1, iz + 1) * sx) * sz; };
+  const left = (x, z) => (0.22 + 0.78 * (0.6 * soft(x / 6, z / 6) + 0.4 * rnd(x, z))) * (soft(x / 9 + 40, z / 9 + 17) < 0.3 ? 0.3 : 1);
+  b.rings.forEach((ring, k) => {
+    const sign = Math.sign(signedArea(ring)) * (k === 0 ? 1 : -1);
+    for (let i = 0; i < ring.length; i++) {
+      const p = ring[i], q = ring[(i + 1) % ring.length], dx = q[0] - p[0], dz = q[1] - p[1], len = Math.hypot(dx, dz); if (len < 1e-3) continue;
+      const out = [(dz / len) * sign, 0, (-dx / len) * sign], n = Math.max(1, Math.ceil(len / 3.2));
+      for (let j = 0; j < n; j++) {
+        const A = [p[0] + (dx * j) / n, p[1] + (dz * j) / n], B = [p[0] + (dx * (j + 1)) / n, p[1] + (dz * (j + 1)) / n];
+        const a0 = [A[0], foot, A[1]], b0 = [B[0], foot, B[1]], a1 = [A[0], ground + full * left(A[0], A[1]), A[1]], b1 = [B[0], ground + full * left(B[0], B[1]), B[1]];
+        m.tri(a0, b0, b1, soot, out, fWall); m.tri(a0, b1, a1, soot, out, fWall); // (one skin: the ruins are drawn from both sides)
+        m.line(a1, b1); if (j === 0) m.line([A[0], ground, A[1]], a1);             // (in ink: the broken top, and the corners)
+      }
+    }
+  });
+  // the rubble: a bed of it over the whole floor, and a few heaps
+  const v2 = (pts) => pts.map((p) => new THREE.Vector2(p[0], p[1])), all = b.rings.flat(), bed = ground + 0.7;
+  for (const [i, j, k] of THREE.ShapeUtils.triangulateShape(v2(b.rings[0]), b.rings.slice(1).map(v2))) {
+    m.tri([all[i][0], bed, all[i][1]], [all[j][0], bed, all[j][1]], [all[k][0], bed, all[k][1]], rubble, [0, 1, 0]);
+  }
+  const { c, u, v, hl, hw } = r.box, heaps = Math.min(5, Math.max(1, Math.round((hl * hw * 4) / 70)));
+  for (let h = 0; h < heaps; h++) {
+    const s = (rnd(seed * 97 + h, 3.1) - 0.5) * 1.6 * hl, t = (rnd(seed * 31 + h, 7.7) - 0.5) * 1.6 * hw, x = c[0] + u[0] * s + v[0] * t, z = c[1] + u[1] * s + v[1] * t;
+    if (!insideRing(b.rings[0], x, z) || b.rings.slice(1).some((hole) => insideRing(hole, x, z))) continue;
+    const rad = Math.min(1.6 + 2.6 * rnd(x, z), Math.max(1.2, hw * 0.8)), top = [x, bed + 0.9 + 1.6 * rnd(z, x), z], tone = rubble.clone().multiplyScalar(0.86 + 0.26 * rnd(x + 5, z));
+    for (let a = 0; a < 6; a++) {
+      const a0 = (a / 6) * Math.PI * 2, a1 = ((a + 1) / 6) * Math.PI * 2;
+      m.tri([x + Math.cos(a0) * rad, bed, z + Math.sin(a0) * rad], [x + Math.cos(a1) * rad, bed, z + Math.sin(a1) * rad], top, tone, [0, 1, 0]);
+      if (a % 2 === 0) m.line([x + Math.cos(a0) * rad, bed, z + Math.sin(a0) * rad], top);
+    }
+  }
   return r;
 }
