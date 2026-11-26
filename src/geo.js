@@ -23,5 +23,8 @@ export function toLatLon(x, z) {
   return [ORIGIN.lat - z / M_PER_DEG_LAT, ORIGIN.lon + x / M_PER_DEG_LON];
 }
 
-/** The area the city covers: the old town inside the former ring of walls, plus a margin. */
-export const BOUNDS = { south: 47.988, west: 7.84, north: 48.001, east: 7.862 };
+/**
+ * The area the city covers: the old town inside the former ring of walls with a margin, and south of the Dreisam the
+ * Wiehre, as far as the plans of 1875 and 1903 reach (about 47.979).
+ */
+export const BOUNDS = { south: 47.979, west: 7.84, north: 48.001, east: 7.862 };

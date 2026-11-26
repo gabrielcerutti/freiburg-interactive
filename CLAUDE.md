@@ -1,6 +1,7 @@
 # Freiburg interactive — notes for Claude
 
-A three.js + Vite viewer of Freiburg's old town. `README.md` explains the pipeline; this is what not to break.
+A three.js + Vite viewer of Freiburg im Breisgau: the old town and the Wiehre so far, the whole city in time (`BOUNDS` in `src/geo.js`;
+to grow it: move the bounds, then `npm run terrain`, `node tools/osm.mjs --refresh`, `npm run plan`, `npm run city`, `npm run ages`). `README.md` explains the pipeline; this is what not to break.
 
     npm run dev      # the viewer
     npm run build    # must always build

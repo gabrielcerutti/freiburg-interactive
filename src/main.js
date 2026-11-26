@@ -38,7 +38,7 @@ app.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
 // the sky (src/sky.js): blue overhead, haze at the horizon; the fog is that haze, so the far city fades into it
-scene.background = SKY.haze.clone(); scene.fog = new THREE.Fog(SKY.haze.clone(), 1200, 3200);
+scene.background = SKY.haze.clone(); scene.fog = new THREE.Fog(SKY.haze.clone(), 1500, 4600); // (far enough to see across the whole map from its other end)
 const sky = buildSky(); scene.add(sky);
 
 const camera = new THREE.PerspectiveCamera(40, 1, 2, 8000);
@@ -46,7 +46,7 @@ camera.position.set(-330, 260, 380);
 const controls = new MapControls(camera, renderer.domElement);
 controls.target.set(-20, 25, 0);
 controls.enableDamping = true; controls.dampingFactor = 0.08;
-controls.maxPolarAngle = Math.PI * 0.47; controls.minDistance = 25; controls.maxDistance = 2600;
+controls.maxPolarAngle = Math.PI * 0.47; controls.minDistance = 25; controls.maxDistance = 3400;
 controls.screenSpacePanning = false;
 
 // The light is an illustration choice, not data: a late-morning sun from the south-south-east, fairly low, so the

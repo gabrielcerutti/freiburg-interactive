@@ -1,6 +1,6 @@
 # Freiburg im Breisgau — interactive
 
-The old town of Freiburg in 3D, in the browser: every building from OpenStreetMap with its roof, the streets, the
+Freiburg im Breisgau in 3D, in the browser — the old town and, south of the Dreisam, the Wiehre: every building from OpenStreetMap with its roof, the streets, the
 Bächle, the tram and OSM's trees on the ground, and landmarks modelled by hand: the Münster, the Martinstor and the
 Schwabentor, the Historisches Kaufhaus, the two town halls, the Colombischlössle, the Theater, the university's
 Alte Universität, its Kollegiengebäude I, II and III and its library, the Ganter brewery, the Hauptbahnhof (its three buildings, each at its years), and on the Schlossberg the tower and the Kastaniengarten. Two looks — colour, and an ink engraving.

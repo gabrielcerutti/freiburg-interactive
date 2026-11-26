@@ -38,7 +38,7 @@ const box = [south, west, north, east].map((v) => v.toFixed(7)).join(','); // (W
 
 mkdirSync('sources/plan', { recursive: true }); mkdirSync('public/plan', { recursive: true });
 let last = 0;
-async function download(file, query) {
+async function download(file, query, box) {
   if (existsSync(file)) return;
   const wait = last + 2600 - Date.now();
   if (wait > 0) await new Promise((r) => setTimeout(r, wait));
@@ -50,11 +50,24 @@ async function download(file, query) {
   console.log('downloaded', file);
 }
 
+// The piece is asked for in bands from north to south, none taller than 2048 pixels (a map service does not hand out
+// pictures of any size), and put together here. The downloads carry the area in their name (its south and north edge),
+// so that a piece of another area is never taken for this one; what the other tools read is the piece put together,
+// sources/plan/<key>.jpg and <key>-cover.png.
+const height = Math.round((WIDTH * H) / W), BANDS = Math.ceil(height / 2048), tag = `${south.toFixed(4)}-${north.toFixed(4)}`;
+const rows = Array.from({ length: BANDS + 1 }, (_, i) => Math.round((height * i) / BANDS));
 const list = [];
 for (const p of PLANS) {
-  const height = Math.round((WIDTH * H) / W), source = `sources/plan/${p.key}.jpg`, cover = `sources/plan/${p.key}-cover.png`;
-  await download(source, `LAYERS=stadtplan_${p.key}&WIDTH=${WIDTH}&HEIGHT=${height}&FORMAT=image/jpeg`);
-  await download(cover, `LAYERS=stadtplan_${p.key}&WIDTH=${COVER}&HEIGHT=${Math.round((COVER * H) / W)}&FORMAT=image/png&TRANSPARENT=true`);
+  const source = `sources/plan/${p.key}.jpg`, cover = `sources/plan/${p.key}-cover.png`, bands = [];
+  for (let i = 0; i < BANDS; i++) {
+    const n = north - ((north - south) * rows[i]) / height, s = north - ((north - south) * rows[i + 1]) / height, file = `sources/plan/${p.key}-${tag}-${i}.jpg`;
+    await download(file, `LAYERS=stadtplan_${p.key}&WIDTH=${WIDTH}&HEIGHT=${rows[i + 1] - rows[i]}&FORMAT=image/jpeg`, [s, west, n, east].map((v) => v.toFixed(7)).join(','));
+    bands.push({ input: file, left: 0, top: rows[i] });
+  }
+  await sharp({ create: { width: WIDTH, height, channels: 3, background: '#fff' } }).composite(bands).jpeg({ quality: 92 }).toFile(source);
+  const coverOf = `sources/plan/${p.key}-${tag}-cover.png`;
+  await download(coverOf, `LAYERS=stadtplan_${p.key}&WIDTH=${COVER}&HEIGHT=${Math.round((COVER * H) / W)}&FORMAT=image/png&TRANSPARENT=true`, box);
+  writeFileSync(cover, readFileSync(coverOf));
 
   // where the sheet reaches: the small picture's transparency, enlarged (smoothly) to the size of the piece
   const alpha = await sharp(cover).ensureAlpha().extractChannel(3).resize(WIDTH, height, { fit: 'fill', kernel: 'cubic' }).raw().toBuffer();
