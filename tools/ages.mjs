@@ -216,6 +216,10 @@ for (const b of city.buildings) if ((b.place && since.get(b.place) <= 1920) || (
 // draws there is the place itself, not lost houses. Today's buildings on the same ground keep their own pixels.)
 const grown = (ring, d) => { const cx = ring.reduce((s, p) => s + p[0], 0) / ring.length, cz = ring.reduce((s, p) => s + p[1], 0) / ring.length; return ring.map(([x, z]) => { const l = Math.hypot(x - cx, z - cz) || 1; return [x + ((x - cx) / l) * d, z + ((z - cz) / l) * d]; }); };
 for (const { PLACE } of PLACES) if (PLACE.footprint && (PLACE.since ?? -Infinity) <= 1920 && (PLACE.until ?? Infinity) > 1920) for (const f of PLACE.footprint) paint(f.rings.map((r) => grown(r, 3)), -2, true);
+// (and today's woods: the plans draw them with hatching and tree signs that read as built-up tint, which put «gone»
+// houses among the trees of the Sternwald and the Schlossberg. A house that stood in 1920 where a wood grows today
+// would be missed — rarer by far than the false ones.)
+for (const g of city.green) if (g.kind === 'forest' || g.kind === 'wood') paint(g.rings, -2, true);
 
 // what each plan shows under each building: how much of its footprint is built on, destroyed, beyond the sheet
 const seen = new Float64Array(keys.length * 7 * 5), area = new Float64Array(keys.length);

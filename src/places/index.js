@@ -29,5 +29,8 @@ import * as kastaniengarten from './kastaniengarten.js';
 import * as alterHauptbahnhof from './alter-hauptbahnhof.js';
 import * as hauptbahnhof1949 from './hauptbahnhof-1949.js';
 import * as hauptbahnhof from './hauptbahnhof.js';
-
-export const PLACES = [muenster, martinstor, schwabentor, kaufhaus, altesRathaus, neuesRathaus, schlossbergturm, colombischloessle, universitaetsbibliothek, kollegiengebaeude1, theater, kollegiengebaeude2, alteUniversitaet, kollegiengebaeude3, brauereiGanter, kastaniengarten, alterHauptbahnhof, hauptbahnhof1949, hauptbahnhof];
+import * as johanneskirche from './johanneskirche.js';
+import * as wasserschloessle from './wasserschloessle.js';
+import * as alterWiehrebahnhof from './alter-wiehrebahnhof.js';
+import * as christuskirche from './christuskirche.js';
+export const PLACES = [muenster, martinstor, schwabentor, kaufhaus, altesRathaus, neuesRathaus, schlossbergturm, colombischloessle, universitaetsbibliothek, kollegiengebaeude1, theater, kollegiengebaeude2, alteUniversitaet, kollegiengebaeude3, brauereiGanter, kastaniengarten, alterHauptbahnhof, hauptbahnhof1949, hauptbahnhof, johanneskirche, wasserschloessle, alterWiehrebahnhof, christuskirche];

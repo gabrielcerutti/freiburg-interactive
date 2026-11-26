@@ -98,4 +98,24 @@ export const PHOTOS = {
     { file: 'File:Gare de Fribourg IMG 4390 retouched.jpg', caption: 'The entrance on 24 May 2009: a flat canopy on slender columns before a glass front lettered «Hauptbahnhof», bands of glass on the range behind it, and the foot of a glass tower on the right.' },
     { file: 'File:FR-HBF 011 retouched.jpg', caption: 'From the bridge south of the station on 30 July 2008: in front the hotel, brick-red and glass, with a frame of panels on its roof; behind it the taller tower, its narrow south face dark blue; Bismarckallee on the right.' },
   ],
+  johanneskirche: [
+    { file: 'File:Aerial View - Freiburg im Breisgau-Johanneskirche1.jpg', caption: 'From the air on 21 October 2012: red sandstone under slate roofs — the porch between the two towers in front, the nave, the transept with a large round window, a slender turret over the crossing.' },
+    { file: 'File:JohanniskircheFR 001.jpg', caption: 'The front and one side from the street on 25 January 2009: the porch with two doorways under round windows, the towers with their clocks, and gables and pinnacles at the foot of the spires.' },
+    { file: 'File:Freiburg, Wiehre- Johanneskirche - LABW - Staatsarchiv Freiburg W 134 Nr. 106739.jpg', caption: 'From the air on 8 September 1976: the church among trees, its round choir end in front and the two towers at the far end, by a wide street crossing.' },
+  ],
+  'alter-wiehrebahnhof': [
+    { file: 'File:Alter Wiehrebahnhof.jpg', caption: 'The street front on 30 August 2005, in grey plaster: five round arches on the ground floor, three of them doors, five upright windows above, strips of red sandstone between them, the lettering «Alter Wiehrebahnhof», and four brick chimneys on the tiled roof.' },
+    { file: 'File:Alter Wiehre Bahnhof 2.jpg', caption: 'The side where the tracks ran, in August 2013: yellow plaster, round arches framed in red sandstone, the two-storey middle block with its gable over the roof of the low wing, and café tables at the far end.' },
+    { file: 'File:Kommunales Kino Freiburg - Der Alte Wiehrebahnhof in Freiburg.jpg', caption: 'The street front in December 2019, now yellow: the two-storey middle block between its two low wings, bare trees on the square, and Christmas trees for sale on the left.' },
+  ],
+  wasserschloessle: [
+    { file: 'File:Wasserschlösschen (Freiburg) 8971.jpg', caption: 'The front on 1 November 2011: pale and grey stone, two iron doors, two round windows, and in the middle arch the city’s arms over the words «Wasserwerk Freiburg», the years 1895 and 1896 and a fountain; above the battlements a tall round tower between two small ones.' },
+    { file: 'File:Wasserschlösschen (Freiburg) 8981.jpg', caption: 'From the side on the same day: the front stands against the wooded slope, with a planted bank beside it and a gravel forecourt in front; two people on the left give the scale.' },
+    { file: 'File:Wasserschlössle oben.jpg', caption: 'From the hill side on 25 March 2009: the three towers stand on the lawn that covers the reservoir, the middle one with a door; red sandstone vents in the grass, and the roofs of the town beyond.' },
+  ],
+  christuskirche: [
+    { file: 'File:Freiburg Bauten b 404.jpg', caption: 'The church a few years after it was finished, from one side: two rows of windows, a many-sided arm under its own roof, and the tower with its gallery, belfry and spire at the far end. Plate from the book «Freiburg im Breisgau. Die Stadt und ihre Bauten», 1898.' },
+    { file: 'File:Christuskirche (Freiburg im Breisgau) jm26448.jpg', caption: 'The entrance front in February 2017, after the renovation: steps up to the arched door, the statue of Christ in its niche, the gallery, the blue clock, the open belfry and the green spire.' },
+    { file: 'File:Freiburg- Christuskirche - LABW - Staatsarchiv Freiburg W 134 Nr. 118372.jpg', caption: 'From the air on 3 June 1982: the church among the houses of the Wiehre, with trees around it — the tower with its green spire at one end, the grey roof of the many-sided choir at the other.' },
+  ],
 };

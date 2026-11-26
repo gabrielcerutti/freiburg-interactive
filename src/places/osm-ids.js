@@ -45,4 +45,14 @@ export const PLACE_OSM = {
   // (https://www.openstreetmap.org/way/308486107). The two station buildings that stood here before
   // ('alter-hauptbahnhof', 'hauptbahnhof-1949') are gone and have no outline: they place themselves.
   hauptbahnhof: ['w233444291', 'w308486108', 'w308486107'],
+  // "Johanneskirche" (St. Johann, Wiehre), https://www.openstreetmap.org/way/643437367, with its 15 building:parts
+  johanneskirche: ['w643437367'],
+  // "Christuskirche" (the Protestant church of the Wiehre), https://www.openstreetmap.org/way/92130186 (one outline,
+  // no building:parts)
+  christuskirche: ['w92130186'],
+  // "Wasserschlössle" (the covered reservoir in the Sternwald, with its castle front),
+  // https://www.openstreetmap.org/relation/18949359 (one outline, no building:parts)
+  wasserschloessle: ['r18949359'],
+  // "Alter Wiehrebahnhof", https://www.openstreetmap.org/way/145404229
+  'alter-wiehrebahnhof': ['w145404229'],
 };
