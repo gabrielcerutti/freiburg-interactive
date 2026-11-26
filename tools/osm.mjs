@@ -1,7 +1,8 @@
 // Downloads today's city from OpenStreetMap (Overpass API) inside BOUNDS (src/geo.js):
 // buildings, building parts, streets, railways/tram, water, green areas, vineyards and trees.
 //   node tools/osm.mjs            -> sources/osm/<layer>.json   (raw Overpass answers)
-// A layer that is already on disk is not downloaded again (delete the file to refresh it).
+// A layer that is already on disk is not downloaded again; `node tools/osm.mjs --refresh` downloads them all again
+// (then: npm run city, npm run ages, and every npm run check — a mapper may have changed an outline).
 // Data © OpenStreetMap contributors, ODbL (https://www.openstreetmap.org/copyright).
 //
 // Manners: one request at a time, at least 2.5 s apart, with a generic User-Agent and no personal data.
@@ -25,12 +26,13 @@ const LAYERS = {
   green: '(way["leisure"~"^(park|garden|playground)$"];way["landuse"~"^(grass|forest|meadow|cemetery|vineyard)$"];way["natural"~"^(wood|scrub)$"];relation["leisure"="park"];relation["landuse"~"^(grass|forest)$"];);',
 };
 
+const REFRESH = process.argv.includes('--refresh'); // (download every layer again, over the one on disk)
 mkdirSync(OUT, { recursive: true });
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 let first = true;
 for (const [name, filter] of Object.entries(LAYERS)) {
   const file = `${OUT}/${name}.json`;
-  if (existsSync(file)) { console.log(`${name}: already on disk`); continue; }
+  if (existsSync(file) && !REFRESH) { console.log(`${name}: already on disk`); continue; }
   if (!first) await wait(2600);
   first = false;
   const query = `[out:json][timeout:120][bbox:${bbox}];${filter}out geom;`;

@@ -125,6 +125,9 @@ export function resolve(b) {
 
   const wall = colour(b.colour, WALLS[hash(b.id) % WALLS.length]);
   const roof = colour(b.roofColour, shape === 'flat' ? '#9c968a' : ROOFS[hash(b.id + 'r') % ROOFS.length]);
+  // (OSM's colour as tagged, but not darker than a dark roof in daylight: a nearly black roof — one house behind the
+  // Kaufhaus is tagged #2c0707 — reads as a hole in the town. Lightened towards its own hue, as the Kaufhaus's is.)
+  { const l = roof.r * 0.299 + roof.g * 0.587 + roof.b * 0.114; if (b.roofColour && l < 0.03) roof.lerp(new THREE.Color('#8a5a4c'), 0.45); }
   if (!b.colour) assumed.push('wall colour');
   if (!b.roofColour) assumed.push('roof colour');
   return { shape, minH, wallTop, roofH, box, across: b.roofOrientation === 'across', wall, roof, assumed };

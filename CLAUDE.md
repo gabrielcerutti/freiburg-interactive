@@ -44,9 +44,12 @@ A three.js + Vite viewer of Freiburg's old town. `README.md` explains the pipeli
 - `sources/` is not in the repository (downloads: the OSM extract, terrain tiles, plan scans, original photos). The
   tools fetch what is missing, politely, in a few minutes: `npm run osm`, `npm run terrain`, `npm run plan`,
   `npm run photos`. They are only needed to regenerate (`npm run city`, `npm run ages`), which adding a landmark
-  does. A fresh OSM download is newer than the one `public/data/city.json` was made from: after it, run
-  `npm run city && npm run ages`, then every `npm run check` and look at the diff — a mapper may have changed an
-  outline a landmark stands on.
+  does.
+- The OSM extract is kept up to date, the same on every machine through what is committed (`public/data/`): to
+  refresh it, `node tools/osm.mjs --refresh`, then `npm run city && npm run ages`, every `npm run check`, and a look
+  at what changed in `public/data/city.json` — a mapper may have moved an outline a landmark stands on. Commit the
+  regenerated data with the refresh, so the other machine gets the same city by pulling (and refreshes its own
+  `sources/osm/` before it next regenerates).
 - To add a landmark, use the skill `add-landmark` (`.claude/skills/add-landmark/SKILL.md`).
 
 ## Working habits
