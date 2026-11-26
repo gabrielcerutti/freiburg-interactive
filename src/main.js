@@ -161,7 +161,8 @@ const timeline = createTimeline(document.getElementById('timeline'), ground, imp
     if (to !== s.y) s.set(s.z >= 0.5 ? s.y : s.x, to, 0); // (from where it is — or was, if it had barely started — to the new stop)
     city.showStops(s.x, s.y);
     // the hand-made places that say since when they stand (PLACE.since) are not there before
-    const year = plan ? Number(plan.key) || 1944.9 : Infinity; // (the damage map, "bomben", is of November 1944)
+    const year = plan ? Number(plan.key) || 1944.9 : Number.MAX_VALUE; // (today: after any year, but before the «never» — Infinity — of a place that still stands)
+    // (the damage map, "bomben", is of November 1944: 1944.9)
     for (const p of placeMeshes) { p.hidden = year < p.since || year >= p.until; // (not there yet, or gone by then)
       if (p.ruin) p.ruined = year >= 1944.9 && year < p.ruinUntil; }
     if (selected?.hidden) select(null);
