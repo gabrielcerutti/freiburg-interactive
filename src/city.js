@@ -8,6 +8,9 @@
 //   ruins   what was left of those the raid of November 1944 destroyed (src/buildings.js, addRuin), at that stop;
 //   lost    the buildings that are gone: plain houses on footprints cut out of the plan of 1920. ASSUMED, all of
 //           them but where they stood: three floors, a tiled roof, the colours — and in ruins like the others.
+// Each of the three is cut into tiles of TILE metres (a building goes to the tile its first corner is in), so that
+// only the part of the city in view is drawn — and its shadows only where the sun's view reaches: the city can
+// grow without every frame paying for all of it.
 // Every vertex carries the ground under its building and its stops (`aWhen`: one bit per stop, bit 8 for today),
 // and the shader raises and lowers each building as the timeline moves (src/look.js). Each mesh also hands over
 // its outlines (`userData.edges`: the segments and the same two numbers for each), which rise with it.
@@ -16,6 +19,7 @@ import { Mesher, addBuilding, addRuin, orientedBox } from './buildings.js';
 import { FLAT } from './terrain.js';
 
 export const TODAY = 8;
+const TILE = 384;
 const ALWAYS = 511;
 /** the stops at which a building is in a given state ('1' standing, '2' in ruins), as bits; `today`: and now */
 const bits = (when, state, today) => { let n = today ? 1 << TODAY : 0; for (let i = 0; i < when.length; i++) if (when[i] === state) n |= 1 << i; return n; };
@@ -30,7 +34,13 @@ export function buildCity(data, materials, terrain = FLAT, ages = null) {
     const key = b.group ?? b.id, h = terrain.lowest(b.rings[0]) - 0.3; // (a little into the ground: no gap under the walls)
     ground.set(key, Math.min(ground.get(key) ?? Infinity, h));
   }
-  const part = () => ({ m: new Mesher(), spans: [], stops: 0 }), parts = { city: part(), ruins: part(), lost: part() };
+  const part = (name) => ({ name, m: new Mesher(), spans: [], stops: 0 }), tiles = new Map();
+  /** the three parts of the tile a building stands in */
+  const tileOf = (b) => {
+    const [x, z] = b.rings[0][0], key = `${Math.floor(x / TILE)},${Math.floor(z / TILE)}`;
+    if (!tiles.has(key)) tiles.set(key, { city: part('city'), ruins: part('ruins'), lost: part('lost') });
+    return tiles.get(key);
+  };
   /** adds one thing to a mesh, remembering which of its vertices are this building's and when it stands */
   const put = (part, lift, stops, add) => {
     if (!stops) return;
@@ -41,7 +51,7 @@ export function buildCity(data, materials, terrain = FLAT, ages = null) {
   let n = 0;
   for (const b of data.buildings) {
     if (b.place) continue;
-    const key = b.group ?? b.id, when = ages?.standing[key], lift = ground.get(key);
+    const key = b.group ?? b.id, when = ages?.standing[key], lift = ground.get(key), parts = tileOf(b);
     put(parts.city, lift, when ? bits(when, '1', true) : ALWAYS, (m) => {
       const r = addBuilding(m, b, { lift, chimneys: !b.group && b.type !== 'part' }); n++;
       for (const a of r.assumed) assumed[a] = (assumed[a] ?? 0) + 1;
@@ -50,25 +60,27 @@ export function buildCity(data, materials, terrain = FLAT, ages = null) {
   }
   (ages?.lost ?? []).forEach((l, i) => {
     const box = orientedBox(l.ring), lift = terrain.lowest(l.ring) - 0.3;
-    const b = { id: `lost${i}`, rings: [l.ring], type: 'yes', levels: 3, roofShape: box.hl < box.hw * 1.35 ? 'hipped' : 'gabled' };
+    const b = { id: `lost${i}`, rings: [l.ring], type: 'yes', levels: 3, roofShape: box.hl < box.hw * 1.35 ? 'hipped' : 'gabled' }, parts = tileOf(b);
     put(parts.lost, lift, bits(l.when, '1', false), (m) => addBuilding(m, b, { lift, chimneys: true }));
     put(parts.ruins, lift, bits(l.when, '2', false), (m) => addRuin(m, b, { lift }));
   });
 
   const group = new THREE.Group(); group.name = 'city';
   let vertices = 0; const sizes = {};
-  const meshes = Object.entries(parts).filter(([, p]) => p.m.vertices).map(([name, p]) => {
-    const mesh = new THREE.Mesh(p.m.toGeometry(), name === 'ruins' ? materials.open : materials.solid);
+  const meshes = [...tiles.values()].flatMap((t) => Object.values(t)).filter((p) => p.m.vertices).map((p) => {
+    const name = p.name, mesh = new THREE.Mesh(p.m.toGeometry(), name === 'ruins' ? materials.open : materials.solid);
     mesh.customDepthMaterial = materials.depth; mesh.castShadow = mesh.receiveShadow = true; mesh.name = name;
-    mesh.frustumCulled = false; // (it is the whole city, always in sight)
+    // (drawn only when in view. The shader only ever lowers a building — it sinks, or is put away far below — so the
+    // sphere around the buildings as they stand always holds what is drawn of them)
+    mesh.geometry.computeBoundingSphere();
     mesh.userData.edges = edgesOf(mesh.geometry, p.spans, p.m.seg); mesh.userData.stops = p.stops;
     vertices += p.m.vertices; group.add(mesh);
-    sizes[name] = { vertices: p.m.vertices, edges: mesh.userData.edges.whens.length / 2 };
+    const s = (sizes[name] ??= { vertices: 0, edges: 0 }); s.vertices += p.m.vertices; s.edges += mesh.userData.edges.whens.length / 2;
     return mesh;
   });
   /** a mesh is only drawn while one of its buildings stands: at the stop the timeline comes from, or the one it goes to */
   const showStops = (from, to) => { for (const mesh of meshes) mesh.visible = Boolean(mesh.userData.stops & ((1 << from) | (1 << to))); };
-  return { group, meshes, showStops, stats: { buildings: n, lost: ages?.lost?.length ?? 0, vertices, sizes, assumed } };
+  return { group, meshes, showStops, stats: { tiles: tiles.size, meshes: meshes.length, buildings: n, lost: ages?.lost?.length ?? 0, vertices, sizes, assumed } };
 }
 
 /**

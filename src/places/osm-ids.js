@@ -40,4 +40,9 @@ export const PLACE_OSM = {
   // "Greiffenegg-Schlössle", https://www.openstreetmap.org/way/118656365, and the kiosk at the upper edge of its beer
   // garden, the Kastaniengarten (https://www.openstreetmap.org/way/285810376; the garden itself is a point in OSM)
   kastaniengarten: ['w118656365', 'w285810376'],
+  // "Hauptbahnhof", https://www.openstreetmap.org/way/233444291 (today's station), with the two office towers
+  // (https://www.openstreetmap.org/way/308486108) and the range along Bismarckallee north of them
+  // (https://www.openstreetmap.org/way/308486107). The two station buildings that stood here before
+  // ('alter-hauptbahnhof', 'hauptbahnhof-1949') are gone and have no outline: they place themselves.
+  hauptbahnhof: ['w233444291', 'w308486108', 'w308486107'],
 };

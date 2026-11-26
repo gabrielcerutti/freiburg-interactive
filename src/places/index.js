@@ -3,6 +3,10 @@
 // buildings, list their outline in osm-ids.js and run `npm run city`. Then `npm run check -- <key>`.
 // A place that was not always there says since when in PLACE.since (a year, with its source): at the stops of the
 // timeline before that year it is put away, with its label. Without it, a place stands at every stop.
+// A place that is gone says until when in PLACE.until (a year, with its source): it is shown from `since` to the
+// last stop before that year, and not today. OSM has no outline for it: it places itself (as the Schlossbergturm
+// does) on a footprint read off an old plan, and if the raid left it in ruins it gives the shell's footprint in
+// PLACE.footprint ([{ id, rings: [[[x, z], …]], levels }], world metres).
 // A place that stood in 1944 says what the air raid of 27 November 1944 did to it in PLACE.war ({ state: 'ruin' |
 // 'damaged' | 'spared', rebuilt: year | null, source }): a 'ruin' is drawn as a roofless shell from that stop until
 // `rebuilt` (src/main.js). Where no source says, the field is left out.
@@ -22,5 +26,8 @@ import * as alteUniversitaet from './alte-universitaet.js';
 import * as kollegiengebaeude3 from './kollegiengebaeude-3.js';
 import * as brauereiGanter from './brauerei-ganter.js';
 import * as kastaniengarten from './kastaniengarten.js';
+import * as alterHauptbahnhof from './alter-hauptbahnhof.js';
+import * as hauptbahnhof1949 from './hauptbahnhof-1949.js';
+import * as hauptbahnhof from './hauptbahnhof.js';
 
-export const PLACES = [muenster, martinstor, schwabentor, kaufhaus, altesRathaus, neuesRathaus, schlossbergturm, colombischloessle, universitaetsbibliothek, kollegiengebaeude1, theater, kollegiengebaeude2, alteUniversitaet, kollegiengebaeude3, brauereiGanter, kastaniengarten];
+export const PLACES = [muenster, martinstor, schwabentor, kaufhaus, altesRathaus, neuesRathaus, schlossbergturm, colombischloessle, universitaetsbibliothek, kollegiengebaeude1, theater, kollegiengebaeude2, alteUniversitaet, kollegiengebaeude3, brauereiGanter, kastaniengarten, alterHauptbahnhof, hauptbahnhof1949, hauptbahnhof];

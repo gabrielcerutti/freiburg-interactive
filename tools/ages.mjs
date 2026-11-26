@@ -192,7 +192,7 @@ for (const k of [2, 3, 4]) {
 // owner[pixel]: which building of today covers it (−1 none, −2 a hand-made place: those always stand)
 const owner = new Int32Array(N).fill(-1);
 /** fills the pixels inside a footprint (its rings, even-odd) with a value */
-function paint(rings, value) {
+function paint(rings, value, onlyFree = false) {
   const px = rings.map((r) => r.map(([x, z]) => [(x - x0) * kx, (z - z0) * kz]));
   let az = 1e9, bz = -1e9;
   for (const [, y] of px[0]) { az = Math.min(az, y); bz = Math.max(bz, y); }
@@ -203,7 +203,7 @@ function paint(rings, value) {
       if ((yi > yc) !== (yj > yc)) xs.push(((xj - xi) * (yc - yi)) / (yj - yi) + xi);
     }
     xs.sort((a, b) => a - b);
-    for (let i = 0; i + 1 < xs.length; i += 2) for (let x = Math.max(0, Math.round(xs[i])); x < Math.min(w, Math.round(xs[i + 1])); x++) owner[y * w + x] = value;
+    for (let i = 0; i + 1 < xs.length; i += 2) for (let x = Math.max(0, Math.round(xs[i])); x < Math.min(w, Math.round(xs[i + 1])); x++) if (!onlyFree || owner[y * w + x] === -1) owner[y * w + x] = value;
   }
 }
 keys.forEach((k, gi) => { for (const rings of groups.get(k).rings) paint(rings, gi); });
@@ -211,6 +211,11 @@ keys.forEach((k, gi) => { for (const rings of groups.get(k).rings) paint(rings, 
 // plan of 1920 draws there is a lost building like any other)
 const since = new Map(PLACES.map((p) => [p.PLACE.key, p.PLACE.since ?? -Infinity]));
 for (const b of city.buildings) if ((b.place && since.get(b.place) <= 1920) || (!b.place && claimed.has(b.group ?? b.id))) paint(b.rings, -2);
+// (and a place that is gone today but stood in 1920 — it has no building in city.json, only the footprint it was
+// traced on, PLACE.footprint — keeps that ground too, grown by 3 m, which is how exact the tracing is: what the plan
+// draws there is the place itself, not lost houses. Today's buildings on the same ground keep their own pixels.)
+const grown = (ring, d) => { const cx = ring.reduce((s, p) => s + p[0], 0) / ring.length, cz = ring.reduce((s, p) => s + p[1], 0) / ring.length; return ring.map(([x, z]) => { const l = Math.hypot(x - cx, z - cz) || 1; return [x + ((x - cx) / l) * d, z + ((z - cz) / l) * d]; }); };
+for (const { PLACE } of PLACES) if (PLACE.footprint && (PLACE.since ?? -Infinity) <= 1920 && (PLACE.until ?? Infinity) > 1920) for (const f of PLACE.footprint) paint(f.rings.map((r) => grown(r, 3)), -2, true);
 
 // what each plan shows under each building: how much of its footprint is built on, destroyed, beyond the sheet
 const seen = new Float64Array(keys.length * 7 * 5), area = new Float64Array(keys.length);

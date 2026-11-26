@@ -3,7 +3,7 @@
 The old town of Freiburg in 3D, in the browser: every building from OpenStreetMap with its roof, the streets, the
 Bächle, the tram and OSM's trees on the ground, and landmarks modelled by hand: the Münster, the Martinstor and the
 Schwabentor, the Historisches Kaufhaus, the two town halls, the Colombischlössle, the Theater, the university's
-Alte Universität, its Kollegiengebäude I, II and III and its library, the Ganter brewery, and on the Schlossberg the tower and the Kastaniengarten. Two looks — colour, and an ink engraving.
+Alte Universität, its Kollegiengebäude I, II and III and its library, the Ganter brewery, the Hauptbahnhof (its three buildings, each at its years), and on the Schlossberg the tower and the Kastaniengarten. Two looks — colour, and an ink engraving.
 
     npm install
     npm run dev          # http://localhost:5173
@@ -37,6 +37,7 @@ a city drawn on its own map, hand-made landmarks built from simple solids, and e
 | 3 | `src/buildings.js` | Turns each footprint into walls and a roof (gabled, hipped, pyramidal, skillion, flat) from its OSM tags. What OSM does not say is filled in and **counted as assumed**. |
 | 4 | `src/ground.js` | The ground: two small maps of what each point is (street, green, water, and which kind), which the shader turns into crisp, painted surfaces at any zoom; a vineyard gets its rows of vines, run across the slope (assumed); the terrain's shape; and the Bächle and the rails as ribbons on it. |
 | 1d | `tools/ages.mjs` | Works out which buildings stood at each stop of the timeline, and which lay in ruins, by reading the old plans under every footprint (built-up tint, the houses the plan of 1920 draws one by one, the black of the 1944 damage map, the hatched “destroyed blocks” of 1955), plus the few construction years OpenStreetMap has. Also cuts the buildings that are gone today out of the plan of 1920: `public/data/ages.json`. An estimate, not recorded dates; the rules are at the top of the file. |
+| 3b | `src/city.js` | The generic city as three sets of meshes (today's buildings, the lost ones, the ruins), each cut into tiles of 384 m so that only the part in view is drawn, with its shadows. |
 | 4b | `src/timeline.js` | The timeline: picking a year lays that year's plan on the ground (in colour as scanned; in ink redrawn with the viewer's ink and paper) and the city follows (`src/city.js`): the buildings that stood then, the lost ones and the ruins rise, the rest sink, each a moment apart (the shader in `src/look.js` does it); “Today” brings the OpenStreetMap ground and every building back. |
 | 4b | `src/trees.js` | OSM's trees and tree rows, and trees filling OSM's woods, as instanced lumpy crowns and trunks. |
 | 4c | `src/look.js` | The shader: façades (windows, frames, shutters, doors), roof tiles and ridges, stone, cobbles, grass, water, foliage; the ink look (sepia paper, ink, hatching laid on the surfaces) and the highlight of a selected landmark. |

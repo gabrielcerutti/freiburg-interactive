@@ -594,5 +594,119 @@
    "cropped": false,
    "page": "https://commons.wikimedia.org/wiki/File:Brauerei_Ganter_in_Freiburg_2.jpg"
   }
+ ],
+ "alter-hauptbahnhof": [
+  {
+   "src": "photos/alter-hauptbahnhof-1.webp",
+   "width": 1280,
+   "height": 457,
+   "caption": "The station from the town side: the two-storey middle block with its row of arches, a slender spire on the clock turret, low wings and the long roof of the train shed behind; strollers, riders and carriages in front. Coloured lithograph, dated about 1845 on Wikimedia Commons.",
+   "author": "Unknown author",
+   "date": "circa 1845",
+   "licence": "Public domain",
+   "licenceUrl": null,
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:Freiburger_Bahnhof_Kolorierte_Lithographie_nach_1845_Augustinermuseum_Freiburg_Denkmaelerarchiv.jpg"
+  },
+  {
+   "src": "photos/alter-hauptbahnhof-2.webp",
+   "width": 1280,
+   "height": 846,
+   "caption": "The middle block with a tram before it: seven arches between pilaster strips, seven round-headed windows above, a balcony on each projecting end, chimneys on the low hipped roof and the clock turret, now without a spire. Photograph, dated 1910 on Wikimedia Commons.",
+   "author": "Unknown author",
+   "date": "1910",
+   "licence": "Public domain",
+   "licenceUrl": null,
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:Freiburger_Hbf_1910.jpg"
+  },
+  {
+   "src": "photos/alter-hauptbahnhof-3.webp",
+   "width": 1280,
+   "height": 784,
+   "caption": "Friedrich Eisenlohr’s ground plan, «Bahnhof bei Freiburg»: the long train shed with its tracks across the top, the open court with a fountain (20) between two ranges of waiting rooms, the entrance hall behind its row of piers at the bottom, a low wing on each side, and a scale bar in Baden feet and metres.",
+   "author": "Friedrich Eisenlohr",
+   "date": "between 1865 and 1873",
+   "licence": "Public domain",
+   "licenceUrl": null,
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:Eisenlohr_Hochbauten_der_badischen_Bahn_Freiburg_00004.jpg"
+  }
+ ],
+ "hauptbahnhof-1949": [
+  {
+   "src": "photos/hauptbahnhof-1949-1.webp",
+   "width": 960,
+   "height": 634,
+   "caption": "The front on 30 April 1981, under a tree: tall windows between piers above a canopy, three tall windows in the plain wall beside them, a square clock turret on the tiled roof, a lower wing beyond; taxis and people in the street. Photograph by Willy Pragher.",
+   "author": "Willy Pragher",
+   "date": "1981-04-30",
+   "licence": "CC BY 3.0 de",
+   "licenceUrl": "https://creativecommons.org/licenses/by/3.0/de/deed.en",
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:Freiburg_Hauptbahnhof_mit_Vorplatz.jpg"
+  },
+  {
+   "src": "photos/hauptbahnhof-1949-2.webp",
+   "width": 960,
+   "height": 634,
+   "caption": "From the air on 8 September 1976, looking south: right of the wide street the station’s hipped roofs around a yard full of parked cars, a glazed pyramid behind the largest roof, and the long roofs over the platforms; beyond it buses on their stands, and a bridge across the tracks. Photograph by Willy Pragher.",
+   "author": "Willy Pragher",
+   "date": "8 September 1976",
+   "licence": "CC BY 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by/4.0",
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:Freiburg-_Hauptbahnhof,_Bismarckallee,_von_Norden_-_LABW_-_Staatsarchiv_Freiburg_W_134_Nr._106747.jpg"
+  },
+  {
+   "src": "photos/hauptbahnhof-1949-3.webp",
+   "width": 1280,
+   "height": 850,
+   "caption": "In 1990, across the cobbled street: pale yellow walls under red-brown tiled roofs, a two-storey part on the left with a sign for an airport bus, a lower wing to the right, flags at its far end. The photo’s description on Wikimedia Commons calls it the old station building, «inzwischen komplett abgerissen».",
+   "author": "Peter Kappus",
+   "date": "1990",
+   "licence": "CC BY-SA 3.0",
+   "licenceUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:Bahnhof_Freiburg_27.jpg"
+  }
+ ],
+ "hauptbahnhof": [
+  {
+   "src": "photos/hauptbahnhof-1.webp",
+   "width": 1280,
+   "height": 857,
+   "caption": "From the air on 15 April 2007: the long six-storey range beside the tracks, the two towers and the lower block before it on the street side, the platform roofs, and a bridge crossing the tracks on the right.",
+   "author": "Luftfahrer",
+   "date": "2007-04-15",
+   "licence": "CC BY 3.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by/3.0",
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:Freiburg_Bahnhof-3.jpg"
+  },
+  {
+   "src": "photos/hauptbahnhof-2.webp",
+   "width": 1280,
+   "height": 781,
+   "caption": "The entrance on 24 May 2009: a flat canopy on slender columns before a glass front lettered «Hauptbahnhof», bands of glass on the range behind it, and the foot of a glass tower on the right.",
+   "author": "Poudou99",
+   "date": "2009-05-24",
+   "licence": "CC BY 3.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by/3.0",
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:Gare_de_Fribourg_IMG_4390_retouched.jpg"
+  },
+  {
+   "src": "photos/hauptbahnhof-3.webp",
+   "width": 1280,
+   "height": 841,
+   "caption": "From the bridge south of the station on 30 July 2008: in front the hotel, brick-red and glass, with a frame of panels on its roof; behind it the taller tower, its narrow south face dark blue; Bismarckallee on the right.",
+   "author": "Joergens.mi",
+   "date": "30 July 2008",
+   "licence": "CC BY-SA 3.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+   "cropped": false,
+   "page": "https://commons.wikimedia.org/wiki/File:FR-HBF_011_retouched.jpg"
+  }
  ]
 }

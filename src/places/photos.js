@@ -83,4 +83,19 @@ export const PHOTOS = {
     { file: 'File:Brauerei Ganter.jpg', caption: 'Much the same view in May 2007, in colour: yellow walls, the tower lettered «Ganter» with glazed storeys on top, steel stacks on a flat roof, the brick chimney, the stepped slate roof with its pointed cap, and a large flat-roofed building behind.' },
     { file: 'File:Brauerei Ganter in Freiburg 2.jpg', caption: 'In the yard, April 2015: a front lettered «Brauerei Ganter» with a coat of arms between tall windows, a low white pavilion before it, the tower and steel stacks behind, the brick chimney on the left and a house with a mural on its gable on the right.' },
   ],
+  'alter-hauptbahnhof': [
+    { file: 'File:Freiburger Bahnhof Kolorierte Lithographie nach 1845 Augustinermuseum Freiburg Denkmaelerarchiv.jpg', caption: 'The station from the town side: the two-storey middle block with its row of arches, a slender spire on the clock turret, low wings and the long roof of the train shed behind; strollers, riders and carriages in front. Coloured lithograph, dated about 1845 on Wikimedia Commons.' },
+    { file: 'File:Freiburger Hbf 1910.jpg', caption: 'The middle block with a tram before it: seven arches between pilaster strips, seven round-headed windows above, a balcony on each projecting end, chimneys on the low hipped roof and the clock turret, now without a spire. Photograph, dated 1910 on Wikimedia Commons.' },
+    { file: 'File:Eisenlohr Hochbauten der badischen Bahn Freiburg 00004.jpg', caption: 'Friedrich Eisenlohr’s ground plan, «Bahnhof bei Freiburg»: the long train shed with its tracks across the top, the open court with a fountain (20) between two ranges of waiting rooms, the entrance hall behind its row of piers at the bottom, a low wing on each side, and a scale bar in Baden feet and metres.' },
+  ],
+  'hauptbahnhof-1949': [
+    { file: 'File:Freiburg Hauptbahnhof mit Vorplatz.jpg', caption: 'The front on 30 April 1981, under a tree: tall windows between piers above a canopy, three tall windows in the plain wall beside them, a square clock turret on the tiled roof, a lower wing beyond; taxis and people in the street. Photograph by Willy Pragher.' },
+    { file: 'File:Freiburg- Hauptbahnhof, Bismarckallee, von Norden - LABW - Staatsarchiv Freiburg W 134 Nr. 106747.jpg', caption: 'From the air on 8 September 1976, looking south: right of the wide street the station’s hipped roofs around a yard full of parked cars, a glazed pyramid behind the largest roof, and the long roofs over the platforms; beyond it buses on their stands, and a bridge across the tracks. Photograph by Willy Pragher.' },
+    { file: 'File:Bahnhof Freiburg 27.jpg', caption: 'In 1990, across the cobbled street: pale yellow walls under red-brown tiled roofs, a two-storey part on the left with a sign for an airport bus, a lower wing to the right, flags at its far end. The photo’s description on Wikimedia Commons calls it the old station building, «inzwischen komplett abgerissen».' },
+  ],
+  hauptbahnhof: [
+    { file: 'File:Freiburg Bahnhof-3.jpg', caption: 'From the air on 15 April 2007: the long six-storey range beside the tracks, the two towers and the lower block before it on the street side, the platform roofs, and a bridge crossing the tracks on the right.' },
+    { file: 'File:Gare de Fribourg IMG 4390 retouched.jpg', caption: 'The entrance on 24 May 2009: a flat canopy on slender columns before a glass front lettered «Hauptbahnhof», bands of glass on the range behind it, and the foot of a glass tower on the right.' },
+    { file: 'File:FR-HBF 011 retouched.jpg', caption: 'From the bridge south of the station on 30 July 2008: in front the hotel, brick-red and glass, with a frame of panels on its roof; behind it the taller tower, its narrow south face dark blue; Bismarckallee on the right.' },
+  ],
 };

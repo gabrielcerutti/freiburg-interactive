@@ -92,7 +92,9 @@ const outlineCity = (mesh) => {
   const { positions, whens } = mesh.userData.edges, geo = new LineSegmentsGeometry().setPositions(positions);
   geo.setAttribute('instanceWhen', new THREE.InstancedBufferAttribute(whens, 2));
   const lines = new LineSegments2(geo, cityEdgeMaterial);
-  lines.raycast = () => {}; lines.frustumCulled = false; mesh.add(lines); delete mesh.userData.edges;
+  if (!whens.length) { delete mesh.userData.edges; return; }
+  geo.boundingSphere = mesh.geometry.boundingSphere.clone(); geo.boundingBox = new THREE.Box3().setFromBufferAttribute(mesh.geometry.attributes.position); // (its building's: the lines never leave it)
+  lines.raycast = () => {}; mesh.add(lines); delete mesh.userData.edges;
 };
 
 // ----------------------------------------------------------------------------------------------- the card and labels
@@ -141,8 +143,10 @@ function yearNote(plan) {
   else text = `<b>${label(i)}.</b> ${more > 0 ? `${about(more).replace(/^a/, 'A')} of today’s buildings went up since ${label(i - 1)}: ` : ''}${about(ages.counts[i])} of ${n(ages.buildings)} ${more > 0 ? 'now stood' : 'stood'}.${gone}`;
   const fresh = PLACES.map((p) => p.PLACE).filter((p) => p.since > (i ? year(i - 1) : -Infinity) && p.since <= year(i) && i).sort((a, b) => a.since - b.since);
   if (fresh.length) text += ` New among the landmarks: ${fresh.map((p) => `${p.name} (${p.since})`).join(', ')}.`;
+  const left = i ? PLACES.map((p) => p.PLACE).filter((p) => p.until > year(i - 1) && p.until <= year(i) && !(p.war?.state === 'ruin' && year(i - 1) >= 1944.9)) : [];
+  if (left.length && !ruins) text += ` Gone since ${label(i - 1)}: ${left.map((p) => `${p.name} (${p.until})`).join(', ')}.`;
   // (what the raid did to the landmarks: each place's file says, with its source)
-  const fate = (state, at) => PLACES.map((p) => p.PLACE).filter((p) => p.war?.state === state && !(p.since > at) && (state !== 'ruin' || at < (p.war.rebuilt ?? 1945))).map((p) => p.name).join(', ');
+  const fate = (state, at) => PLACES.map((p) => p.PLACE).filter((p) => p.war?.state === state && !(p.since > at) && !(p.until <= at) && (state !== 'ruin' || at < (p.war.rebuilt ?? 1945))).map((p) => p.name).join(', ');
   if (ruins) { const r = fate('ruin', year(i)), d = fate('damaged', year(i)), ok = fate('spared', year(i)); text += ` Among the landmarks${r ? `, in ruins: ${r}` : ''}${d ? `${r ? ';' : ','} damaged: ${d}` : ''}${ok ? `${r || d ? ';' : ','} spared: ${ok}` : ''}.`; }
   else if (year(i) > 1945 && fate('ruin', year(i))) text += ` Still in ruins among the landmarks: ${fate('ruin', year(i))}.`;
   return `${text} <i>Read off the city’s old plans: an estimate, not recorded dates.</i>`;
@@ -158,7 +162,8 @@ const timeline = createTimeline(document.getElementById('timeline'), ground, imp
     city.showStops(s.x, s.y);
     // the hand-made places that say since when they stand (PLACE.since) are not there before
     const year = plan ? Number(plan.key) || 1944.9 : Infinity; // (the damage map, "bomben", is of November 1944)
-    for (const p of placeMeshes) { p.hidden = year < p.since; if (p.ruin) p.ruined = year >= 1944.9 && year < p.ruinUntil; }
+    for (const p of placeMeshes) { p.hidden = year < p.since || year >= p.until; // (not there yet, or gone by then)
+      if (p.ruin) p.ruined = year >= 1944.9 && year < p.ruinUntil; }
     if (selected?.hidden) select(null);
   },
   about: yearNote,
@@ -187,17 +192,21 @@ for (const place of PLACES) {
     const mesh = new THREE.Mesh(kit.mesher.toGeometry(), lookMaterial());
     mesh.castShadow = mesh.receiveShadow = true; mesh.name = place.PLACE.key;
     // the whole place stands on the lowest ground under it (one lift for all its pieces, so they stay together)
-    const lift = (parts.length ? terrain.lowest(parts.flatMap((b) => b.rings[0])) : terrain.heightAt(anchor[0], anchor[1])) - 0.3;
+    // (a place that is gone stands on the footprint it gives; one with neither, at its anchor)
+    const under = (parts.length ? parts : place.PLACE.footprint ?? []).flatMap((b) => b.rings[0]);
+    const lift = (under.length ? terrain.lowest(under) : terrain.heightAt(anchor[0], anchor[1])) - 0.3;
     mesh.position.y = lift;
     outline(mesh); scene.add(mesh);
-    const entry = { place: place.PLACE, mesh, labelAt: [anchor[0], lift + top + 6, anchor[1]], target: 0, since: place.PLACE.since ?? -Infinity, hidden: false, rise: 1 };
+    const entry = { place: place.PLACE, mesh, labelAt: [anchor[0], lift + top + 6, anchor[1]], target: 0, since: place.PLACE.since ?? -Infinity, until: place.PLACE.until ?? Infinity, hidden: place.PLACE.until != null, rise: place.PLACE.until != null ? 0 : 1 };
     mesh.userData.entry = entry; placeMeshes.push(entry);
     // A place the raid of 27 November 1944 left in ruins (PLACE.war, sourced in its file) has a second shape: the
     // shell of its outline, made like the city's ruins. It takes the place's place from that stop until the year it
     // stood again (`rebuilt`; where no source gives one, only at the stop of November 1944).
     const war = place.PLACE.war;
-    if (war?.state === 'ruin' && parts.length) {
-      const m = new Mesher(); for (const b of parts) addRuin(m, b, { lift: 0 });
+    // (a place that is gone has no outline in OSM: it gives the shell's footprint itself, PLACE.footprint)
+    const shell = parts.length ? parts : place.PLACE.footprint ?? [];
+    if (war?.state === 'ruin' && shell.length) {
+      const m = new Mesher(); for (const b of shell) addRuin(m, b, { lift: 0 });
       const ruin = new THREE.Mesh(m.toGeometry(), ruinLook()); ruin.position.y = lift; ruin.castShadow = ruin.receiveShadow = true; ruin.visible = false;
       const lines = new LineSegments2(new LineSegmentsGeometry().setPositions(m.seg), edgeMaterial); lines.raycast = () => {}; ruin.add(lines);
       ruin.userData.entry = entry; scene.add(ruin);
