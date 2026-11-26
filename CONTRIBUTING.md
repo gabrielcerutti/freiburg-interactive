@@ -77,6 +77,11 @@ the details):
 Budget: a single building under 25,000 vertices, a group under 90,000. Model what a draughtsman would draw from a
 distance — volumes, roofs, towers, rows of openings — not interiors or mouldings.
 
+Which landmark to make next: [`LANDMARKS.md`](LANDMARKS.md) lists the candidates district by district — what is made,
+what is on the map and waiting, what waits for the map to reach it. `node tools/landmark-candidates.mjs` writes it
+from OpenStreetMap (run it again after making one or moving the map's edge); add by hand, between its two marks,
+the places people ask for that it cannot know. The map grows first; landmarks follow little by little.
+
 ## Keeping the map data fresh, and growing the map
 
 - **Fresh OpenStreetMap data**: `node tools/osm.mjs --refresh`, then `npm run city && npm run ages`, every check, and

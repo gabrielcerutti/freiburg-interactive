@@ -51,6 +51,8 @@ to grow it: move the bounds, then `npm run terrain`, `node tools/osm.mjs --refre
   at what changed in `public/data/city.json` — a mapper may have moved an outline a landmark stands on. Commit the
   regenerated data with the refresh, so the other machine gets the same city by pulling (and refreshes its own
   `sources/osm/` before it next regenerates).
+- `LANDMARKS.md` is the list of landmarks still to make, by district (`node tools/landmark-candidates.mjs` rewrites it;
+  what is between its «by hand» marks is kept). The owner's order of work: grow the map first, landmarks little by little.
 - To add a landmark, use the skill `add-landmark` (`.claude/skills/add-landmark/SKILL.md`).
 
 ## Working habits

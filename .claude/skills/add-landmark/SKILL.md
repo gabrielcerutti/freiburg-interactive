@@ -31,7 +31,7 @@ Read `CLAUDE.md` and the "Adding a landmark" part of `README.md` first. Models t
    and one with `--ink` (`node tools/shot.mjs`), looked at, and what looks wrong fixed (floating or buried pieces,
    holes, roofs poking through).
 6. **Finish**: `npm run ages` (so the timeline knows the ground is taken), `node tools/pace.mjs`, add the place to
-   the list at the top of `README.md`.
+   the list at the top of `README.md`, and run `node tools/landmark-candidates.mjs` so `LANDMARKS.md` marks it made.
 7. **Report**: OSM ids, `since`, `war`, vertices, photos with licences, the facts with their sources, every
    assumption, where sources disagreed, what could not be verified.
 
