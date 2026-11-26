@@ -26,6 +26,9 @@ Inspired by [«Buenos Aires, de 1867 a 1950»](https://github.com/mormonnegro/ba
 (<https://baires.mormon.garden>). The code here is new, written from scratch in English, but the ideas are theirs:
 a city drawn on its own map, hand-made landmarks built from simple solids, and every fact with its source.
 
+To work on it, read [`CONTRIBUTING.md`](CONTRIBUTING.md): the rules (nothing invented, every year historically
+accurate), the setup, what is generated from what, and what to run before sending a change.
+
 ## How it is made
 
 | Step | File | What it does |

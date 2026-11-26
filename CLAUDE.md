@@ -55,6 +55,10 @@ to grow it: move the bounds, then `npm run terrain`, `node tools/osm.mjs --refre
 
 ## Working habits
 
+- **Document for the next collaborator** (the owner's standing rule): whatever a newcomer would need — a new field
+  of `PLACE`, a new tool or option, a step of the pipeline, a rule, a known limit — goes into `CONTRIBUTING.md`
+  (people), this file (Claude) or `README.md` (how it is made) in the same change that introduces it.
+
 - Commit and push only when asked. Straight to `main` (one owner, no pull requests so far), with the repository's
   own git identity — a GitHub noreply address, set with `git config user.name` / `user.email` in this repository
   only, never the machine's global one. Commit titles say what changed for someone looking at the viewer.
