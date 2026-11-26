@@ -328,7 +328,13 @@ renderer.setAnimationLoop((time) => {
   // the look eases from one to the other
   const ink = (LOOK.uInk.value += Math.sign(inkTarget - LOOK.uInk.value) * Math.min(Math.abs(inkTarget - LOOK.uInk.value), dt / 0.6));
   scene.background.lerpColors(SKY.haze, SKY.paper, ink); scene.fog.color.copy(scene.background);
-  for (const m of [edgeMaterial, cityEdgeMaterial]) { m.opacity = 0.3 + 0.65 * ink; m.linewidth = (0.9 + 0.7 * ink) * renderer.getPixelRatio(); }
+  // The outlines are drawn with a pen that thins as one steps back: from near, a firm line; from far, where every
+  // house is a few pixels, a hair — and paler — or the town turns into a black thicket.
+  const away = camera.position.distanceTo(controls.target), fine = THREE.MathUtils.clamp(320 / away, 0.3, 1);
+  for (const m of [edgeMaterial, cityEdgeMaterial]) {
+    m.linewidth = Math.max((0.9 + 0.7 * ink) * fine, 0.55) * renderer.getPixelRatio();
+    m.opacity = (0.3 + 0.65 * ink) * (0.55 + 0.45 * fine);
+  }
   STOP.uStop.value.z = Math.min(1, STOP.uStop.value.z + dt / 1.8); // (the timeline: the buildings that come and go)
   if (STOP.uStop.value.z === 1) city.showStops(STOP.uStop.value.y, STOP.uStop.value.y); // (arrived: what is left of the stop before is put away)
   for (const p of placeMeshes) {

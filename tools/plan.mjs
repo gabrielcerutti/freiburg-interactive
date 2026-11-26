@@ -27,13 +27,14 @@ const PLANS = [
   { key: '1955', label: '1955', record: 'da91cc61-79b1-4f39-8ce1-8dfd35a616b2', note: 'Official colour plan, 1:10,000.' },
   { key: '1981', label: '1981', record: '84731cbd-226a-4e66-b2ab-3f72812e085a', note: 'Official city map, 1:16,000.' },
 ];
-const WIDTH = 4096, COVER = 512;
+const RES = 2240 / 4096, COVER = 512; // (metres per pixel of the pieces: what the first area had at 4096 across)
 const WMS = 'https://geoportal.freiburg.de/wms/verma_stadtplan_hist/verma_stadtplan_hist', USER_AGENT = 'historic-maps/1.0 (viewer of old city maps)';
 const CATALOGUE = 'https://geodaten.freiburg.de/geonetwork/srv/ger/catalog.search#/metadata/';
 
 const t = JSON.parse(readFileSync('public/data/terrain.json', 'utf8'));
 const x0 = t.x0, z0 = t.z0, W = (t.width - 1) * t.step, H = (t.height - 1) * t.step;
 const [north, west] = toLatLon(x0, z0), [south, east] = toLatLon(x0 + W, z0 + H);
+const WIDTH = Math.round(W / RES);
 const box = [south, west, north, east].map((v) => v.toFixed(7)).join(','); // (WMS 1.3.0 with EPSG:4326: south, west, north, east)
 
 mkdirSync('sources/plan', { recursive: true }); mkdirSync('public/plan', { recursive: true });
@@ -50,19 +51,20 @@ async function download(file, query, box) {
   console.log('downloaded', file);
 }
 
-// The piece is asked for in bands from north to south, none taller than 2048 pixels (a map service does not hand out
-// pictures of any size), and put together here. The downloads carry the area in their name (its south and north edge),
-// so that a piece of another area is never taken for this one; what the other tools read is the piece put together,
+// The piece is asked for in tiles, none larger than 2048 pixels a side (a map service does not hand out pictures of
+// any size), and put together here. The downloads carry the area in their name (its four edges), so that a piece of
+// another area is never taken for this one; what the other tools read is the piece put together,
 // sources/plan/<key>.jpg and <key>-cover.png.
-const height = Math.round((WIDTH * H) / W), BANDS = Math.ceil(height / 2048), tag = `${south.toFixed(4)}-${north.toFixed(4)}`;
-const rows = Array.from({ length: BANDS + 1 }, (_, i) => Math.round((height * i) / BANDS));
+const height = Math.round((WIDTH * H) / W), BANDS = Math.ceil(height / 2048), COLUMNS = Math.ceil(WIDTH / 2048), tag = `${south.toFixed(4)}-${north.toFixed(4)}-${west.toFixed(4)}-${east.toFixed(4)}`;
+const rows = Array.from({ length: BANDS + 1 }, (_, i) => Math.round((height * i) / BANDS)), cols = Array.from({ length: COLUMNS + 1 }, (_, i) => Math.round((WIDTH * i) / COLUMNS));
 const list = [];
 for (const p of PLANS) {
   const source = `sources/plan/${p.key}.jpg`, cover = `sources/plan/${p.key}-cover.png`, bands = [];
-  for (let i = 0; i < BANDS; i++) {
-    const n = north - ((north - south) * rows[i]) / height, s = north - ((north - south) * rows[i + 1]) / height, file = `sources/plan/${p.key}-${tag}-${i}.jpg`;
-    await download(file, `LAYERS=stadtplan_${p.key}&WIDTH=${WIDTH}&HEIGHT=${rows[i + 1] - rows[i]}&FORMAT=image/jpeg`, [s, west, n, east].map((v) => v.toFixed(7)).join(','));
-    bands.push({ input: file, left: 0, top: rows[i] });
+  for (let i = 0; i < BANDS; i++) for (let j = 0; j < COLUMNS; j++) {
+    const n = north - ((north - south) * rows[i]) / height, s = north - ((north - south) * rows[i + 1]) / height;
+    const w = west + ((east - west) * cols[j]) / WIDTH, e = west + ((east - west) * cols[j + 1]) / WIDTH, file = `sources/plan/${p.key}-${tag}-${i}-${j}.jpg`;
+    await download(file, `LAYERS=stadtplan_${p.key}&WIDTH=${cols[j + 1] - cols[j]}&HEIGHT=${rows[i + 1] - rows[i]}&FORMAT=image/jpeg`, [s, w, n, e].map((v) => v.toFixed(7)).join(','));
+    bands.push({ input: file, left: cols[j], top: rows[i] });
   }
   await sharp({ create: { width: WIDTH, height, channels: 3, background: '#fff' } }).composite(bands).jpeg({ quality: 92 }).toFile(source);
   const coverOf = `sources/plan/${p.key}-${tag}-cover.png`;

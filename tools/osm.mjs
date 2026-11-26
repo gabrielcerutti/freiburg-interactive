@@ -9,7 +9,8 @@
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { BOUNDS } from '../src/geo.js';
 
-const ENDPOINT = 'https://overpass-api.de/api/interpreter';
+// (the main public server, and two public mirrors of it for when it is too busy to answer)
+const ENDPOINTS = ['https://overpass-api.de/api/interpreter', 'https://overpass.private.coffee/api/interpreter', 'https://overpass.kumi.systems/api/interpreter'];
 const USER_AGENT = 'historic-maps/1.0 (viewer of old city maps)';
 const OUT = 'sources/osm';
 const bbox = `${BOUNDS.south},${BOUNDS.west},${BOUNDS.north},${BOUNDS.east}`;
@@ -30,6 +31,7 @@ const REFRESH = process.argv.includes('--refresh'); // (download every layer aga
 mkdirSync(OUT, { recursive: true });
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 let first = true;
+const fresh = []; // (written only when every layer has arrived: never a city with new buildings on old streets)
 for (const [name, filter] of Object.entries(LAYERS)) {
   const file = `${OUT}/${name}.json`;
   if (existsSync(file) && !REFRESH) { console.log(`${name}: already on disk`); continue; }
@@ -37,19 +39,24 @@ for (const [name, filter] of Object.entries(LAYERS)) {
   first = false;
   const query = `[out:json][timeout:120][bbox:${bbox}];${filter}out geom;`;
   let text;
-  // The public server is often busy (429/502/504): try a few times, waiting longer each time.
+  // The public servers are often busy (429/502/504) or drop the line: try each in turn, waiting longer each time.
   for (let attempt = 1; ; attempt++) {
-    const res = await fetch(ENDPOINT, {
-      method: 'POST',
-      headers: { 'User-Agent': USER_AGENT, 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: 'data=' + encodeURIComponent(query),
-    });
-    if (res.ok) { text = await res.text(); break; }
-    if (attempt === 5) { console.error(`${name}: HTTP ${res.status}, giving up`); process.exit(1); }
-    console.log(`${name}: HTTP ${res.status}, retrying in ${attempt * 15} s`);
-    await wait(attempt * 15_000);
+    let why;
+    try {
+      const res = await fetch(ENDPOINTS[(attempt - 1) % ENDPOINTS.length], {
+        method: 'POST', signal: AbortSignal.timeout(180_000),
+        headers: { 'User-Agent': USER_AGENT, 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'data=' + encodeURIComponent(query),
+      });
+      if (res.ok) { text = await res.text(); JSON.parse(text); break; } // (an answer cut short is not JSON: try again)
+      why = `HTTP ${res.status}`;
+    } catch (e) { why = e.cause?.code ?? e.name; }
+    if (attempt === 9) { console.error(`${name}: ${why}, giving up — nothing on disk was changed`); process.exit(1); }
+    console.log(`${name}: ${why}, retrying in ${attempt * 10} s`);
+    await wait(attempt * 10_000);
   }
-  const n = JSON.parse(text).elements?.length ?? 0; // (fails loudly if the answer is not JSON)
-  writeFileSync(file, text);
+  const n = JSON.parse(text).elements?.length ?? 0;
+  fresh.push([file, text]);
   console.log(`${name}: ${n} elements, ${(text.length / 1e6).toFixed(1)} MB`);
 }
+for (const [file, text] of fresh) writeFileSync(file, text);

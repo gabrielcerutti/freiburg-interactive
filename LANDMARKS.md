@@ -110,6 +110,18 @@ Partly on the map.
 | ⬜ | Schwabentorbrücke | bridge |  | [r3271921](https://www.openstreetmap.org/relation/3271921) | [Q1578595](https://www.wikidata.org/wiki/Q1578595) |
 | · | Friedenskirche | church |  | [w116454060](https://www.openstreetmap.org/way/116454060) | [Q62520313](https://www.wikidata.org/wiki/Q62520313) |
 
+### Stühlinger
+
+Partly on the map.
+
+| | Place | What | Year in OSM | OpenStreetMap | Wikidata |
+|---|---|---|---|---|---|
+| ⬜ | Herz-Jesu-Kirche | church |  | [w146291827](https://www.openstreetmap.org/way/146291827) | [Q1614963](https://www.wikidata.org/wiki/Q1614963) |
+| · | Heilig Geist | church | 1954 | [w787832068](https://www.openstreetmap.org/way/787832068) | [Q98032287](https://www.wikidata.org/wiki/Q98032287) |
+| · | Klinik für Frauenheilkunde | hospital |  | [w33903879](https://www.openstreetmap.org/way/33903879) | [Q43896550](https://www.wikidata.org/wiki/Q43896550) |
+| · | Lutherkirche | university |  | [w418305568](https://www.openstreetmap.org/way/418305568) | [Q62613957](https://www.wikidata.org/wiki/Q62613957) |
+| · | St. Josef | church | 1955 | [w105555279](https://www.openstreetmap.org/way/105555279) | [Q107509281](https://www.wikidata.org/wiki/Q107509281) |
+
 ### Wiehre
 
 Partly on the map.
@@ -121,17 +133,17 @@ Partly on the map.
 | ✅ | Christuskirche (`christuskirche`) | church |  | [w92130186](https://www.openstreetmap.org/way/92130186) | [Q1087311](https://www.wikidata.org/wiki/Q1087311) |
 | ⬜ | Collegium Sapientiae | office |  | [w110946570](https://www.openstreetmap.org/way/110946570) | [Q1109284](https://www.wikidata.org/wiki/Q1109284) |
 | ⬜ | Corps Hubertia | building |  | [w1297322680](https://www.openstreetmap.org/way/1297322680) | [Q1134919](https://www.wikidata.org/wiki/Q1134919) |
+| ⬜ | DR 85 007 | locomotive |  | [n1641538021](https://www.openstreetmap.org/node/1641538021) | [Q260674](https://www.wikidata.org/wiki/Q260674) |
+| ⬜ | Hildaturm | tower | 1886 | [w194516198](https://www.openstreetmap.org/way/194516198) | [Q67772790](https://www.wikidata.org/wiki/Q67772790) |
 | ⬜ | informationszentrum 3.welt | office |  | [w101223072](https://www.openstreetmap.org/way/101223072) | [Q28737856](https://www.wikidata.org/wiki/Q28737856) |
 | ✅ | Johanneskirche (`johanneskirche`) | church |  | [w643437367](https://www.openstreetmap.org/way/643437367) | [Q2319056](https://www.wikidata.org/wiki/Q2319056) |
+| ⬜ | Lorettokapelle | church |  | [w126094789](https://www.openstreetmap.org/way/126094789) | [Q1870292](https://www.wikidata.org/wiki/Q1870292) |
 | ⬜ | Max-Planck-Institut zur Erforschung von Kriminalität, Sicherheit und Recht | research_institute |  | [r2806671](https://www.openstreetmap.org/relation/2806671) | [Q832780](https://www.wikidata.org/wiki/Q832780) |
-| · | DR 85 007 | locomotive |  | [n1641538021](https://www.openstreetmap.org/node/1641538021) | [Q260674](https://www.wikidata.org/wiki/Q260674) |
+| ⬜ | PSD Bank Geschäftsstelle Freiburg | office |  | [w165998769](https://www.openstreetmap.org/way/165998769) | [Q1568800](https://www.wikidata.org/wiki/Q1568800) |
 | · | Drehsolarhaus Heliotrop | detached | 1994 | [w193811808](https://www.openstreetmap.org/way/193811808) | [Q325460](https://www.wikidata.org/wiki/Q325460) |
 | · | Forstliche Versuchs- und Forschungsanstalt Baden-Württemberg | building |  | [w696708074](https://www.openstreetmap.org/way/696708074) | [Q28737838](https://www.wikidata.org/wiki/Q28737838) |
-| · | Hildaturm | tower | 1886 | [w194516198](https://www.openstreetmap.org/way/194516198) | [Q67772790](https://www.wikidata.org/wiki/Q67772790) |
-| · | Lorettokapelle | church |  | [w126094789](https://www.openstreetmap.org/way/126094789) | [Q1870292](https://www.wikidata.org/wiki/Q1870292) |
 | · | Maria-Hilf | church |  | [w92419522](https://www.openstreetmap.org/way/92419522) | [Q19546230](https://www.wikidata.org/wiki/Q19546230) |
 | · | Maria-Schutz | church |  | [w766734867](https://www.openstreetmap.org/way/766734867) | [Q92768857](https://www.wikidata.org/wiki/Q92768857) |
-| · | PSD Bank Geschäftsstelle Freiburg | office |  | [w165998769](https://www.openstreetmap.org/way/165998769) | [Q1568800](https://www.wikidata.org/wiki/Q1568800) |
 | · | Stadthalle Freiburg | civic | 1954 | [w37641393](https://www.openstreetmap.org/way/37641393) | [Q22672198](https://www.wikidata.org/wiki/Q22672198) |
 
 ### Betzenhausen
@@ -304,18 +316,6 @@ Not on the map yet.
 | · | Keidel Mineral-Thermalbad Freiburg | public | 1979 | [w88290449](https://www.openstreetmap.org/way/88290449) | [Q120646711](https://www.wikidata.org/wiki/Q120646711) |
 | · | Lukaskirche | church |  | [w203524546](https://www.openstreetmap.org/way/203524546) | [Q81645557](https://www.wikidata.org/wiki/Q81645557) |
 | · | St. Peter und Paul | church |  | [w24720560](https://www.openstreetmap.org/way/24720560) | [Q19991106](https://www.wikidata.org/wiki/Q19991106) |
-
-### Stühlinger
-
-Not on the map yet.
-
-| | Place | What | Year in OSM | OpenStreetMap | Wikidata |
-|---|---|---|---|---|---|
-| · | Heilig Geist | church | 1954 | [w787832068](https://www.openstreetmap.org/way/787832068) | [Q98032287](https://www.wikidata.org/wiki/Q98032287) |
-| · | Herz-Jesu-Kirche | church |  | [w146291827](https://www.openstreetmap.org/way/146291827) | [Q1614963](https://www.wikidata.org/wiki/Q1614963) |
-| · | Klinik für Frauenheilkunde | hospital |  | [w33903879](https://www.openstreetmap.org/way/33903879) | [Q43896550](https://www.wikidata.org/wiki/Q43896550) |
-| · | Lutherkirche | university |  | [w418305568](https://www.openstreetmap.org/way/418305568) | [Q62613957](https://www.wikidata.org/wiki/Q62613957) |
-| · | St. Josef | church | 1955 | [w105555279](https://www.openstreetmap.org/way/105555279) | [Q107509281](https://www.wikidata.org/wiki/Q107509281) |
 
 ### Tiengen
 

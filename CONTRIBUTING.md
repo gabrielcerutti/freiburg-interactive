@@ -90,8 +90,12 @@ the places people ask for that it cannot know. The map grows first; landmarks fo
 - **A larger area**: move `BOUNDS` in `src/geo.js`, then `npm run terrain`, `node tools/osm.mjs --refresh`,
   `npm run plan`, `npm run city`, `npm run ages`. Before that, check how far each old plan reaches over the new
   area: where a sheet does not reach, nothing is shown standing at that year, and the viewer says so. The city is
-  drawn in tiles (`src/city.js`), so more buildings cost little; the ground and the plans are still one picture
-  each, which is fine while the map only grows in one direction and will need tiles when it grows in both.
+  drawn in tiles (`src/city.js`), so more buildings cost little. The plans keep their sharpness whatever the area
+  (`tools/plan.mjs` downloads them in tiles at a fixed 0.55 m per pixel and the picture grows); the ground is one
+  picture of at most 4096 pixels a side, so it gets coarser as the longer side of the map grows, and will need
+  tiles of its own some day. Watch the memory in `tools/pace.mjs` after growing: a plan is one large picture.
+- `tools/osm.mjs` asks the public Overpass server and two public mirrors in turn, and writes nothing unless every
+  layer arrived; when all are busy, try again later.
 
 ## Before you send a change
 
