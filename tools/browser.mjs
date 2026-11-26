@@ -29,9 +29,10 @@ export const gpuArgs = ['--ignore-gpu-blocklist', '--enable-gpu', '--force_high_
 
 // On Windows Chrome for Testing is called chrome.exe like the everyday Chrome, so its processes are picked by the
 // path of the program, never by name.
+// (a blocking call has a time limit: while it waits, the tools' own stop-after-a-time watchdogs cannot fire)
 const ps = (script, done) => {
   const cmd = `powershell -NoProfile -NonInteractive -EncodedCommand ${Buffer.from(script, 'utf16le').toString('base64')}`;
-  return done ? exec(cmd, { windowsHide: true }, done) : execSync(cmd, { windowsHide: true, stdio: ['ignore', 'pipe', 'ignore'] });
+  return done ? exec(cmd, { windowsHide: true }, done) : execSync(cmd, { windowsHide: true, timeout: 15_000, stdio: ['ignore', 'pipe', 'ignore'] });
 };
 const ours = (chrome) => `Get-CimInstance Win32_Process -Filter "Name='chrome.exe'" | Where-Object { $_.ExecutablePath -eq '${resolve(chrome).replace(/'/g, "''")}' }`;
 
@@ -43,6 +44,13 @@ export function killChrome(chrome) {
   $p | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }; Start-Sleep -Milliseconds 250 }`);
     else execSync("pkill -9 -f 'Google Chrome for Testing'", { stdio: 'ignore' });
   } catch { /* none left */ }
+}
+
+/** the end of a run: the browser closed the normal way (up to 10 s), then whatever is left killed. On Windows a GPU
+ *  process killed in the middle of a frame can hang in the graphics driver for minutes; closed first, it does not. */
+export async function closeChrome(browser, chrome) {
+  await Promise.race([browser.close().catch(() => {}), new Promise((done) => setTimeout(done, 10_000))]);
+  killChrome(chrome);
 }
 
 /** asks, without blocking, how much memory (GB) every process of the test browser takes, summed; calls back with

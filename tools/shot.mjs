@@ -10,7 +10,7 @@ import { createServer } from 'vite';
 import { chromium } from 'playwright-core';
 import { mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
-import { findChrome, gpuArgs, killChrome } from './browser.mjs';
+import { findChrome, gpuArgs, killChrome, closeChrome } from './browser.mjs';
 
 const args = process.argv.slice(2);
 const opt = (name) => (args.includes(name) ? args[args.indexOf(name) + 1] : null);
@@ -51,7 +51,7 @@ try {
 } catch (e) {
   console.error('FAILED:', String(e.message).slice(0, 400)); process.exitCode = 1;
 } finally {
-  kill();
+  await closeChrome(browser, chrome);
   await server.close();
   process.exit(process.exitCode ?? 0);
 }

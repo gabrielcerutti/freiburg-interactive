@@ -8,7 +8,7 @@
 // Uses the same headless Chrome for Testing as tools/shot.mjs, on its own port.
 import { createServer } from 'vite';
 import { chromium } from 'playwright-core';
-import { findChrome, gpuArgs, killChrome, chromeMemory } from './browser.mjs';
+import { findChrome, gpuArgs, killChrome, closeChrome, chromeMemory } from './browser.mjs';
 
 const args = process.argv.slice(2), hide = args.includes('--hide') ? args[args.indexOf('--hide') + 1].split(',') : [];
 if (args.includes('--no-shadows')) hide.push('shadows');
@@ -51,4 +51,4 @@ try {
 } catch (e) {
   console.log('FAILED:', String(e.message).slice(0, 500));
   console.log('memory, GB, every 3 s:', series.join(' '));
-} finally { clearInterval(watch); kill(); await server.close(); process.exit(0); }
+} finally { clearInterval(watch); await closeChrome(browser, chrome); await server.close(); process.exit(0); }
