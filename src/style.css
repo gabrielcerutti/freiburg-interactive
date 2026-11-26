@@ -10,7 +10,7 @@ html, body { margin: 0; height: 100%; overflow: hidden; background: #e2e8e2; }
 #app { position: fixed; inset: 0; }
 #app canvas { display: block; }
 
-.title, #card, .label, #status, #search, #search-note, #about, #about-button, #timeline {
+.head, #card, .label, #status, #search-note, #about, #about-button, #timeline {
   background: var(--paper);
   border: 1px solid var(--edge);
   box-shadow: 0 0 0 3px var(--paper), 0 0 0 4px var(--edge), 0 6px 18px rgb(0 0 0 / 0.18);
@@ -19,9 +19,11 @@ html, body { margin: 0; height: 100%; overflow: hidden; background: #e2e8e2; }
 /* the left column: the title, the search under it and what the search answers */
 .left { position: fixed; top: 18px; left: 18px; width: min(330px, calc(100vw - 36px)); display: flex; flex-direction: column; gap: 14px; pointer-events: none; }
 .left > * { pointer-events: auto; }
-.title { padding: 10px 18px; }
-.title h1 { margin: 0; font-size: 22px; font-variant: small-caps; letter-spacing: 0.06em; }
-.title p { margin: 2px 0 0; font-style: italic; font-size: 14px; }
+/* the name over the search, in one panel: its two rows are as tall as the two of the years beside it */
+:root { --row: 38px; --strip: 30px; }
+.title { height: var(--row); display: flex; align-items: center; padding: 0 14px; }
+#search { height: var(--strip); border-top: 1px solid var(--edge); }
+.title h1 { margin: 0; font-size: 21px; white-space: nowrap; font-variant: small-caps; letter-spacing: 0.06em; }
 
 #status { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); padding: 10px 18px; margin: 0; font-style: italic; }
 
@@ -58,12 +60,12 @@ html, body { margin: 0; height: 100%; overflow: hidden; background: #e2e8e2; }
 #timeline { position: fixed; top: 18px; left: calc(362px + (100vw - 362px - 436px) / 2); transform: translateX(-50%); max-width: calc(100vw - 36px); display: flex; flex-direction: column; }
 #timeline[hidden] { display: none; }
 #timeline .years { display: flex; max-width: 100%; overflow-x: auto; }
-#timeline .years button { flex: 1 0 auto; font: inherit; font-size: 16px; color: var(--ink); background: none; border: 0; border-left: 1px solid var(--edge); padding: 9px 14px; cursor: pointer; white-space: nowrap; }
+#timeline .years button { flex: 1 0 auto; font: inherit; font-size: 16px; color: var(--ink); background: none; border: 0; border-left: 1px solid var(--edge); padding: 0 14px; height: var(--row); cursor: pointer; white-space: nowrap; }
 #timeline .years button:first-child { border-left: 0; }
 #timeline .years button:hover, #timeline .more:hover { background: #fffaf0; }
 #timeline .years button[aria-pressed='true'] { background: var(--ink); color: var(--paper); }
 #timeline.busy .years button[aria-pressed='true'] { opacity: 0.6; }
-#timeline .more { font: inherit; font-size: 13px; font-style: italic; color: var(--ink); background: #ece4d0; border: 0; border-top: 1px solid var(--edge); padding: 2px 12px 3px; cursor: pointer; }
+#timeline .more { font: inherit; font-size: 13px; font-style: italic; color: var(--ink); background: #ece4d0; border: 0; border-top: 1px solid var(--edge); padding: 0 12px; height: var(--strip); cursor: pointer; }
 #timeline .note { display: none; width: 0; min-width: 100%; border-top: 1px solid var(--edge); padding: 8px 16px 9px; font-size: 14px; line-height: 1.42; }
 #timeline.open .note, #timeline.failed .note { display: block; }
 #timeline .note p { margin: 0; }
@@ -81,14 +83,14 @@ html, body { margin: 0; height: 100%; overflow: hidden; background: #e2e8e2; }
 /* the search: an address of today */
 #search { display: flex; align-items: stretch; }
 #search:focus-within { background: #fffaf0; }
-#search input { flex: 1; min-width: 0; margin: 0; font: inherit; font-size: 16px; color: inherit; background: transparent; border: 0; outline: 0; border-radius: 0; padding: 8px 6px 9px 14px; appearance: none; -webkit-appearance: none; }
+#search input { flex: 1; min-width: 0; margin: 0; font: inherit; font-size: 15px; color: inherit; background: transparent; border: 0; outline: 0; border-radius: 0; padding: 0 6px 1px 14px; appearance: none; -webkit-appearance: none; }
 #search input::placeholder { color: var(--ink); opacity: 0.55; font-style: italic; }
 #search input::-webkit-search-cancel-button { display: none; }
 #search button { flex: none; margin: 0; font: inherit; color: inherit; background: transparent; border: 0; cursor: pointer; }
 #search .clear { display: none; padding: 0 9px; font-size: 20px; line-height: 1; opacity: 0.55; }
 #search.typed .clear, #search.used .clear { display: block; }
 #search .clear:hover { opacity: 1; }
-#search .go { padding: 0 14px; font-size: 15px; border-left: 1px solid var(--edge); }
+#search .go { padding: 0 14px; font-size: 14px; font-style: italic; border-left: 1px solid var(--edge); }
 #search .go:hover { background: var(--ink); color: var(--paper); }
 #search.busy .go { opacity: 0.5; pointer-events: none; }
 #search-note { padding: 8px 14px 9px; font-size: 14px; line-height: 1.42; }
@@ -117,7 +119,7 @@ html, body { margin: 0; height: 100%; overflow: hidden; background: #e2e8e2; }
 }
 .tools button:hover { background: #fffaf0; }
 .tools button[aria-pressed='true'] { background: var(--ink); color: var(--paper); }
-body.ink .title, body.ink #card, body.ink #timeline, body.ink .label:not(.found), body.ink #search, body.ink #search-note, body.ink #about, body.ink #about-button, body.ink .tools button:not([aria-pressed='true']) { box-shadow: 0 0 0 3px var(--paper), 0 0 0 4px var(--edge); }
+body.ink .head, body.ink #card, body.ink #timeline, body.ink .label:not(.found), body.ink #search-note, body.ink #about, body.ink #about-button, body.ink .tools button:not([aria-pressed='true']) { box-shadow: 0 0 0 3px var(--paper), 0 0 0 4px var(--edge); }
 
 /* the photos on a card: each one whole, with its caption under it */
 #card .photo { margin: 4px 0 14px; }
