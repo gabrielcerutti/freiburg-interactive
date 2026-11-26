@@ -287,14 +287,22 @@ function setLook(ink) {
   document.body.classList.toggle('ink', ink);
 }
 lookButton.addEventListener('click', () => setLook(!inkTarget));
+// the landmarks' names: on (those of the part of the city in view: src/labels.js) or off (only the one pointed at)
+const namesButton = document.getElementById('names');
+let namesOn = true;
+try { namesOn = localStorage.getItem('names') !== '0'; } catch { /* no storage: on */ }
+function setNames(on) { namesOn = on; namesButton.setAttribute('aria-pressed', String(on)); try { localStorage.setItem('names', on ? '1' : '0'); } catch { /* never mind */ } }
+namesButton.addEventListener('click', () => setNames(!namesOn));
+setNames(namesOn);
 addEventListener('keydown', (ev) => {
   if (ev.target instanceof HTMLInputElement) return;
   if (ev.key === 'c' || ev.key === 'C') setLook(!inkTarget);
+  if (ev.key === 'l' || ev.key === 'L') setNames(!namesOn);
   if (ev.key === 'Escape') { select(null); showAbout(false); }
 });
 setLook(false);
 
-window.lab = { search: (text) => search.search(text), scene, camera, controls, renderer, city: city.stats, setLook, plan: (key) => timeline.then((t) => t?.show(key)), select: (key) => select(placeMeshes.find((p) => p.place.key === key) ?? null) };
+window.lab = { setNames, search: (text) => search.search(text), scene, camera, controls, renderer, city: city.stats, setLook, plan: (key) => timeline.then((t) => t?.show(key)), select: (key) => select(placeMeshes.find((p) => p.place.key === key) ?? null) };
 
 // ---------------------------------------------------------------------------------------------------- the main loop
 function resize() {
@@ -334,5 +342,5 @@ renderer.setAnimationLoop((time) => {
   sky.position.copy(camera.position);
   aimSun();
   renderer.render(scene, camera);
-  labels.update(app.clientWidth, app.clientHeight);
+  labels.update(app.clientWidth, app.clientHeight, { all: namesOn, focus: controls.target, reach: 150 + 0.6 * camera.position.distanceTo(controls.target) });
 });

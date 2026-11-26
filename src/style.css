@@ -33,6 +33,9 @@ html, body { margin: 0; height: 100%; overflow: hidden; background: #e2e8e2; }
 }
 .label::after { content: ''; position: absolute; left: 50%; top: 100%; width: 1px; height: 22px; background: var(--ink); }
 .label:hover { background: #fffaf0; }
+/* a label that is put away (too far from where one is looking, under another one, or all of them off) fades out */
+.label { transition: opacity 0.25s; }
+.label.off { opacity: 0; pointer-events: none; }
 
 /* the card: its header stays, the rest scrolls under it */
 #card {
@@ -68,11 +71,12 @@ html, body { margin: 0; height: 100%; overflow: hidden; background: #e2e8e2; }
 #timeline .note a { color: inherit; white-space: nowrap; }
 /* where the years do not fit between the title and a card: at the bottom, with the note opening upwards */
 @media (max-width: 1440px) {
-  #timeline { top: auto; bottom: 14px; left: 50%; max-width: calc(100vw - 230px); flex-direction: column-reverse; }
+  /* (in the middle of what a card on the right leaves free, between the «?» and the card) */
+  #timeline { top: auto; bottom: 14px; left: calc(40px + (100vw - 436px) / 2); max-width: calc(100vw - 436px - 110px); flex-direction: column-reverse; }
   #timeline .more { border-top: 0; border-bottom: 1px solid var(--edge); }
   #timeline .note { border-top: 0; border-bottom: 1px solid var(--edge); max-height: 40vh; overflow-y: auto; }
 }
-@media (max-width: 700px) { #timeline { bottom: 70px; max-width: calc(100vw - 36px); } }
+@media (max-width: 700px) { #timeline { left: 50%; bottom: 70px; max-width: calc(100vw - 36px); } }
 
 /* the search: an address of today */
 #search { display: flex; align-items: stretch; }

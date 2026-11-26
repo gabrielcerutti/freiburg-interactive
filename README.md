@@ -19,6 +19,8 @@ that are gone are drawn as plain houses where the plan of 1920 shows one (where 
 height, roofs and colours are assumed); and in **Nov 1944** what the raid destroyed stands in ruins (how much of
 each house was left is assumed). **Today** brings everything back.
 **C** (or the button) switches between colour and ink; **Esc** closes the card.
+**L** (or the «Names» button) shows or hides the landmarks' names. Shown, only those of the part of the city in view
+appear, and of two that would overlap, the nearer one; hidden, a landmark shows its name under the pointer.
 
 Inspired by [«Buenos Aires, de 1867 a 1950»](https://github.com/mormonnegro/baires-interactivo) by @mormonnegro
 (<https://baires.mormon.garden>). The code here is new, written from scratch in English, but the ideas are theirs:
