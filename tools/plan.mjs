@@ -46,10 +46,19 @@ async function download(file, query, box) {
   const wait = last + 2600 - Date.now();
   if (wait > 0) await new Promise((r) => setTimeout(r, wait));
   const url = `${WMS}?SERVICE=WMS&REQUEST=GetMap&VERSION=1.3.0&STYLES=&CRS=EPSG:4326&BBOX=${box}&${query}`;
-  const res = await fetch(url, { headers: { 'User-Agent': USER_AGENT } });
-  last = Date.now();
-  if (!res.ok || !String(res.headers.get('content-type')).startsWith('image/')) { console.error(`${url}: HTTP ${res.status} ${res.headers.get('content-type')}`); process.exit(1); }
-  writeFileSync(file, Buffer.from(await res.arrayBuffer()));
+  // (the service drops the line now and then: a few tries, a little apart)
+  let res = null, why = '';
+  for (let attempt = 1; attempt <= 5 && !res; attempt++) {
+    try {
+      const r = await fetch(url, { headers: { 'User-Agent': USER_AGENT }, signal: AbortSignal.timeout(90_000) });
+      if (r.ok && String(r.headers.get('content-type')).startsWith('image/')) res = Buffer.from(await r.arrayBuffer());
+      else why = `HTTP ${r.status} ${r.headers.get('content-type')}`;
+    } catch (e) { why = e.cause?.code ?? e.name; }
+    last = Date.now();
+    if (!res) await new Promise((r) => setTimeout(r, attempt * 8000));
+  }
+  if (!res) { console.error(`${url}: ${why}`); process.exit(1); }
+  writeFileSync(file, res);
   console.log('downloaded', file);
 }
 

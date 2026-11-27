@@ -102,7 +102,7 @@ The old plans decide. From the measurements made while growing (how much of an a
 
 | Area | What the plans cover |
 |---|---|
-| Oberau (east of 7.862, between the Dreisam and the Schlossberg) | 1920 and later: all of it, out to 7.876. 1875 and 1903: the northern part of that strip, where Oberau lies. The best of the candidates; the exact east edge is still to be measured. |
+| Oberau | Done: the east edge is 7.880, where the plan of 1903 ends (1920 goes on whole to 7.883; 1875 ends at 7.8765). Further east only the plans from 1920 on reach. |
 | More of Herdern (north of 48.011) | 1903 ends at 48.011 and 1875 at about 48.013: the early years would be empty. 1920 misses the two northern corners. About 6,850 buildings between 48.001 and 48.021, of which 3,800 are already in. |
 | The south of the Wiehre (Lorettoberg, to about 47.970) | 1920 and later cover it; 1875 and 1903 do not reach. Brings the Lorettokapelle and the Hildaturm onto the map. |
 | Haslach (south-west) | The weakest: the plan of 1920 thins out west of 7.830 and that of 1875 ends at 7.832, so most of it would have no reading before 1944. |

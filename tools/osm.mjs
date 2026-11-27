@@ -51,9 +51,9 @@ for (const [name, filter] of Object.entries(LAYERS)) {
       if (res.ok) { text = await res.text(); JSON.parse(text); break; } // (an answer cut short is not JSON: try again)
       why = `HTTP ${res.status}`;
     } catch (e) { why = e.cause?.code ?? e.name; }
-    if (attempt === 9) { console.error(`${name}: ${why}, giving up — nothing on disk was changed`); process.exit(1); }
+    if (attempt === 15) { console.error(`${name}: ${why}, giving up — nothing on disk was changed`); process.exit(1); }
     console.log(`${name}: ${why}, retrying in ${attempt * 10} s`);
-    await wait(attempt * 10_000);
+    await wait(Math.min(attempt, 6) * 10_000);
   }
   const n = JSON.parse(text).elements?.length ?? 0;
   fresh.push([file, text]);

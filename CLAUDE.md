@@ -1,6 +1,6 @@
 # Freiburg interactive — notes for Claude
 
-A three.js + Vite viewer of Freiburg im Breisgau: the old town, the Wiehre, the Stühlinger and Herdern so far, the whole city in time (`BOUNDS` in `src/geo.js`;
+A three.js + Vite viewer of Freiburg im Breisgau: the old town, the Wiehre, the Stühlinger, Herdern and the Oberau so far, the whole city in time (`BOUNDS` in `src/geo.js`;
 to grow it: move the bounds, then `npm run terrain`, `node tools/osm.mjs --refresh`, `npm run plan`, `npm run city`, `npm run ages`). `README.md` explains the pipeline; this is what not to break.
 
     npm run dev      # the viewer
@@ -57,14 +57,13 @@ to grow it: move the bounds, then `npm run terrain`, `node tools/osm.mjs --refre
 
 ## Next steps (as of 27 November 2026)
 
-- **Growing the map**, in this order: Oberau (east of 7.862), then more of Herdern (north of 48.011), then the
-  south of the Wiehre (the Lorettoberg, to about 47.970). Before each: measure how far every old plan reaches over
+- **Growing the map**: the Oberau is done (east edge 7.880, 27 November). Next, in this order: more of Herdern
+  (north of 48.011), then the south of the Wiehre (the Lorettoberg, to about 47.970). Before each: measure how far every old plan reaches over
   the new area and set the edge where the plan of 1920 still covers it; then the steps at the top of this file.
   What earlier measurements say about each is in `CONTRIBUTING.md`, «Where to grow next».
-- **Blocked on the city's plan service**: on 27 November the geoportal did not answer from the owner's work
-  network (connection refused, the site and the map service alike; possibly blocked there, not down). The plans
-  come from `https://geoportal.freiburg.de/wms/verma_stadtplan_hist/verma_stadtplan_hist` (`tools/plan.mjs`).
-  Try from the other machine. Nothing was changed for Oberau: `BOUNDS` still ends at 7.862.
+- The city's plan service (`https://geoportal.freiburg.de/wms/verma_stadtplan_hist/verma_stadtplan_hist`) and the
+  Overpass servers both drop requests now and then; the tools retry and write nothing half-done. If a download
+  gives up, run it again later. The geoportal did not answer at all for some hours on 27 November.
 - **Memory**: step 1 (build the city tile by tile, let the raw data go) is done and took it from about 2.3 GB to
   1.5–1.8 GB in the test browser. Step 2 (geometry prepared ahead, loaded by tile) is the owner's to decide; what
   was measured is in `CONTRIBUTING.md`, «Known limits».

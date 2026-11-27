@@ -122,14 +122,14 @@ On the map.
 
 ### Oberau
 
-Partly on the map.
+On the map.
 
 | | Place | What | Year in OSM | OpenStreetMap | Wikidata |
 |---|---|---|---|---|---|
 | ⬜ | Black Forest Hostel | hostel |  | [w125770420](https://www.openstreetmap.org/way/125770420) | [Q111119165](https://www.wikidata.org/wiki/Q111119165) |
 | ✅ | Brauerei Ganter (`brauerei-ganter`) | building |  | [r7509071](https://www.openstreetmap.org/relation/7509071) | [Q323969](https://www.wikidata.org/wiki/Q323969) |
+| ⬜ | Friedenskirche | church |  | [w116454060](https://www.openstreetmap.org/way/116454060) | [Q62520313](https://www.wikidata.org/wiki/Q62520313) |
 | ⬜ | Schwabentorbrücke | bridge |  | [r3271921](https://www.openstreetmap.org/relation/3271921) | [Q1578595](https://www.wikidata.org/wiki/Q1578595) |
-| · | Friedenskirche | church |  | [w116454060](https://www.openstreetmap.org/way/116454060) | [Q62520313](https://www.wikidata.org/wiki/Q62520313) |
 
 ### Stühlinger
 
@@ -142,6 +142,18 @@ On the map.
 | ⬜ | Klinik für Frauenheilkunde | hospital |  | [w33903879](https://www.openstreetmap.org/way/33903879) | [Q43896550](https://www.wikidata.org/wiki/Q43896550) |
 | ⬜ | Lutherkirche | university |  | [w418305568](https://www.openstreetmap.org/way/418305568) | [Q62613957](https://www.wikidata.org/wiki/Q62613957) |
 | ⬜ | St. Josef | church | 1955 | [w105555279](https://www.openstreetmap.org/way/105555279) | [Q107509281](https://www.wikidata.org/wiki/Q107509281) |
+
+### Waldsee
+
+Partly on the map.
+
+| | Place | What | Year in OSM | OpenStreetMap | Wikidata |
+|---|---|---|---|---|---|
+| ⬜ | Wasserkraftanlage Sandfang | building | 2009 | [w93373265](https://www.openstreetmap.org/way/93373265) | [Q111503256](https://www.wikidata.org/wiki/Q111503256) |
+| · | Dreifaltigkeitskirche | church |  | [w105802423](https://www.openstreetmap.org/way/105802423) | [Q19792292](https://www.wikidata.org/wiki/Q19792292) |
+| · | Dreisamstadion | attraction |  | [w116674751](https://www.openstreetmap.org/way/116674751) | [Q311458](https://www.wikidata.org/wiki/Q311458) |
+| · | Kapelle Sankt Ottilien | church |  | [w87967999](https://www.openstreetmap.org/way/87967999) | [Q402173](https://www.wikidata.org/wiki/Q402173) |
+| · | Sankt Wendelin Kapelle | church |  | [w93374986](https://www.openstreetmap.org/way/93374986) | [Q402554](https://www.wikidata.org/wiki/Q402554) |
 
 ### Wiehre
 
@@ -159,13 +171,13 @@ Partly on the map.
 | ⬜ | informationszentrum 3.welt | office |  | [w101223072](https://www.openstreetmap.org/way/101223072) | [Q28737856](https://www.wikidata.org/wiki/Q28737856) |
 | ✅ | Johanneskirche (`johanneskirche`) | church |  | [w643437367](https://www.openstreetmap.org/way/643437367) | [Q2319056](https://www.wikidata.org/wiki/Q2319056) |
 | ⬜ | Lorettokapelle | church |  | [w126094789](https://www.openstreetmap.org/way/126094789) | [Q1870292](https://www.wikidata.org/wiki/Q1870292) |
+| ⬜ | Maria-Hilf | church |  | [w92419522](https://www.openstreetmap.org/way/92419522) | [Q19546230](https://www.wikidata.org/wiki/Q19546230) |
+| ⬜ | Maria-Schutz | church |  | [w766734867](https://www.openstreetmap.org/way/766734867) | [Q92768857](https://www.wikidata.org/wiki/Q92768857) |
 | ⬜ | Max-Planck-Institut zur Erforschung von Kriminalität, Sicherheit und Recht | research_institute |  | [r2806671](https://www.openstreetmap.org/relation/2806671) | [Q832780](https://www.wikidata.org/wiki/Q832780) |
 | ⬜ | PSD Bank Geschäftsstelle Freiburg | office |  | [w165998769](https://www.openstreetmap.org/way/165998769) | [Q1568800](https://www.wikidata.org/wiki/Q1568800) |
+| ⬜ | Stadthalle Freiburg | civic | 1954 | [w37641393](https://www.openstreetmap.org/way/37641393) | [Q22672198](https://www.wikidata.org/wiki/Q22672198) |
 | · | Drehsolarhaus Heliotrop | detached | 1994 | [w193811808](https://www.openstreetmap.org/way/193811808) | [Q325460](https://www.wikidata.org/wiki/Q325460) |
 | · | Forstliche Versuchs- und Forschungsanstalt Baden-Württemberg | building |  | [w696708074](https://www.openstreetmap.org/way/696708074) | [Q28737838](https://www.wikidata.org/wiki/Q28737838) |
-| · | Maria-Hilf | church |  | [w92419522](https://www.openstreetmap.org/way/92419522) | [Q19546230](https://www.wikidata.org/wiki/Q19546230) |
-| · | Maria-Schutz | church |  | [w766734867](https://www.openstreetmap.org/way/766734867) | [Q92768857](https://www.wikidata.org/wiki/Q92768857) |
-| · | Stadthalle Freiburg | civic | 1954 | [w37641393](https://www.openstreetmap.org/way/37641393) | [Q22672198](https://www.wikidata.org/wiki/Q22672198) |
 
 ### Betzenhausen
 
@@ -325,18 +337,6 @@ Not on the map yet.
 |---|---|---|---|---|---|
 | · | Christen in Freiburg | church |  | [w549600575](https://www.openstreetmap.org/way/549600575) | [Q120696980](https://www.wikidata.org/wiki/Q120696980) |
 | · | Tuniberghaus | public |  | [w38783347](https://www.openstreetmap.org/way/38783347) | [Q120697134](https://www.wikidata.org/wiki/Q120697134) |
-
-### Waldsee
-
-Not on the map yet.
-
-| | Place | What | Year in OSM | OpenStreetMap | Wikidata |
-|---|---|---|---|---|---|
-| · | Dreifaltigkeitskirche | church |  | [w105802423](https://www.openstreetmap.org/way/105802423) | [Q19792292](https://www.wikidata.org/wiki/Q19792292) |
-| · | Dreisamstadion | attraction |  | [w116674751](https://www.openstreetmap.org/way/116674751) | [Q311458](https://www.wikidata.org/wiki/Q311458) |
-| · | Kapelle Sankt Ottilien | church |  | [w87967999](https://www.openstreetmap.org/way/87967999) | [Q402173](https://www.wikidata.org/wiki/Q402173) |
-| · | Sankt Wendelin Kapelle | church |  | [w93374986](https://www.openstreetmap.org/way/93374986) | [Q402554](https://www.wikidata.org/wiki/Q402554) |
-| · | Wasserkraftanlage Sandfang | building | 2009 | [w93373265](https://www.openstreetmap.org/way/93373265) | [Q111503256](https://www.wikidata.org/wiki/Q111503256) |
 
 ### Weingarten
 

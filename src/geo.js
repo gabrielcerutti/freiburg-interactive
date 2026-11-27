@@ -29,5 +29,7 @@ export function toLatLon(x, z) {
  * as the plan of 1920 — the one the buildings' years are read from — covers whole (7.830; that of 1875 ends at 7.832),
  * and to the north Herdern with its old village, as far as the plan of 1903 reaches (48.011; that of 1875 goes on to
  * 48.013, and that of 1920 misses the two northern corners, its sheet lying askew).
+ * To the east the Oberau, as far as the plan of 1903 reaches (7.880; that of 1920 goes on whole to 7.883, that of 1875
+ * ends at 7.8765).
  */
-export const BOUNDS = { south: 47.979, west: 7.83, north: 48.011, east: 7.862 };
+export const BOUNDS = { south: 47.979, west: 7.83, north: 48.011, east: 7.88 };
