@@ -44,7 +44,7 @@ for (const [name, filter] of Object.entries(LAYERS)) {
     let why;
     try {
       const res = await fetch(ENDPOINTS[(attempt - 1) % ENDPOINTS.length], {
-        method: 'POST', signal: AbortSignal.timeout(180_000),
+        method: 'POST', signal: AbortSignal.timeout(90_000),
         headers: { 'User-Agent': USER_AGENT, 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'data=' + encodeURIComponent(query),
       });

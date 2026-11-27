@@ -80,24 +80,45 @@ On the map.
 | ⬜ | Universitätskirche | church |  | [w106950622](https://www.openstreetmap.org/way/106950622) | [Q2496372](https://www.wikidata.org/wiki/Q2496372) |
 | ⬜ | Zum Roten Bären | hotel | 1120 | [r1548463](https://www.openstreetmap.org/relation/1548463) | [Q229591](https://www.wikidata.org/wiki/Q229591) |
 
-### Neuburg
+### Herdern
 
 Partly on the map.
 
 | | Place | What | Year in OSM | OpenStreetMap | Wikidata |
 |---|---|---|---|---|---|
+| ⬜ | Botanischer Garten | attraction |  | [w121495939](https://www.openstreetmap.org/way/121495939) | [Q328848](https://www.wikidata.org/wiki/Q328848) |
+| ⬜ | Deutscher Caritasverband e.V. – Bundeszentrale | office |  | [w102199355](https://www.openstreetmap.org/way/102199355) | [Q29508174](https://www.wikidata.org/wiki/Q29508174) |
+| · | Roßkopfturm | tower | 1889 | [w1142212492](https://www.openstreetmap.org/way/1142212492) | [Q82966](https://www.wikidata.org/wiki/Q82966) |
+
+### Mooswald
+
+Partly on the map.
+
+| | Place | What | Year in OSM | OpenStreetMap | Wikidata |
+|---|---|---|---|---|---|
+| ⬜ | Freiburger Institut für Musikermedizin | hospital |  | [w174799181](https://www.openstreetmap.org/way/174799181) | [Q1453866](https://www.wikidata.org/wiki/Q1453866) |
+| · | Heilige Familie | church |  | [w103458967](https://www.openstreetmap.org/way/103458967) | [Q106472872](https://www.wikidata.org/wiki/Q106472872) |
+| · | Jüdischer Friedhof | cemetery |  | [w58964719](https://www.openstreetmap.org/way/58964719) | [Q1389587](https://www.wikidata.org/wiki/Q1389587) |
+| · | Markuskirche | church | 1968 | [w61940713](https://www.openstreetmap.org/way/61940713) | [Q105543603](https://www.wikidata.org/wiki/Q105543603) |
+
+### Neuburg
+
+On the map.
+
+| | Place | What | Year in OSM | OpenStreetMap | Wikidata |
+|---|---|---|---|---|---|
 | ⬜ | Bismarckturm | tower | 1900-07-28 | [w429699075](https://www.openstreetmap.org/way/429699075) | [Q335847](https://www.wikidata.org/wiki/Q335847) |
+| ⬜ | Corps Rhenania Freiburg | apartments |  | [w131451031](https://www.openstreetmap.org/way/131451031) | [Q1135003](https://www.wikidata.org/wiki/Q1135003) |
 | ⬜ | Erlöserkirche | church |  | [w154623203](https://www.openstreetmap.org/way/154623203) | [Q105954825](https://www.wikidata.org/wiki/Q105954825) |
+| ⬜ | Fraunhofer-Institut für Kurzzeitdynamik, Ernst-Mach-Institut, EMI | office |  | [w808109258](https://www.openstreetmap.org/way/808109258) | [Q438787](https://www.wikidata.org/wiki/Q438787) |
+| ⬜ | Freiburg Institute for Advanced Studies | university |  | [w91381786](https://www.openstreetmap.org/way/91381786) | [Q821051](https://www.wikidata.org/wiki/Q821051) |
 | ⬜ | Katholische Akademie | university |  | [w281013852](https://www.openstreetmap.org/way/281013852) | [Q1736316](https://www.wikidata.org/wiki/Q1736316) |
 | ⬜ | Landesamt für Geologie, Rohstoffe und Bergbau | building |  | [w94164492](https://www.openstreetmap.org/way/94164492) | [Q1802056](https://www.wikidata.org/wiki/Q1802056) |
 | ⬜ | Landratsamt Breisgau-Hochschwarzwald | public |  | [w108090660](https://www.openstreetmap.org/way/108090660) | [Q115714791](https://www.wikidata.org/wiki/Q115714791) |
+| ⬜ | Ludwigskirche | church | 1954 | [w92484648](https://www.openstreetmap.org/way/92484648) | [Q1632742](https://www.wikidata.org/wiki/Q1632742) |
 | ⬜ | Schlossbergturm | tower | 2002 | [n9453925186](https://www.openstreetmap.org/node/9453925186) | [Q317922](https://www.wikidata.org/wiki/Q317922) |
 | ⬜ | St. Michaelskapelle | church |  | [w217363727](https://www.openstreetmap.org/way/217363727) | [Q2321771](https://www.wikidata.org/wiki/Q2321771) |
-| · | Corps Rhenania Freiburg | apartments |  | [w131451031](https://www.openstreetmap.org/way/131451031) | [Q1135003](https://www.wikidata.org/wiki/Q1135003) |
-| · | Fraunhofer-Institut für Kurzzeitdynamik, Ernst-Mach-Institut, EMI | office |  | [w808109258](https://www.openstreetmap.org/way/808109258) | [Q438787](https://www.wikidata.org/wiki/Q438787) |
-| · | Freiburg Institute for Advanced Studies | university |  | [w91381786](https://www.openstreetmap.org/way/91381786) | [Q821051](https://www.wikidata.org/wiki/Q821051) |
-| · | Ludwigskirche | church | 1954 | [w92484648](https://www.openstreetmap.org/way/92484648) | [Q1632742](https://www.wikidata.org/wiki/Q1632742) |
-| · | Verlag Herder GmbH | office |  | [w124513414](https://www.openstreetmap.org/way/124513414) | [Q2516698](https://www.wikidata.org/wiki/Q2516698) |
+| ⬜ | Verlag Herder GmbH | office |  | [w124513414](https://www.openstreetmap.org/way/124513414) | [Q2516698](https://www.wikidata.org/wiki/Q2516698) |
 
 ### Oberau
 
@@ -112,15 +133,15 @@ Partly on the map.
 
 ### Stühlinger
 
-Partly on the map.
+On the map.
 
 | | Place | What | Year in OSM | OpenStreetMap | Wikidata |
 |---|---|---|---|---|---|
+| ⬜ | Heilig Geist | church | 1954 | [w787832068](https://www.openstreetmap.org/way/787832068) | [Q98032287](https://www.wikidata.org/wiki/Q98032287) |
 | ⬜ | Herz-Jesu-Kirche | church |  | [w146291827](https://www.openstreetmap.org/way/146291827) | [Q1614963](https://www.wikidata.org/wiki/Q1614963) |
-| · | Heilig Geist | church | 1954 | [w787832068](https://www.openstreetmap.org/way/787832068) | [Q98032287](https://www.wikidata.org/wiki/Q98032287) |
-| · | Klinik für Frauenheilkunde | hospital |  | [w33903879](https://www.openstreetmap.org/way/33903879) | [Q43896550](https://www.wikidata.org/wiki/Q43896550) |
-| · | Lutherkirche | university |  | [w418305568](https://www.openstreetmap.org/way/418305568) | [Q62613957](https://www.wikidata.org/wiki/Q62613957) |
-| · | St. Josef | church | 1955 | [w105555279](https://www.openstreetmap.org/way/105555279) | [Q107509281](https://www.wikidata.org/wiki/Q107509281) |
+| ⬜ | Klinik für Frauenheilkunde | hospital |  | [w33903879](https://www.openstreetmap.org/way/33903879) | [Q43896550](https://www.wikidata.org/wiki/Q43896550) |
+| ⬜ | Lutherkirche | university |  | [w418305568](https://www.openstreetmap.org/way/418305568) | [Q62613957](https://www.wikidata.org/wiki/Q62613957) |
+| ⬜ | St. Josef | church | 1955 | [w105555279](https://www.openstreetmap.org/way/105555279) | [Q107509281](https://www.wikidata.org/wiki/Q107509281) |
 
 ### Wiehre
 
@@ -207,16 +228,6 @@ Not on the map yet.
 | · | Melanchthonkirche | church |  | [w310566423](https://www.openstreetmap.org/way/310566423) | [Q20564794](https://www.wikidata.org/wiki/Q20564794) |
 | · | Sankt-Michael | church |  | [w145130851](https://www.openstreetmap.org/way/145130851) | [Q19832582](https://www.wikidata.org/wiki/Q19832582) |
 
-### Herdern
-
-Not on the map yet.
-
-| | Place | What | Year in OSM | OpenStreetMap | Wikidata |
-|---|---|---|---|---|---|
-| · | Botanischer Garten | attraction |  | [w121495939](https://www.openstreetmap.org/way/121495939) | [Q328848](https://www.wikidata.org/wiki/Q328848) |
-| · | Deutscher Caritasverband e.V. – Bundeszentrale | office |  | [w102199355](https://www.openstreetmap.org/way/102199355) | [Q29508174](https://www.wikidata.org/wiki/Q29508174) |
-| · | Roßkopfturm | tower | 1889 | [w1142212492](https://www.openstreetmap.org/way/1142212492) | [Q82966](https://www.wikidata.org/wiki/Q82966) |
-
 ### Hochdorf
 
 Not on the map yet.
@@ -261,17 +272,6 @@ Not on the map yet.
 |---|---|---|---|---|---|
 | · | Auferstehungskirche | church | 1962 | [w265882838](https://www.openstreetmap.org/way/265882838) | [Q62616233](https://www.wikidata.org/wiki/Q62616233) |
 | · | St. Barbara | church |  | [w91753955](https://www.openstreetmap.org/way/91753955) | [Q27987968](https://www.wikidata.org/wiki/Q27987968) |
-
-### Mooswald
-
-Not on the map yet.
-
-| | Place | What | Year in OSM | OpenStreetMap | Wikidata |
-|---|---|---|---|---|---|
-| · | Freiburger Institut für Musikermedizin | hospital |  | [w174799181](https://www.openstreetmap.org/way/174799181) | [Q1453866](https://www.wikidata.org/wiki/Q1453866) |
-| · | Heilige Familie | church |  | [w103458967](https://www.openstreetmap.org/way/103458967) | [Q106472872](https://www.wikidata.org/wiki/Q106472872) |
-| · | Jüdischer Friedhof | cemetery |  | [w58964719](https://www.openstreetmap.org/way/58964719) | [Q1389587](https://www.wikidata.org/wiki/Q1389587) |
-| · | Markuskirche | church | 1968 | [w61940713](https://www.openstreetmap.org/way/61940713) | [Q105543603](https://www.wikidata.org/wiki/Q105543603) |
 
 ### Munzingen
 

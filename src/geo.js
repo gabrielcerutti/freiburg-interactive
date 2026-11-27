@@ -26,6 +26,8 @@ export function toLatLon(x, z) {
 /**
  * The area the city covers: the old town inside the former ring of walls with a margin, and south of the Dreisam the
  * Wiehre, as far as the plans of 1875 and 1903 reach (about 47.979), and west of the railway the Stühlinger, as far
- * as the plan of 1920 — the one the buildings' years are read from — covers whole (7.830; that of 1875 ends at 7.832).
+ * as the plan of 1920 — the one the buildings' years are read from — covers whole (7.830; that of 1875 ends at 7.832),
+ * and to the north Herdern with its old village, as far as the plan of 1903 reaches (48.011; that of 1875 goes on to
+ * 48.013, and that of 1920 misses the two northern corners, its sheet lying askew).
  */
-export const BOUNDS = { south: 47.979, west: 7.83, north: 48.001, east: 7.862 };
+export const BOUNDS = { south: 47.979, west: 7.83, north: 48.011, east: 7.862 };

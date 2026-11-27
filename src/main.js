@@ -125,7 +125,8 @@ const [data, terrain, ages] = await Promise.all([
   fetch(`${import.meta.env.BASE_URL}data/ages.json`).then((r) => (r.ok ? r.json() : null)).catch(() => null),
 ]);
 
-const ground = buildGround(data, terrain);
+// (the ground's two maps: as large as keeps them at about 1.7 pixels a metre, if the graphics card takes pictures that size)
+const ground = buildGround(data, terrain, { maxSize: Math.min(6144, renderer.capabilities.maxTextureSize) });
 scene.add(ground.mesh, ground.lines);
 // What the note under the years says: what changed by that year, in a visitor's words. The numbers are counts of
 // public/data/ages.json (which buildings each plan shows: an estimate, and the note says so), rounded to the ten; the

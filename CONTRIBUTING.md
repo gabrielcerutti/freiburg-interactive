@@ -92,8 +92,8 @@ the places people ask for that it cannot know. The map grows first; landmarks fo
   area: where a sheet does not reach, nothing is shown standing at that year, and the viewer says so. The city is
   drawn in tiles (`src/city.js`), so more buildings cost little. The plans keep their sharpness whatever the area
   (`tools/plan.mjs` downloads them in tiles at a fixed 0.55 m per pixel and the picture grows); the ground is one
-  picture of at most 4096 pixels a side, so it gets coarser as the longer side of the map grows, and will need
-  tiles of its own some day. Watch the memory in `tools/pace.mjs` after growing: a plan is one large picture.
+  picture of at most 6144 pixels a side (4096 where the graphics card takes no more), so it gets coarser as the
+  longer side of the map grows past about 3.6 km, and will need tiles of its own then. Watch the memory in `tools/pace.mjs` after growing: a plan is one large picture.
 - `tools/osm.mjs` asks the public Overpass server and two public mirrors in turn, and writes nothing unless every
   layer arrived; when all are busy, try again later.
 
@@ -129,3 +129,7 @@ says how). Whatever an assistant writes is held to the same rules: sources opene
 - The windows the shader paints may sit wrong on a landmark that stands on a slope (drawn openings do not).
 - The Wiehre has no hand-made landmarks yet.
 - Not tested on phones since the map grew.
+- Memory grows with the map (about 2.5 GB in the test browser with Herdern): the plans and the ground are single
+  large pictures. Tiles for both are the next step before the map grows much further.
+- Where the plan of 1920 does not reach (the two northern corners of the map) the years of the buildings are read
+  from the other plans only.
