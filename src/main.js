@@ -7,7 +7,7 @@ import { LineSegmentsGeometry } from 'three/addons/lines/LineSegmentsGeometry.js
 import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
 import { buildGround } from './ground.js';
 import { createTimeline } from './timeline.js';
-import { buildCity, TODAY } from './city.js';
+import { buildCity, lighten, TODAY } from './city.js';
 import { Mesher, addRuin } from './buildings.js';
 import { buildTrees } from './trees.js';
 import { startPlace } from './kit.js';
@@ -94,6 +94,7 @@ const outlineCity = (mesh) => {
   const lines = new LineSegments2(geo, cityEdgeMaterial);
   if (!whens.length) { delete mesh.userData.edges; return; }
   geo.boundingSphere = mesh.geometry.boundingSphere.clone(); geo.boundingBox = new THREE.Box3().setFromBufferAttribute(mesh.geometry.attributes.position); // (its building's: the lines never leave it)
+  lighten(geo);
   lines.raycast = () => {}; mesh.add(lines); delete mesh.userData.edges;
 };
 
@@ -125,9 +126,8 @@ const [data, terrain, ages] = await Promise.all([
   fetch(`${import.meta.env.BASE_URL}data/ages.json`).then((r) => (r.ok ? r.json() : null)).catch(() => null),
 ]);
 
-// (the ground's two maps: as large as keeps them at about 1.7 pixels a metre, if the graphics card takes pictures that size)
-const ground = buildGround(data, terrain, { maxSize: Math.min(6144, renderer.capabilities.maxTextureSize) });
-scene.add(ground.mesh, ground.lines);
+const ground = buildGround(data, terrain);
+scene.add(ground.group, ground.lines);
 // What the note under the years says: what changed by that year, in a visitor's words. The numbers are counts of
 // public/data/ages.json (which buildings each plan shows: an estimate, and the note says so), rounded to the ten; the
 // landmarks are the hand-made places with a year of their own (PLACE.since, sourced in each file).
@@ -323,6 +323,7 @@ function resize() {
 addEventListener('resize', resize); resize();
 
 const timer = new THREE.Timer();
+let frame = 0;
 renderer.setAnimationLoop((time) => {
   timer.update(time); const dt = timer.getDelta();
   LOOK.uTime.value += dt;
@@ -356,6 +357,7 @@ renderer.setAnimationLoop((time) => {
     if (flight.t === 1) flight = null;
   }
   controls.update();
+  if (frame++ % 10 === 0) ground.update(controls.target, camera.position.distanceTo(controls.target)); // (which tiles of ground are sharp)
   sky.position.copy(camera.position);
   aimSun();
   renderer.render(scene, camera);

@@ -74,6 +74,7 @@ export function buildCity(data, materials, terrain = FLAT, ages = null) {
     // sphere around the buildings as they stand always holds what is drawn of them)
     mesh.geometry.computeBoundingSphere();
     mesh.userData.edges = edgesOf(mesh.geometry, p.spans, p.m.seg); mesh.userData.stops = p.stops;
+    lighten(mesh.geometry);
     vertices += p.m.vertices; group.add(mesh);
     const s = (sizes[name] ??= { vertices: 0, edges: 0 }); s.vertices += p.m.vertices; s.edges += mesh.userData.edges.whens.length / 2;
     return mesh;
@@ -81,6 +82,17 @@ export function buildCity(data, materials, terrain = FLAT, ages = null) {
   /** a mesh is only drawn while one of its buildings stands: at the stop the timeline comes from, or the one it goes to */
   const showStops = (from, to) => { for (const mesh of meshes) mesh.visible = Boolean(mesh.userData.stops & ((1 << from) | (1 << to))); };
   return { group, meshes, showStops, stats: { tiles: tiles.size, meshes: meshes.length, buildings: n, lost: ages?.lost?.length ?? 0, vertices, sizes, assumed } };
+}
+
+/**
+ * Once a geometry is on the graphics card, the copy of its numbers kept in the page's memory is let go: for the whole
+ * city that copy is well over a gigabyte. (Nothing reads it afterwards: the city's meshes are not clicked on — only
+ * the hand-made places are — and their bounds are worked out before.)
+ */
+export function lighten(geometry) {
+  geometry.computeBoundingSphere(); geometry.computeBoundingBox();
+  for (const a of Object.values(geometry.attributes)) (a.isInterleavedBufferAttribute ? a.data : a).onUpload(function () { this.array = null; });
+  if (geometry.index) geometry.index.onUpload(function () { this.array = null; });
 }
 
 /**

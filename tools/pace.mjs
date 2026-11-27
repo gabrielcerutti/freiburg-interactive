@@ -1,6 +1,7 @@
 // How long a frame takes, what is being drawn, and how much memory the browser takes while it runs: for finding out
 // what made the viewer slow or hungry.
-//   node tools/pace.mjs [--hide name,name] [--no-shadows] [--url http://localhost:5173/]
+//   node tools/pace.mjs [--hide name,name] [--no-shadows] [--plan 1920] [--url http://localhost:5173/]
+//   (--plan: with that year picked on the timeline, its plan on the ground and its city standing)
 //   (--url: measure a server that is already running — yours — instead of starting one)
 //   (names of objects in the scene to hide first: city, trees, ground, lines, outlines, or a place's key)
 // It watches the memory of its own browser every 3 s and stops at once if it passes 6 GB or if the run takes more
@@ -12,6 +13,7 @@ import { findChrome, gpuArgs, killChrome, closeChrome, chromeMemory } from './br
 
 const args = process.argv.slice(2), hide = args.includes('--hide') ? args[args.indexOf('--hide') + 1].split(',') : [];
 if (args.includes('--no-shadows')) hide.push('shadows');
+const plan = args.includes('--plan') ? args[args.indexOf('--plan') + 1] : null; // (a year of the timeline: 1920, bomben…)
 // the memory of every process of the test browser, summed (tools/browser.mjs says what is counted on each system),
 // asked without blocking every 3 s
 const chrome = findChrome(), kill = () => killChrome(chrome);
@@ -35,6 +37,7 @@ try {
   page.on('console', (m) => { if ((m.type() === 'error' || m.type() === 'warning') && said++ < 4) console.log(`[page ${m.type()}]`, m.text().slice(0, 600)); });
   stage('browser open'); await page.goto(url ?? 'http://localhost:5432/'); stage('page loaded');
   await page.waitForFunction(() => window.lab, null, { timeout: 45_000, polling: 500 }); stage('city built');
+  if (plan) { await page.evaluate((k) => lab.plan(k), plan); await page.waitForTimeout(4000); stage(`plan of ${plan} on the ground`); }
   const result = await page.evaluate(async (hide) => {
     lab.scene.traverse((o) => { if (hide.includes(o.name) || (hide.includes('outlines') && o.isLineSegments2)) o.visible = false; });
     if (hide.includes('shadows')) lab.renderer.shadowMap.enabled = false;

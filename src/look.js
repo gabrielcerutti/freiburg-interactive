@@ -301,6 +301,12 @@ export function setPlan(material, texture, area = [0, 0, 1, 1], levels = [0, 1])
   p.tPlan.value = texture ?? BLANK; p.uPlan.value.set(...area); p.uPlanLevels.value.set(...levels); p.uPlanOn.value = texture ? 1 : 0;
 }
 
+/** Gives a ground material other maps: `mask` and `sub` over `area` [x0, z0, width, depth]. */
+export function setGround(material, mask, sub, area) {
+  const g = material.userData.ground;
+  g.tMask.value = mask; g.tSub.value = sub; g.uGround.value.set(...area);
+}
+
 /**
  * A Lambert material with the look. `ground`: { mask, sub, area: [x0, z0, width, depth] } for the ground (its two
  * maps and the rectangle they cover). Every material is pushed back a little in depth, so the ink outlines drawn on
@@ -312,7 +318,9 @@ export function lookMaterial({ ground = null, vertexColors = !ground, rise = fal
   m.userData.highlight = own.uHighlight;
   // (the ground's old plan comes and goes with the timeline: see setPlan above)
   const plan = { tPlan: { value: BLANK }, uPlan: { value: new THREE.Vector4(0, 0, 1, 1) }, uPlanOn: { value: 0 }, uPlanLevels: { value: new THREE.Vector2(0, 1) } };
-  if (ground) m.userData.plan = plan;
+  // (and its two maps can be changed for sharper ones, tile by tile: see setGround below)
+  const maps = ground ? { tMask: { value: ground.mask }, tSub: { value: ground.sub }, uGround: { value: new THREE.Vector4(...ground.area) } } : null;
+  if (ground) { m.userData.plan = plan; m.userData.ground = maps; }
   m.onBeforeCompile = (shader) => {
     Object.assign(shader.uniforms, LOOK, own, {
       uPaper: { value: PAPER }, uInkColour: { value: INK }, uShade: { value: SHADE }, uGlow: { value: new THREE.Color('#ffd27a') },
@@ -320,7 +328,7 @@ export function lookMaterial({ ground = null, vertexColors = !ground, rise = fal
     });
     if (rise) { Object.assign(shader.uniforms, STOP); shader.defines = { ...shader.defines, RISE: '' }; }
     if (ground) {
-      Object.assign(shader.uniforms, plan, { tMask: { value: ground.mask }, tSub: { value: ground.sub }, uGround: { value: new THREE.Vector4(...ground.area) } });
+      Object.assign(shader.uniforms, plan, maps);
       shader.defines = { ...shader.defines, GROUND: '' };
     }
     shader.vertexShader = shader.vertexShader

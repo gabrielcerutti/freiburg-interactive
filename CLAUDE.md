@@ -55,6 +55,11 @@ to grow it: move the bounds, then `npm run terrain`, `node tools/osm.mjs --refre
   what is between its «by hand» marks is kept). The owner's order of work: grow the map first, landmarks little by little.
 - To add a landmark, use the skill `add-landmark` (`.claude/skills/add-landmark/SKILL.md`).
 
+## Next steps the owner has put off
+
+- **Memory** (about 2.3 GB in the test browser): to be tackled later by the owner's decision. What is known and where
+  to look first is in `CONTRIBUTING.md`, «Known limits». Don't start on it unasked; do mention it if the map is to grow.
+
 ## Working habits
 
 - **Document for the next collaborator** (the owner's standing rule): whatever a newcomer would need — a new field

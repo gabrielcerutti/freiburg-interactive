@@ -2,11 +2,10 @@
 // "Today". Picking a year lays that plan on the ground, in colour as it was scanned and in the ink look redrawn
 // with the viewer's own ink and paper; "Today" brings back the ground drawn from OpenStreetMap.
 // The buildings follow (src/city.js, moved by src/main.js): those that stood then, as far as the plans tell, rise
-// out of the ground and the others sink into it. One plan is held in memory at a time.
+// out of the ground and the others sink into it. One plan is held in memory at a time, and of it only a small picture
+// of the whole and the pieces near the camera (src/ground.js).
 // Under the years, a note says what changed by that year and which map it comes from. It can be put away («hide the
 // note») and stays as each visitor left it; what cannot wait (a plan that did not load) is shown either way.
-import * as THREE from 'three';
-import { setPlan } from './look.js';
 
 /**
  * `el`: the bar's element; `ground`: from buildGround; `onChange(plan | null)` is called after each change;
@@ -29,8 +28,8 @@ export async function createTimeline(el, ground, base, { onChange = () => {}, ab
     <button class="more" type="button" aria-controls="year-note"></button>
     <div class="note" id="year-note" aria-live="polite"></div>`;
   el.hidden = false;
-  const note = el.querySelector('.note'), more = el.querySelector('.more'), loader = new THREE.TextureLoader();
-  let current = null, texture = null, asked = 0;
+  const note = el.querySelector('.note'), more = el.querySelector('.more');
+  let current = null, asked = 0;
 
   let open = true;
   try { open = localStorage.getItem('year-note') !== '0'; } catch { /* no storage: open */ }
@@ -51,17 +50,14 @@ export async function createTimeline(el, ground, base, { onChange = () => {}, ab
     const plan = list.plans.find((p) => p.key === key) ?? null, mine = ++asked;
     for (const b of el.querySelectorAll('button[data-key]')) b.setAttribute('aria-pressed', String(b.dataset.key === (plan?.key ?? '')));
     write(plan);
-    let next = null;
-    if (plan) {
-      el.classList.add('busy');
-      try { next = await loader.loadAsync(`${base}${plan.src}`); } catch { next = null; }
-      if (mine !== asked) { next?.dispose(); return; } // (another year was picked meanwhile)
-      el.classList.remove('busy');
-      if (!next) { note.innerHTML = '<p>This plan could not be loaded. Pick the year again to retry.</p>'; el.classList.add('failed'); }
-      else { next.colorSpace = THREE.SRGBColorSpace; next.flipY = false; next.anisotropy = 8; } // (row 0 is the north)
-    }
-    setPlan(ground.mesh.material, next, plan?.area, plan?.levels);
-    texture?.dispose(); texture = next; current = next ? plan : null;
+    // (the ground loads the plan — a small picture of the whole of it first, the pieces near the camera after — and
+    // keeps the plan before on until the new one is there: src/ground.js)
+    if (plan) el.classList.add('busy');
+    const ok = await ground.showPlan(plan, base);
+    if (mine !== asked) return; // (another year was picked meanwhile)
+    el.classList.remove('busy');
+    if (!ok) { note.innerHTML = '<p>This plan could not be loaded. Pick the year again to retry.</p>'; el.classList.add('failed'); }
+    current = ok ? plan : null;
     onChange(current);
   }
   el.addEventListener('click', (ev) => { const b = ev.target.closest('button[data-key]'); if (b) show(b.dataset.key); });

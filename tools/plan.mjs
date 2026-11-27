@@ -4,7 +4,8 @@
 //   node tools/plan.mjs   -> sources/plan/<key>.jpg, <key>-cover.png  (downloaded once: the piece of the plan over
 //                                                                      our area, and a small picture of where the
 //                                                                      sheet reaches)
-//                            public/plan/<key>.webp   (the piece as scanned; see-through where the sheet ends)
+//                            public/plan/<key>/low.webp, <column>-<row>.webp   (a small picture of the whole piece and
+//                                                      the piece as scanned in tiles; see-through where the sheet ends)
 //                            public/plan/plans.json   (the list: each plan's rectangle in world metres, its tones
 //                                                      of ink and paper, what it is, and its credit)
 // What is said of each plan comes from its metadata record in the city's catalogue (`record`, at
@@ -27,6 +28,7 @@ const PLANS = [
   { key: '1955', label: '1955', record: 'da91cc61-79b1-4f39-8ce1-8dfd35a616b2', note: 'Official colour plan, 1:10,000.' },
   { key: '1981', label: '1981', record: '84731cbd-226a-4e66-b2ab-3f72812e085a', note: 'Official city map, 1:16,000.' },
 ];
+const TILE = 768, PAD = 8, SMALL = 1536; // (the ground's tiles, in metres — TILE in src/ground.js; the overlap, in pixels; the small picture's width)
 const RES = 2240 / 4096, COVER = 512; // (metres per pixel of the pieces: what the first area had at 4096 across)
 const WMS = 'https://geoportal.freiburg.de/wms/verma_stadtplan_hist/verma_stadtplan_hist', USER_AGENT = 'historic-maps/1.0 (viewer of old city maps)';
 const CATALOGUE = 'https://geodaten.freiburg.de/geonetwork/srv/ger/catalog.search#/metadata/';
@@ -84,15 +86,31 @@ for (const p of PLANS) {
   const ink = at(0.01), paper = at(0.95);
   if (paper - ink < 40) { console.error(`${p.key}: the scan has no contrast (ink ${ink}, paper ${paper}): is the picture empty?`); process.exit(1); }
 
-  const out = `public/plan/${p.key}.webp`;
-  await sharp(source).removeAlpha().joinChannel(alpha, { raw: { width: WIDTH, height, channels: 1 } }).webp({ quality: 74, alphaQuality: 60 }).toFile(out);
+  // What the viewer loads (src/ground.js): a small picture of the whole piece, for the view from far, and the piece
+  // as scanned cut into tiles of TILE metres — the same tiles as the ground's — each reaching PAD pixels beyond its
+  // edges so that two neighbours agree there. A tile the sheet does not reach at all is not written.
+  const dir = `public/plan/${p.key}`; mkdirSync(dir, { recursive: true });
+  const rgb = await sharp(source).removeAlpha().toColourspace('srgb').raw().toBuffer(), rgba = Buffer.alloc(WIDTH * height * 4);
+  if (rgb.length !== WIDTH * height * 3) { console.error(`${source}: not ${WIDTH} × ${height} pixels of three colours`); process.exit(1); }
+  for (let i = 0, n = WIDTH * height; i < n; i++) { rgba[i * 4] = rgb[i * 3]; rgba[i * 4 + 1] = rgb[i * 3 + 1]; rgba[i * 4 + 2] = rgb[i * 3 + 2]; rgba[i * 4 + 3] = alpha[i]; }
+  const whole = sharp(rgba, { raw: { width: WIDTH, height, channels: 4 } });
+  await whole.clone().resize(SMALL, Math.round((SMALL * height) / WIDTH)).webp({ quality: 78, alphaQuality: 70 }).toFile(`${dir}/low.webp`);
+  const tiles = [], px = WIDTH / W;
+  for (let r = 0; r * TILE < H; r++) for (let c = 0; c * TILE < W; c++) {
+    const left = Math.max(0, Math.round(c * TILE * px) - PAD), top = Math.max(0, Math.round(r * TILE * px) - PAD);
+    const right = Math.min(WIDTH, Math.round((c + 1) * TILE * px) + PAD), bottom = Math.min(height, Math.round((r + 1) * TILE * px) + PAD);
+    let any = false; for (let y = top; y < bottom && !any; y += 16) for (let x = left; x < right; x += 16) if (alpha[y * WIDTH + x] > 127) { any = true; break; }
+    if (!any) continue;
+    await whole.clone().extract({ left, top, width: right - left, height: bottom - top }).webp({ quality: 74, alphaQuality: 60 }).toFile(`${dir}/${c}-${r}.webp`);
+    tiles.push([c, r, +(x0 + left / px).toFixed(2), +(z0 + top / px).toFixed(2), +((right - left) / px).toFixed(2), +((bottom - top) / px).toFixed(2)]);
+  }
   list.push({
-    key: p.key, label: p.label, src: `plan/${p.key}.webp`, area: [x0, z0, W, H], levels: [+(ink / 255).toFixed(3), +(paper / 255).toFixed(3)],
+    key: p.key, label: p.label, low: `plan/${p.key}/low.webp`, area: [x0, z0, W, H], tiles, levels: [+(ink / 255).toFixed(3), +(paper / 255).toFixed(3)],
     covers: +share.toFixed(2), note: p.note, page: p.record ? CATALOGUE + p.record : null,
   });
-  console.log(`${out}: covers ${(share * 100).toFixed(0)} % of the area; ink ${ink}, paper ${paper}`);
+  console.log(`${dir}: ${tiles.length} tiles; covers ${(share * 100).toFixed(0)} % of the area; ink ${ink}, paper ${paper}`);
 }
 writeFileSync('public/plan/plans.json', `${JSON.stringify({
   credit: 'Datengrundlage: Stadt Freiburg, www.freiburg.de', licence: 'Datenlizenz Deutschland – Namensnennung – Version 2.0', licenceUrl: 'https://www.govdata.de/dl-de/by-2-0',
-  metresPerPixel: +(W / WIDTH).toFixed(2), plans: list,
+  metresPerPixel: +(W / WIDTH).toFixed(2), tile: TILE, plans: list, // (a tile: [column, row, x, z, width, depth] in world metres)
 }, null, 1)}\n`);
