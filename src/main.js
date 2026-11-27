@@ -218,6 +218,11 @@ for (const place of PLACES) {
     console.info(place.PLACE.key, kit.mesher.vertices, 'vertices');
   } catch (e) { console.warn(`could not build ${place.PLACE.key}:`, e); }
 }
+// Everything is built: what was only needed for building is let go. Of the buildings, the search still needs
+// where each one stands (its outline) and which it is; the ground keeps the streets, the green and the water for
+// its tiles.
+data.buildings = data.buildings.map((b) => ({ id: b.id, group: b.group, place: b.place, type: b.type, rings: [b.rings[0]] }));
+data.trees = null; if (ages) ages.lost = null;
 status.hidden = true;
 
 // --------------------------------------------------------------------------------------- clicking on a landmark

@@ -65,9 +65,9 @@ to grow it: move the bounds, then `npm run terrain`, `node tools/osm.mjs --refre
   network (connection refused, the site and the map service alike; possibly blocked there, not down). The plans
   come from `https://geoportal.freiburg.de/wms/verma_stadtplan_hist/verma_stadtplan_hist` (`tools/plan.mjs`).
   Try from the other machine. Nothing was changed for Oberau: `BOUNDS` still ends at 7.862.
-- **Memory** (about 2.3 GB in the test browser): what was measured and the two steps agreed are in
-  `CONTRIBUTING.md`, «Known limits». Step 1 (build the city tile by tile, let the raw data go) first, measure,
-  then decide on step 2 (geometry prepared ahead, loaded by tile).
+- **Memory**: step 1 (build the city tile by tile, let the raw data go) is done and took it from about 2.3 GB to
+  1.5–1.8 GB in the test browser. Step 2 (geometry prepared ahead, loaded by tile) is the owner's to decide; what
+  was measured is in `CONTRIBUTING.md`, «Known limits».
 
 ## Working habits
 
@@ -79,7 +79,7 @@ to grow it: move the bounds, then `npm run terrain`, `node tools/osm.mjs --refre
   own git identity — a GitHub noreply address, set with `git config user.name` / `user.email` in this repository
   only, never the machine's global one. Commit titles say what changed for someone looking at the viewer.
 - Before saying something is done: `npm run build`, the checks of the places touched, `node tools/pace.mjs`
-  (frame time about 13 ms, memory about 1.6 GB on the Mac it was built on; about 17 ms and 2.2–2.9 GB on the Windows
+  (frame time about 9 ms, memory about 1.5–1.8 GB on the Mac it was built on, with 11,000 buildings; about 17 ms and 2.2–2.9 GB on the Windows
   laptop, which counts memory differently — see `tools/browser.mjs`), and a look at screenshots in both
   looks. Make sure no test browser is left running.
 - After each piece of work, tell the owner what is assumed, where sources disagreed and what could not be found.

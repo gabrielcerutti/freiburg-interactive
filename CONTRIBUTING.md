@@ -159,5 +159,8 @@ says how). Whatever an assistant writes is held to the same rules: sources opene
   2. then decide whether to prepare the geometry ahead of time, per tile, and load only the tiles near the camera
      (moves the work from the visitor's browser to the tools; larger).
   Halving the shadow map would save 0.1 GB but soften the shadows from far: that one loses something.
+  **Step 1 is done** (`src/city.js` builds one tile at a time; `src/main.js` lets the raw data go once everything
+  is built): five runs gave 1.53–1.79 GB where the same machine gave 2.24–2.28 just before, and the peak while
+  loading fell from about 3.0 to about 1.8–2.0 GB. Frame time unchanged. Step 2 is still to be decided.
 - Where the plan of 1920 does not reach (the two northern corners of the map) the years of the buildings are read
   from the other plans only.
