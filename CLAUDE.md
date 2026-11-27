@@ -55,10 +55,19 @@ to grow it: move the bounds, then `npm run terrain`, `node tools/osm.mjs --refre
   what is between its «by hand» marks is kept). The owner's order of work: grow the map first, landmarks little by little.
 - To add a landmark, use the skill `add-landmark` (`.claude/skills/add-landmark/SKILL.md`).
 
-## Next steps the owner has put off
+## Next steps (as of 27 November 2026)
 
-- **Memory** (about 2.3 GB in the test browser): to be tackled later by the owner's decision. What is known and where
-  to look first is in `CONTRIBUTING.md`, «Known limits». Don't start on it unasked; do mention it if the map is to grow.
+- **Growing the map**, in this order: Oberau (east of 7.862), then more of Herdern (north of 48.011), then the
+  south of the Wiehre (the Lorettoberg, to about 47.970). Before each: measure how far every old plan reaches over
+  the new area and set the edge where the plan of 1920 still covers it; then the steps at the top of this file.
+  What earlier measurements say about each is in `CONTRIBUTING.md`, «Where to grow next».
+- **Blocked on the city's plan service**: on 27 November the geoportal did not answer from the owner's work
+  network (connection refused, the site and the map service alike; possibly blocked there, not down). The plans
+  come from `https://geoportal.freiburg.de/wms/verma_stadtplan_hist/verma_stadtplan_hist` (`tools/plan.mjs`).
+  Try from the other machine. Nothing was changed for Oberau: `BOUNDS` still ends at 7.862.
+- **Memory** (about 2.3 GB in the test browser): what was measured and the two steps agreed are in
+  `CONTRIBUTING.md`, «Known limits». Step 1 (build the city tile by tile, let the raw data go) first, measure,
+  then decide on step 2 (geometry prepared ahead, loaded by tile).
 
 ## Working habits
 

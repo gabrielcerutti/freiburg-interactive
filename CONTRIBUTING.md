@@ -96,6 +96,26 @@ the places people ask for that it cannot know. The map grows first; landmarks fo
 - `tools/osm.mjs` asks the public Overpass server and two public mirrors in turn, and writes nothing unless every
   layer arrived; when all are busy, try again later.
 
+## Where to grow next
+
+The old plans decide. From the measurements made while growing (how much of an area each sheet covers):
+
+| Area | What the plans cover |
+|---|---|
+| Oberau (east of 7.862, between the Dreisam and the Schlossberg) | 1920 and later: all of it, out to 7.876. 1875 and 1903: the northern part of that strip, where Oberau lies. The best of the candidates; the exact east edge is still to be measured. |
+| More of Herdern (north of 48.011) | 1903 ends at 48.011 and 1875 at about 48.013: the early years would be empty. 1920 misses the two northern corners. About 6,850 buildings between 48.001 and 48.021, of which 3,800 are already in. |
+| The south of the Wiehre (Lorettoberg, to about 47.970) | 1920 and later cover it; 1875 and 1903 do not reach. Brings the Lorettokapelle and the Hildaturm onto the map. |
+| Haslach (south-west) | The weakest: the plan of 1920 thins out west of 7.830 and that of 1875 ends at 7.832, so most of it would have no reading before 1944. |
+
+The sources, to look at a plan before deciding: the city's viewer with the historical plans switched on,
+<https://geoportal.freiburg.de/freigis/> (layers «hist_1838», «hist_1875», «hist_1903», «hist_1944», «hist_1981»
+and the others of the series), and the city's catalogue of geodata, <https://geodaten.freiburg.de/geonetwork/>
+(each plan's record is linked from `tools/plan.mjs`; the record
+<https://geodaten.freiburg.de/geonetwork/srv/api/records/ad1ae3cc-535a-414e-94d5-c80817500497> was noted by the
+owner and has not been read yet). The pictures come from the map service
+`https://geoportal.freiburg.de/wms/verma_stadtplan_hist/verma_stadtplan_hist`. These sites may be unreachable from
+some networks.
+
 ## Before you send a change
 
     npm run build
@@ -128,12 +148,16 @@ says how). Whatever an assistant writes is held to the same rules: sources opene
 - The windows the shader paints may sit wrong on a landmark that stands on a slope (drawn openings do not).
 - The Wiehre has no hand-made landmarks yet.
 - Not tested on phones since the map grew.
-- **Memory — next step, not started.** About 2.3 GB in the test browser with 11,000 buildings
-  (`node tools/pace.mjs`, and `--plan 1920` for a year; a run varies by about 0.2 GB). Tiling the ground and the
-  plans saved only 0.2–0.3 GB: they were not the main consumers. Measured so far: the geometry the page still holds
-  is under 0.2 GB and the page's own memory (JavaScript heap) about 0.6 GB, so most of the rest is elsewhere in the
-  browser and has not been tracked down. Where to look first: the shadow map (4096 × 4096) and the tree instances;
-  `node tools/pace.mjs --hide trees` / `--no-shadows` / `--hide city` show what each costs. Do this before the map
-  grows much further, and before trying a phone.
+- **Memory.** About 2.3 GB in the test browser with 11,000 buildings (`node tools/pace.mjs`, and `--plan 1920` for
+  a year; a run varies by about 0.2 GB). Measured on 27 November 2026 by loading the viewer and giving parts of the
+  scene back one by one: an empty browser 0.19 GB; the viewer 2.27; without the shadow map 2.07; also without the
+  trees 2.07; the outlines 2.06; the ruins and lost houses 2.02; the whole city 2.00. So what is on screen is
+  little — the shadow map 0.2 GB, all the rest under 0.1 — and about 2 GB stays with the city gone. The reading
+  (an inference, not measured): it is taken while the scene is built at load, when memory peaks near 3 GB, and the
+  browser keeps it; the page's own heap is about 0.5 GB of it. Agreed steps, losing nothing on screen:
+  1. build the city tile by tile into compact arrays and let the raw data go afterwards; measure;
+  2. then decide whether to prepare the geometry ahead of time, per tile, and load only the tiles near the camera
+     (moves the work from the visitor's browser to the tools; larger).
+  Halving the shadow map would save 0.1 GB but soften the shadows from far: that one loses something.
 - Where the plan of 1920 does not reach (the two northern corners of the map) the years of the buildings are read
   from the other plans only.
